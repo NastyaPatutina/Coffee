@@ -2,7 +2,7 @@ package com.coffee.controller;
 
 import com.coffee.entity.Product;
 import com.coffee.model.ProductInfo;
-import com.coffee.service.ProductService;
+import com.coffee.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

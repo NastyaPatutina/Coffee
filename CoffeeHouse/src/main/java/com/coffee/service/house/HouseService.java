@@ -1,4 +1,4 @@
-package com.coffee.service;
+package com.coffee.service.house;
 
 import com.coffee.entity.House;
 import com.coffee.model.HouseInfo;

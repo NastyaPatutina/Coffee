@@ -1,4 +1,4 @@
-package com.coffee.service;
+package com.coffee.service.product;
 
 import com.coffee.entity.Product;
 import com.coffee.model.ProductInfo;

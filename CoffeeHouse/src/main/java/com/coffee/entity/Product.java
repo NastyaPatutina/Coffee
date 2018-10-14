@@ -40,11 +40,11 @@ public class Product {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        Product house = (Product) o;
+        Product product = (Product) o;
 
         return new EqualsBuilder()
-                .append(id, house.id)
-                .append(name, house.name)
+                .append(id, product.id)
+                .append(name, product.name)
                 .isEquals();
     }
 
