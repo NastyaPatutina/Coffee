@@ -36,10 +36,24 @@ public class HouseServiceImpl implements HouseService {
         return houseRepository.findById(id).map(this::buildHouseInfo).orElse(null);
     }
 
+    @Nullable
+    @Override
+    @Transactional
+    public void deleteById(@Nonnull Integer id) {
+        houseRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public House save(House house) {
+        return houseRepository.save(house);
+    }
+
     @Nonnull
     private HouseInfo buildHouseInfo(House house) {
         HouseInfo info = new HouseInfo();
         info.setName(house.getName());
+        info.setId(house.getId());
         info.setAddress(house.getAddress());
         info.setLongitude(house.getLongitude());
         info.setLatitude(house.getLatitude());
