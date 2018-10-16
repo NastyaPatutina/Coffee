@@ -12,5 +12,7 @@
 hs_err_pid*
 
 CoffeeHouse/\.idea/
-
 CoffeeHouse/target/
+
+CoffeeUser/\.idea/
+CoffeeUser/target/
