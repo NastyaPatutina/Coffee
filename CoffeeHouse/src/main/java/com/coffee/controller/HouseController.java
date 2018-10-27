@@ -34,7 +34,7 @@ public class HouseController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createHouse(@RequestBody House houseInfo) {
+    public ResponseEntity<Object> createHouse(@RequestBody HouseInfo houseInfo) {
         House savedHouse = houseService.save(houseInfo);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -45,7 +45,7 @@ public class HouseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateHouse(@RequestBody House house, @PathVariable Integer id) {
+    public ResponseEntity<Object> updateHouse(@RequestBody HouseInfo house, @PathVariable Integer id) {
 
         HouseInfo houseOptional = houseService.findHouseById(id);
 

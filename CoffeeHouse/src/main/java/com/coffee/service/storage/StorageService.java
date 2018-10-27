@@ -16,5 +16,5 @@ public interface StorageService {
 
     void deleteById(@Nonnull Integer id);
 
-    Storage save(Storage product);
+    Storage save(StorageInfo product);
 }

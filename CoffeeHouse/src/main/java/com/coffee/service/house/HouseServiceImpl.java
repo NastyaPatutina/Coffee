@@ -45,8 +45,8 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     @Transactional
-    public House save(House house) {
-        return houseRepository.save(house);
+    public House save(HouseInfo house) {
+        return houseRepository.save(buildHouseByInfo(house));
     }
 
     @Nonnull
@@ -58,5 +58,16 @@ public class HouseServiceImpl implements HouseService {
         info.setLongitude(house.getLongitude());
         info.setLatitude(house.getLatitude());
         return info;
+    }
+
+    @Nonnull
+    private House buildHouseByInfo(HouseInfo houseInfo) {
+        House house = houseRepository.findById(houseInfo.getId()).orElse(null);
+        house.setName(houseInfo.getName());
+        house.setId(houseInfo.getId());
+        house.setAddress(houseInfo.getAddress());
+        house.setLongitude(houseInfo.getLongitude());
+        house.setLatitude(houseInfo.getLatitude());
+        return house;
     }
 }

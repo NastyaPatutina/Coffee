@@ -23,19 +23,19 @@ public class Storage {
     @Column(name = "house_id")
     private Integer house_id;
 
-    public Integer getProduct_id() {
+    public Integer getProductId() {
         return product_id;
     }
 
-    public void setProduct_id(Integer product_id) {
+    public void setProductId(Integer product_id) {
         this.product_id = product_id;
     }
 
-    public Integer getHouse_id() {
+    public Integer getHouseId() {
         return house_id;
     }
 
-    public void setHouse_id(Integer house_id) {
+    public void setHouseId(Integer house_id) {
         this.house_id = house_id;
     }
 

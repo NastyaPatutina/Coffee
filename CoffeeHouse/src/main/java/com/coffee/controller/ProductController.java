@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createProduct(@RequestBody Product productInfo) {
+    public ResponseEntity<Object> createProduct(@RequestBody ProductInfo productInfo) {
         Product savedProduct = productService.save(productInfo);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -45,7 +45,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateProduct(@RequestBody Product product, @PathVariable Integer id) {
+    public ResponseEntity<Object> updateProduct(@RequestBody ProductInfo product, @PathVariable Integer id) {
 
         ProductInfo productOptional = productService.findProductById(id);
 

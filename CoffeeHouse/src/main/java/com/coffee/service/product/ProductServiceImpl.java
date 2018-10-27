@@ -43,8 +43,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product save(Product product) {
-        return productRepository.save(product);
+    public Product save(ProductInfo product) {
+        return productRepository.save(buildProductByInfo(product));
     }
 
     @Nonnull
@@ -53,5 +53,13 @@ public class ProductServiceImpl implements ProductService {
         info.setId(product.getId());
         info.setName(product.getName());
         return info;
+    }
+
+    @Nonnull
+    private Product buildProductByInfo(ProductInfo productInfo) {
+        Product product = productRepository.findById(productInfo.getId()).orElse(null);
+        product.setName(productInfo.getName());
+        product.setId(productInfo.getId());
+        return product;
     }
 }

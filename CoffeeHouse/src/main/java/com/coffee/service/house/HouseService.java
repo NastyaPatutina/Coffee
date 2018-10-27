@@ -16,5 +16,5 @@ public interface HouseService {
 
     void deleteById(@Nonnull Integer id);
 
-    House save(House house);
+    House save(HouseInfo house);
 }

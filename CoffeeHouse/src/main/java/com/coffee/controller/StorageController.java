@@ -34,7 +34,7 @@ public class StorageController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createStorage(@RequestBody Storage storageInfo) {
+    public ResponseEntity<Object> createStorage(@RequestBody StorageInfo storageInfo) {
         Storage savedStorage = storageService.save(storageInfo);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -45,7 +45,7 @@ public class StorageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateStorage(@RequestBody Storage storage, @PathVariable Integer id) {
+    public ResponseEntity<Object> updateStorage(@RequestBody StorageInfo storage, @PathVariable Integer id) {
 
         StorageInfo storageOptional = storageService.findStorageById(id);
 

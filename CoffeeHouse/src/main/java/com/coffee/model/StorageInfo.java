@@ -14,19 +14,19 @@ public class StorageInfo {
         this.id = id;
     }
 
-    public int getHouse_id() {
+    public int getHouseId() {
         return house_id;
     }
 
-    public void setHouse_id(int house_id) {
+    public void setHouseId(int house_id) {
         this.house_id = house_id;
     }
 
-    public int getProduct_id() {
+    public int getProductId() {
         return product_id;
     }
 
-    public void setProduct_id(int product_id) {
+    public void setProductId(int product_id) {
         this.product_id = product_id;
     }
 

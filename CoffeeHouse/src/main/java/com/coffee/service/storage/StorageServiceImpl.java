@@ -42,8 +42,8 @@ public class StorageServiceImpl implements StorageService{
 
     @Override
     @Transactional
-    public Storage save(Storage Storage) {
-        return storageRepository.save(Storage);
+    public Storage save(StorageInfo storage) {
+        return storageRepository.save(buildStorageByInfo(storage));
     }
 
     @Nonnull
@@ -51,8 +51,18 @@ public class StorageServiceImpl implements StorageService{
         StorageInfo info = new StorageInfo();
         info.setId(storage.getId());
         info.setCount(storage.getCount());
-        info.setHouse_id(storage.getHouse_id());
-        info.setProduct_id(storage.getProduct_id());
+        info.setHouseId(storage.getHouseId());
+        info.setProductId(storage.getProductId());
         return info;
+    }
+
+    @Nonnull
+    private Storage buildStorageByInfo(StorageInfo storageInfo) {
+        Storage storage = storageRepository.findById(storageInfo.getId()).orElse(null);
+        storage.setId(storageInfo.getId());
+        storage.setCount(storageInfo.getCount());
+        storage.setHouseId(storageInfo.getHouseId());
+        storage.setProductId(storageInfo.getProductId());
+        return storage;
     }
 }
