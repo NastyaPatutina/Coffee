@@ -11,6 +11,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@RestController
+@RequestMapping("/recipes")
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;

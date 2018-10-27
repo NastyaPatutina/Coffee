@@ -127,8 +127,11 @@
             <groupId>com.coffee</groupId>
             <artifactId>CoffeeOrder</artifactId>
             <version>1.0</version>
-            <!--<scope>system</scope>-->
-            <!--<systemPath>${project.basedir}/../CoffeeOrder/target/CoffeeOrder.jar</systemPath>-->
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.4</version>
         </dependency>
     </dependencies>
 </project>

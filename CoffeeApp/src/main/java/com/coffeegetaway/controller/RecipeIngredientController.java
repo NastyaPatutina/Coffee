@@ -1,9 +1,10 @@
 package com.coffeegetaway.controller;
 
+
+import com.coffee.model.RecipeIngredientInfo;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.coffee.model.OrderInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,20 +12,20 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orders")
-public class OrdersController {
+@RequestMapping("/recipe_ingredients")
+public class RecipeIngredientController {
 
-    String default_urlTarget = "http://localhost:8081/orders/";
+    private String default_urlTarget = "http://localhost:8081/recipe_ingredients/";
 
     @GetMapping("/{id}")
-    public OrderInfo orderById(@PathVariable Integer id) {
+    public RecipeIngredientInfo recipeIngredientById(@PathVariable Integer id) {
         String urlParameters = "";
         String urlTarget = default_urlTarget + id.toString();
         ObjectMapper objectMapper = new ObjectMapper();
         String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET");
-        OrderInfo res = null;
+        RecipeIngredientInfo res = null;
         try {
-            res = objectMapper.readValue(res_requst, OrderInfo.class);
+            res = objectMapper.readValue(res_requst, RecipeIngredientInfo.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -32,13 +33,13 @@ public class OrdersController {
     }
 
     @GetMapping
-    public List<OrderInfo> allOrders() {
+    public List<RecipeIngredientInfo> allRecipeIngredients() {
         String urlParameters = "";
         String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET");
         ObjectMapper objectMapper = new ObjectMapper();
-        List<OrderInfo> res = null;
+        List<RecipeIngredientInfo> res = null;
         try {
-            res = objectMapper.readValue(res_requst, new TypeReference<List<OrderInfo>>(){});
+            res = objectMapper.readValue(res_requst, new TypeReference<List<RecipeIngredientInfo>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,19 +47,19 @@ public class OrdersController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable Integer id) {
+    public void deleteRecipeIngredient(@PathVariable Integer id) {
         String urlParameters = "";
         String urlTarget = default_urlTarget + id.toString();
         CoffeeRequest.generate(urlTarget, urlParameters,"DELETE");
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createOrder(@RequestBody OrderInfo orderInfo) {
+    public ResponseEntity<Object> createRecipeIngredient(@RequestBody RecipeIngredientInfo recipeIngredientInfo) {
         return null;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateOrder(@RequestBody OrderInfo order, @PathVariable Integer id) {
+    public ResponseEntity<Object> updateRecipeIngredient(@RequestBody RecipeIngredientInfo recipeIngredient, @PathVariable Integer id) {
         return null;
     }
 }
