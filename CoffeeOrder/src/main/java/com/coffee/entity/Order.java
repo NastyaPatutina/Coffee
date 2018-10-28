@@ -1,5 +1,6 @@
 package com.coffee.entity;
 
+import com.coffee.model.RecipeInfo;
 import com.google.common.base.MoreObjects;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -18,8 +19,9 @@ public class Order {
     @Column(name = "user_id")
     private Integer user_id;
 
-    @Column(name = "recipe_id")
-    private Integer recipe_id;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "recipe_id", nullable = false)
+    private Recipe recipe;
 
     @Column(name = "coffee_house_id")
     private Integer coffee_house_id;
@@ -40,12 +42,16 @@ public class Order {
         this.user_id = user_id;
     }
 
-    public Integer getRecipeId() {
-        return recipe_id;
+    public Recipe getRecipe() {
+        return recipe;
     }
 
-    public void setRecipeId(Integer recipe_id) {
-        this.recipe_id = recipe_id;
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    public void setRecipe(RecipeInfo recipe) {
+        this.recipe.setId(recipe.getId());
     }
 
     public Integer getCoffeeHouseId() {
@@ -68,7 +74,7 @@ public class Order {
         return new EqualsBuilder()
                 .append(id, order.id)
                 .append(user_id, order.user_id)
-                .append(recipe_id, order.recipe_id)
+                .append(recipe.getId(), order.recipe.getId())
                 .append(coffee_house_id, order.coffee_house_id)
                 .isEquals();
     }
@@ -78,7 +84,7 @@ public class Order {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(user_id)
-                .append(recipe_id)
+                .append(recipe.hashCode())
                 .append(coffee_house_id)
                 .toHashCode();
     }
@@ -88,7 +94,7 @@ public class Order {
         return MoreObjects
                 .toStringHelper(this)
                 .add("user_id", user_id)
-                .add("recipe_id", recipe_id)
+                .add("recipe", recipe.toString())
                 .add("coffee_house_id", coffee_house_id)
                 .toString();
     }
