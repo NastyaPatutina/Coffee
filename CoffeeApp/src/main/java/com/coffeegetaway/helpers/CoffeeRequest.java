@@ -24,10 +24,15 @@ public class CoffeeRequest {
 
             connection.setUseCaches(false);
             connection.setDoOutput(true);
-
-            //Send request
             connection.connect();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                logger.warn("http response code is " + connection.getResponseCode());
+                return null;
+            }
+            //Send request
+            InputStream is = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             StringBuilder results = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
