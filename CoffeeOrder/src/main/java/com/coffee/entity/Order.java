@@ -50,8 +50,12 @@ public class Order {
         this.recipe = recipe;
     }
 
-    public void setRecipe(RecipeInfo recipe) {
-        this.recipe.setId(recipe.getId());
+    public Integer getRecipeId() {
+        return recipe.getId();
+    }
+
+    public void setRecipeId(Integer recipe_id) {
+        this.recipe.setId(recipe_id);
     }
 
     public Integer getCoffeeHouseId() {

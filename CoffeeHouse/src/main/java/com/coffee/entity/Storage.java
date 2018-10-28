@@ -17,26 +17,36 @@ public class Storage {
     @Column(name = "count")
     private Integer count;
 
-    @Column(name = "product_id")
-    private Integer product_id;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    @Column(name = "house_id")
-    private Integer house_id;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "house_id", nullable = false)
+    private House house;
+
+    public House getHouse() {
+        return house;
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
+    }
 
     public Integer getProductId() {
-        return product_id;
+        return product.getId();
     }
 
     public void setProductId(Integer product_id) {
-        this.product_id = product_id;
+        this.product.setId(product_id);
     }
 
     public Integer getHouseId() {
-        return house_id;
+        return house.getId();
     }
 
     public void setHouseId(Integer house_id) {
-        this.house_id = house_id;
+        this.house.setId(house_id);
     }
 
     public Integer getCount() {
@@ -66,8 +76,8 @@ public class Storage {
         return new EqualsBuilder()
                 .append(id, storage.id)
                 .append(count, storage.count)
-                .append(product_id, storage.product_id)
-                .append(house_id, storage.house_id)
+                .append(product.getId(), storage.product.getId())
+                .append(house.getId(), storage.house.getId())
                 .isEquals();
     }
 
@@ -76,8 +86,8 @@ public class Storage {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(count)
-                .append(product_id)
-                .append(house_id)
+                .append(product.hashCode())
+                .append(house.hashCode())
                 .toHashCode();
     }
 
@@ -86,8 +96,8 @@ public class Storage {
         return MoreObjects
                 .toStringHelper(this)
                 .add("count", count)
-                .add("product_id", product_id)
-                .add("house_id", house_id)
+                .add("product", product.toString())
+                .add("house", house.toString())
                 .toString();
     }
 }

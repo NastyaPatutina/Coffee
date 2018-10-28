@@ -29,11 +29,15 @@ public class OrderInfo {
     }
 
     public void setRecipe(RecipeInfo recipe) {
-        this.recipe = recipe;
+        this.recipe.setId(recipe.getId());
     }
 
-    public void setRecipe(Recipe recipe) {
-        this.recipe.setId(recipe.getId());
+    public Integer getRecipeId() {
+        return recipe.getId();
+    }
+
+    public void setRecipeId(Integer recipe_id) {
+        this.recipe.setId(recipe_id);
     }
 
     public Integer getCoffeeHouseId() {

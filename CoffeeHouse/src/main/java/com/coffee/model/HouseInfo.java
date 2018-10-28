@@ -5,7 +5,7 @@ public class HouseInfo {
     private String address;
     private float latitude;
     private float longitude;
-    private int id;
+    private Integer id;
 
 
     public float getLongitude() {
@@ -24,11 +24,11 @@ public class HouseInfo {
         this.latitude = latitude;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -3,18 +3,18 @@ package com.coffee.model;
 import com.coffee.entity.User;
 
 public class UserInfo {
-    private int id;
+    private Integer id;
     private String first_name;
     private String last_name;
     private User.GenderType gender;
     private String email;
     private String phone;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
         OrderInfo info = new OrderInfo();
         info.setId(order.getId());
         info.setUserId(order.getUserId());
-        info.setRecipe(order.getRecipe());
+        info.setRecipeId(order.getRecipeId());
         info.setCoffeeHouseId(order.getCoffeeHouseId());
         return info;
     }
@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
     private Order buildOrderByInfo(OrderInfo orderInfo) {
         Order order = orderRepository.findById(orderInfo.getId()).orElse(null);
         order.setUserId(orderInfo.getUserId());
-        order.setRecipe(orderInfo.getRecipe());
+        order.setRecipeId(orderInfo.getRecipeId());
         order.setCoffeeHouseId(orderInfo.getCoffeeHouseId());
         return order;
     }
