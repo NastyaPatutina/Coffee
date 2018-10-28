@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,14 +16,17 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private String default_urlTarget = "http://localhost:8081/products/";
+    private static Logger logger = LoggerFactory.getLogger(ProductController.class);
+
+    private String default_urlTarget = "http://localhost:8080/products/";
 
     @GetMapping("/{id}")
     public ProductInfo ProductById(@PathVariable Integer id) {
         String urlParameters = "";
         String urlTarget = default_urlTarget + id.toString();
         ObjectMapper objectMapper = new ObjectMapper();
-        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET");
+        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
+        logger.info(res_requst);
         ProductInfo res = null;
         try {
             res = objectMapper.readValue(res_requst, ProductInfo.class);
@@ -35,7 +40,8 @@ public class ProductController {
     public List<ProductInfo> allProducts() {
 
         String urlParameters = "";
-        String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET");
+        String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET", logger);
+        logger.info(res_requst);
         ObjectMapper objectMapper = new ObjectMapper();
         List<ProductInfo> res = null;
         try {
@@ -50,7 +56,7 @@ public class ProductController {
     public void deleteProduct(@PathVariable Integer id) {
         String urlParameters = "";
         String urlTarget = default_urlTarget + id.toString();
-        CoffeeRequest.generate(urlTarget, urlParameters,"DELETE");
+        CoffeeRequest.generate(urlTarget, urlParameters,"DELETE", logger);
     }
 
     @PostMapping("/")

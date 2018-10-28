@@ -1,9 +1,12 @@
 package com.coffeegetaway.controller.user;
 
 import com.coffee.model.UserInfo;
+import com.coffeegetaway.controller.house.ProductController;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,14 +16,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UsersController {
-    private String default_urlTarget = "http://localhost:8081/storage/";
+
+    private static Logger logger = LoggerFactory.getLogger(ProductController.class);
+    private String default_urlTarget = "http://localhost:8082/users/";
 
     @GetMapping("/{id}")
     public UserInfo userById(@PathVariable Integer id) {
         String urlParameters = "";
         String urlTarget = default_urlTarget + id.toString();
         ObjectMapper objectMapper = new ObjectMapper();
-        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET");
+        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
         UserInfo res = null;
         try {
             res = objectMapper.readValue(res_requst, UserInfo.class);
@@ -33,7 +38,7 @@ public class UsersController {
     @GetMapping
     public List<UserInfo> allUsers() {
         String urlParameters = "";
-        String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET");
+        String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET", logger);
         ObjectMapper objectMapper = new ObjectMapper();
         List<UserInfo> res = null;
         try {
@@ -48,7 +53,7 @@ public class UsersController {
     public void deleteUser(@PathVariable Integer id) {
         String urlParameters = "";
         String urlTarget = default_urlTarget + id.toString();
-        CoffeeRequest.generate(urlTarget, urlParameters,"DELETE");
+        CoffeeRequest.generate(urlTarget, urlParameters,"DELETE", logger);
     }
 
     @PostMapping("/")
