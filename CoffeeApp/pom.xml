@@ -37,13 +37,45 @@
                 <version>2.5.2</version>
                 <executions>
                     <execution>
-                        <id>install-common</id>
+                        <id>install-order</id>
                         <phase>clean</phase>
                         <configuration>
                             <file>${project.basedir}/../CoffeeOrder/target/CoffeeOrder.jar</file>
                             <repositoryLayout>default</repositoryLayout>
                             <groupId>com.coffee</groupId>
                             <artifactId>CoffeeOrder</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>install-house</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <file>${project.basedir}/../CoffeeHouse/target/CoffeeHouse.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>com.coffee</groupId>
+                            <artifactId>CoffeeHouse</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>install-user</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <file>${project.basedir}/../CoffeeUser/target/CoffeeUser.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>com.coffee</groupId>
+                            <artifactId>CoffeeUser</artifactId>
                             <version>1.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
@@ -126,6 +158,16 @@
         <dependency>
             <groupId>com.coffee</groupId>
             <artifactId>CoffeeOrder</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.coffee</groupId>
+            <artifactId>CoffeeHouse</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.coffee</groupId>
+            <artifactId>CoffeeUser</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

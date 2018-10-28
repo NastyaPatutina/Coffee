@@ -1,9 +1,9 @@
-package com.coffeegetaway.controller;
+package com.coffeegetaway.controller.house;
 
+import com.coffee.model.StorageInfo;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.coffee.model.OrderInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,20 +11,20 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orders")
-public class OrdersController {
-
-    String default_urlTarget = "http://localhost:8081/orders/";
+@RequestMapping("/storage")
+public class StorageController {
+    private String default_urlTarget = "http://localhost:8081/storage/";
 
     @GetMapping("/{id}")
-    public OrderInfo orderById(@PathVariable Integer id) {
+    public StorageInfo StorageById(@PathVariable Integer id) {
+
         String urlParameters = "";
         String urlTarget = default_urlTarget + id.toString();
         ObjectMapper objectMapper = new ObjectMapper();
         String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET");
-        OrderInfo res = null;
+        StorageInfo res = null;
         try {
-            res = objectMapper.readValue(res_requst, OrderInfo.class);
+            res = objectMapper.readValue(res_requst, StorageInfo.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -32,13 +32,14 @@ public class OrdersController {
     }
 
     @GetMapping
-    public List<OrderInfo> allOrders() {
+    public List<StorageInfo> allStorages() {
+
         String urlParameters = "";
         String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET");
         ObjectMapper objectMapper = new ObjectMapper();
-        List<OrderInfo> res = null;
+        List<StorageInfo> res = null;
         try {
-            res = objectMapper.readValue(res_requst, new TypeReference<List<OrderInfo>>(){});
+            res = objectMapper.readValue(res_requst, new TypeReference<List<StorageInfo>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,19 +47,21 @@ public class OrdersController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable Integer id) {
+    public void deleteStorage(@PathVariable Integer id) {
+
         String urlParameters = "";
         String urlTarget = default_urlTarget + id.toString();
         CoffeeRequest.generate(urlTarget, urlParameters,"DELETE");
+
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createOrder(@RequestBody OrderInfo orderInfo) {
+    public ResponseEntity<Object> createStorage(@RequestBody StorageInfo storageInfo) {
         return null;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateOrder(@RequestBody OrderInfo order, @PathVariable Integer id) {
+    public ResponseEntity<Object> updateStorage(@RequestBody StorageInfo storage, @PathVariable Integer id) {
         return null;
     }
 }

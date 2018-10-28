@@ -1,4 +1,4 @@
-package com.coffeegetaway.controller;
+package com.coffeegetaway.controller.order;
 
 
 import com.coffee.model.RecipeIngredientInfo;
