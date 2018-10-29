@@ -9,6 +9,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
+
+    public User(String first_name, String last_name, GenderType gender, String email, String phone) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.gender = gender;
+        this.email = email;
+        this.phone = phone;
+    }
+
     public static enum GenderType {male, female}
 
     @Id
@@ -29,6 +38,7 @@ public class User {
 
     @Column(name = "phone", length = 11)
     private String phone;
+
 
 
     public Integer getId() {
