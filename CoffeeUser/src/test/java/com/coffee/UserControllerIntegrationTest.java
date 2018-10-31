@@ -69,6 +69,30 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$[1].phone", is(mike.getPhone())));
     }
 
+    @Test
+    public void givenUser_whenGetUser_thenReturnJson()
+            throws Exception {
+
+        User alex = new User("alex",
+                "Alexeew",
+                User.GenderType.male,
+                "aalexeew@gmail.com",
+                "89090009900");
+
+        UserInfo userInfo = buildUserInfo(alex);
+
+        given(service.findUserById(20)).willReturn(userInfo);
+
+        mvc.perform(get("/users/20")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", is(alex.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(alex.getLastName())))
+                .andExpect(jsonPath("$.gender", is(alex.getGender().toString())))
+                .andExpect(jsonPath("$.email", is(alex.getEmail())))
+                .andExpect(jsonPath("$.phone", is(alex.getPhone())));
+    }
+
     @Nonnull
     private UserInfo buildUserInfo(User user) {
         UserInfo info = new UserInfo();
