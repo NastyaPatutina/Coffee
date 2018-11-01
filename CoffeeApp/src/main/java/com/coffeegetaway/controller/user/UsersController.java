@@ -1,5 +1,6 @@
 package com.coffeegetaway.controller.user;
 
+import com.coffee.model.OrderInfo;
 import com.coffee.model.UserInfo;
 import com.coffeegetaway.controller.house.ProductController;
 import com.coffeegetaway.helpers.CoffeeRequest;
@@ -29,6 +30,32 @@ public class UsersController {
         UserInfo res = null;
         try {
             res = objectMapper.readValue(res_requst, UserInfo.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @GetMapping("/{id}/orders")
+    public List<OrderInfo> userOrdersById(@PathVariable Integer id) {
+        String urlParameters = "";
+        String urlTarget = default_urlTarget + id.toString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
+        UserInfo user = null;
+        try {
+            user = objectMapper.readValue(res_requst, UserInfo.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        urlParameters = "";
+        urlTarget = "http://localhost:8081/orders/?used_id=" + user.getId();
+        objectMapper = new ObjectMapper();
+        res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
+        List<OrderInfo> res = null;
+        try {
+            res = objectMapper.readValue(res_requst, new TypeReference<List<OrderInfo>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }

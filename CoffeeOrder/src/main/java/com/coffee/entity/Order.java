@@ -1,6 +1,5 @@
 package com.coffee.entity;
 
-import com.coffee.model.RecipeInfo;
 import com.google.common.base.MoreObjects;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -17,14 +16,14 @@ public class Order {
     private Integer id;
 
     @Column(name = "user_id")
-    private Integer user_id;
+    private Integer userId;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
     @Column(name = "coffee_house_id")
-    private Integer coffee_house_id;
+    private Integer coffeeHouseId;
 
     public Integer getId() {
         return id;
@@ -35,11 +34,11 @@ public class Order {
     }
 
     public Integer getUserId() {
-        return user_id;
+        return userId;
     }
 
     public void setUserId(Integer user_id) {
-        this.user_id = user_id;
+        this.userId = user_id;
     }
 
     public Recipe getRecipe() {
@@ -59,11 +58,11 @@ public class Order {
     }
 
     public Integer getCoffeeHouseId() {
-        return coffee_house_id;
+        return coffeeHouseId;
     }
 
     public void setCoffeeHouseId(Integer coffee_house_id) {
-        this.coffee_house_id = coffee_house_id;
+        this.coffeeHouseId = coffee_house_id;
     }
 
 
@@ -77,9 +76,9 @@ public class Order {
 
         return new EqualsBuilder()
                 .append(id, order.id)
-                .append(user_id, order.user_id)
+                .append(userId, order.userId)
                 .append(recipe.getId(), order.recipe.getId())
-                .append(coffee_house_id, order.coffee_house_id)
+                .append(coffeeHouseId, order.coffeeHouseId)
                 .isEquals();
     }
 
@@ -87,9 +86,9 @@ public class Order {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(user_id)
+                .append(userId)
                 .append(recipe.hashCode())
-                .append(coffee_house_id)
+                .append(coffeeHouseId)
                 .toHashCode();
     }
 
@@ -97,9 +96,9 @@ public class Order {
     public String toString() {
         return MoreObjects
                 .toStringHelper(this)
-                .add("user_id", user_id)
+                .add("userId", userId)
                 .add("recipe", recipe.toString())
-                .add("coffee_house_id", coffee_house_id)
+                .add("coffeeHouseId", coffeeHouseId)
                 .toString();
     }
 }

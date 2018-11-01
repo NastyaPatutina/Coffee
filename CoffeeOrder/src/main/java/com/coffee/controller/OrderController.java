@@ -10,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/orders")
@@ -23,8 +24,13 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderInfo> allOrders() {
-        return orderService.findAllOrders();
+    public List<OrderInfo> allOrders(@RequestParam("user_id") Optional<Integer> userId) {
+        if (userId.isPresent()) {
+            return orderService.findOrderByUserId(userId.get());
+
+        } else {
+            return orderService.findAllOrders();
+        }
     }
 
     @DeleteMapping("/{id}")

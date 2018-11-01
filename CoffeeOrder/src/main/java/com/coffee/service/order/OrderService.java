@@ -11,6 +11,9 @@ public interface OrderService {
     @Nonnull
     List<OrderInfo> findAllOrders();
 
+    @Nonnull
+    List<OrderInfo> findOrderByUserId(@Nonnull Integer userId);
+
     @Nullable
     OrderInfo findOrderById(@Nonnull Integer id);
 
