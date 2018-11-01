@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "recipes")
@@ -19,6 +20,9 @@ public class Recipe {
 
     @Column(name = "cost")
     private Integer cost;
+
+    @OneToMany(mappedBy="recipes")
+    private Set<RecipeIngredient> recipeIngredients;
 
     public Integer getId() {
         return id;
@@ -42,6 +46,10 @@ public class Recipe {
 
     public void setCost(Integer cost) {
         this.cost = cost;
+    }
+
+    public Set<RecipeIngredient> getRecipeIngredients() {
+        return recipeIngredients;
     }
 
     @Override

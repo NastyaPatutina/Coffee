@@ -18,8 +18,18 @@ public class RecipeIngredient {
     @Column(name = "product_id")
     private Integer product_id;
 
-    @Column(name = "recipe_id")
-    private Integer recipe_id;
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    @ManyToOne
+    @JoinColumn(name="recipe_id", nullable=false)
+    private Recipe recipe;
 
     @Column(name = "count")
     private Integer count;
@@ -43,11 +53,11 @@ public class RecipeIngredient {
     }
 
     public Integer getRecipeId() {
-        return recipe_id;
+        return recipe.getId();
     }
 
     public void setRecipeId(Integer recipe_id) {
-        this.recipe_id = recipe_id;
+        this.recipe.setId(recipe_id);
     }
 
     public Integer getCount() {
@@ -69,7 +79,7 @@ public class RecipeIngredient {
         return new EqualsBuilder()
                 .append(id, recipeIngredient.id)
                 .append(product_id, recipeIngredient.product_id)
-                .append(recipe_id, recipeIngredient.recipe_id)
+                .append(recipe.getId(), recipeIngredient.recipe.getId())
                 .append(count, recipeIngredient.count)
                 .isEquals();
     }
@@ -79,7 +89,7 @@ public class RecipeIngredient {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(product_id)
-                .append(recipe_id)
+                .append(recipe.getId())
                 .append(count)
                 .toHashCode();
     }
@@ -89,7 +99,7 @@ public class RecipeIngredient {
         return MoreObjects
                 .toStringHelper(this)
                 .add("product_id", product_id)
-                .add("recipe_id", recipe_id)
+                .add("recipe_id", recipe.getId())
                 .add("count", count)
                 .toString();
     }

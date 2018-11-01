@@ -2,6 +2,7 @@ package com.coffee.controller;
 
 import com.coffee.entity.Recipe;
 import com.coffee.model.RecipeInfo;
+import com.coffee.model.RecipeIngredientInfo;
 import com.coffee.service.recipe.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/recipes")
@@ -20,6 +22,11 @@ public class RecipeController {
     @GetMapping("/{id}")
     public RecipeInfo recipeById(@PathVariable Integer id) {
         return recipeService.findRecipeById(id);
+    }
+
+    @GetMapping("/{id}/ingredients")
+    public Set<RecipeIngredientInfo> recipeIngredientById(@PathVariable Integer id) {
+        return recipeService.findRecipeById(id).getRecipeIngredients();
     }
 
     @GetMapping
