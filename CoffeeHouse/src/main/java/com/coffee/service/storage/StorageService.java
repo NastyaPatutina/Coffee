@@ -1,6 +1,7 @@
 package com.coffee.service.storage;
 
 import com.coffee.entity.Storage;
+import com.coffee.model.HouseInfo;
 import com.coffee.model.StorageInfo;
 
 import javax.annotation.Nonnull;
@@ -10,6 +11,9 @@ import java.util.List;
 public interface StorageService {
     @Nonnull
     List<StorageInfo> findAllStorage();
+
+    @Nonnull
+    List<StorageInfo> findStorageForHouse(@Nonnull Integer houseId);
 
     @Nullable
     StorageInfo findStorageById(@Nonnull Integer id);

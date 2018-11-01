@@ -1,6 +1,7 @@
 package com.coffeegetaway.controller.house;
 
 import com.coffee.model.HouseInfo;
+import com.coffee.model.RecipeInfo;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,25 @@ public class HouseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return res;
+    }
+
+    @GetMapping("/{id}/available_recipes")
+    public List<RecipeInfo> HouseAvailableRecipes(@PathVariable Integer id) {
+
+        String urlParameters = "";
+        String urlTarget = default_urlTarget + id.toString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
+        HouseInfo house = null;
+        try {
+            house = objectMapper.readValue(res_requst, HouseInfo.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<RecipeInfo> res = null;
+
         return res;
     }
 

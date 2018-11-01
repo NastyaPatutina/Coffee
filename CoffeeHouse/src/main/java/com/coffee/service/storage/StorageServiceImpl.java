@@ -1,6 +1,7 @@
 package com.coffee.service.storage;
 
 import com.coffee.entity.Storage;
+import com.coffee.model.HouseInfo;
 import com.coffee.model.StorageInfo;
 import com.coffee.repository.StorageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,15 @@ public class StorageServiceImpl implements StorageService{
     @Transactional(readOnly = true)
     public List<StorageInfo> findAllStorage() {
         return storageRepository.findAll()
+                .stream()
+                .map(this::buildStorageInfo)
+                .collect(Collectors.toList());
+    }
+
+    @Nonnull
+    @Override
+    public List<StorageInfo> findStorageForHouse(@Nonnull Integer houseId) {
+        return storageRepository.findByHouseId(houseId)
                 .stream()
                 .map(this::buildStorageInfo)
                 .collect(Collectors.toList());

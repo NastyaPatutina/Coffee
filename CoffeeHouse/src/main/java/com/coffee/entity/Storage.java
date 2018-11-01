@@ -33,6 +33,14 @@ public class Storage {
         this.house = house;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
     public Integer getProductId() {
         return product.getId();
     }

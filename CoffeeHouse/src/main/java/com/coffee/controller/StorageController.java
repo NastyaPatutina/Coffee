@@ -10,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/storage")
@@ -24,8 +25,12 @@ public class StorageController {
     }
 
     @GetMapping
-    public List<StorageInfo> allStorages() {
-        return storageService.findAllStorage();
+    public List<StorageInfo> allStorages(@RequestParam("house_id") Optional<Integer> houseId) {
+        if (houseId.isPresent()) {
+            return storageService.findStorageForHouse(houseId.get());
+        } else {
+            return storageService.findAllStorage();
+        }
     }
 
     @DeleteMapping("/{id}")
