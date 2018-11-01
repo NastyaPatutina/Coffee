@@ -37,6 +37,16 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Nonnull
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrderInfo> findOrderByCoffeeHouseId(@Nonnull Integer coffeeHouseId) {
+        return orderRepository.findByCoffeeHouseId(coffeeHouseId)
+                .stream()
+                .map(this::buildOrderInfo)
+                .collect(Collectors.toList());
+    }
+
     @Nullable
     @Override
     public OrderInfo findOrderById(@Nonnull Integer id) {

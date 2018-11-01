@@ -24,10 +24,11 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderInfo> allOrders(@RequestParam("user_id") Optional<Integer> userId) {
+    public List<OrderInfo> allOrders(@RequestParam("user_id") Optional<Integer> userId, @RequestParam("coffee_house_id") Optional<Integer> coffeeHouseId) {
         if (userId.isPresent()) {
             return orderService.findOrderByUserId(userId.get());
-
+        } else if(coffeeHouseId.isPresent()) {
+            return orderService.findOrderByCoffeeHouseId(coffeeHouseId.get());
         } else {
             return orderService.findAllOrders();
         }
