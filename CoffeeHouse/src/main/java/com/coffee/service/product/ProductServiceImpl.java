@@ -1,6 +1,7 @@
 package com.coffee.service.product;
 
 import com.coffee.entity.Product;
+import com.coffee.helpers.Builder;
 import com.coffee.model.ProductInfo;
 import com.coffee.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductInfo> findAllProducts() {
         return productRepository.findAll()
                 .stream()
-                .map(this::buildProductInfo)
+                .map(Builder::buildProductInfo)
                 .collect(Collectors.toList());
     }
 
@@ -32,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public ProductInfo findProductById(@Nonnull Integer id) {
-        return productRepository.findById(id).map(this::buildProductInfo).orElse(null);
+        return productRepository.findById(id).map(Builder::buildProductInfo).orElse(null);
     }
 
     @Override
@@ -44,22 +45,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product save(ProductInfo product) {
-        return productRepository.save(buildProductByInfo(product));
-    }
-
-    @Nonnull
-    private ProductInfo buildProductInfo(Product product) {
-        ProductInfo info = new ProductInfo();
-        info.setId(product.getId());
-        info.setName(product.getName());
-        return info;
-    }
-
-    @Nonnull
-    private Product buildProductByInfo(ProductInfo productInfo) {
-        Product product = productRepository.findById(productInfo.getId()).orElse(null);
-        product.setName(productInfo.getName());
-        product.setId(productInfo.getId());
-        return product;
+        return productRepository.save(Builder.buildProductByInfo(product));
     }
 }

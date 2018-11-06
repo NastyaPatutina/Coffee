@@ -17,6 +17,10 @@ public class Product {
     @Column(name = "name", length = 40)
     private String name;
 
+    public Product(String name) {
+        this.name= name;
+    }
+    public Product() {}
 
     public Integer getId() {
         return id;
