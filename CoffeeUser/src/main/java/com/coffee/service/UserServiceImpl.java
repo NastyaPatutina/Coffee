@@ -1,6 +1,7 @@
 package com.coffee.service;
 
 import com.coffee.entity.User;
+import com.coffee.helpers.Builder;
 import com.coffee.model.UserInfo;
 import com.coffee.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,14 @@ public class UserServiceImpl implements UserService {
     public List<UserInfo> findAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(this::buildUserInfo)
+                .map(Builder::buildUserInfo)
                 .collect(Collectors.toList());
     }
 
     @Nullable
     @Override
     public UserInfo findUserById(@Nonnull Integer id) {
-        return userRepository.findById(id).map(this::buildUserInfo).orElse(null);
+        return userRepository.findById(id).map(Builder::buildUserInfo).orElse(null);
     }
 
     @Override
@@ -42,29 +43,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User save(UserInfo userInfo) {
-        return userRepository.save(buildUserByInfo(userInfo));
-    }
-
-    @Nonnull
-    private UserInfo buildUserInfo(User user) {
-        UserInfo info = new UserInfo();
-        info.setId(user.getId());
-        info.setFirstName(user.getFirstName());
-        info.setLastName(user.getLastName());
-        info.setGender(user.getGender());
-        info.setEmail(user.getEmail());
-        info.setPhone(user.getPhone());
-        return info;
-    }
-
-    @Nonnull
-    private User buildUserByInfo(UserInfo userInfo) {
-        User user = userRepository.findById(userInfo.getId()).orElse(null);
-        user.setFirstName(userInfo.getFirstName());
-        user.setLastName(userInfo.getLastName());
-        user.setGender(userInfo.getGender());
-        user.setEmail(userInfo.getEmail());
-        user.setPhone(userInfo.getPhone());
-        return user;
+        return userRepository.save(Builder.buildUserByInfo(userInfo));
     }
 }

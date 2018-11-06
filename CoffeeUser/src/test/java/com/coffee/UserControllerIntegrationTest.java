@@ -2,6 +2,7 @@ package com.coffee;
 
 import com.coffee.controller.UserController;
 import com.coffee.entity.User;
+import com.coffee.helpers.Builder;
 import com.coffee.model.UserInfo;
 import com.coffee.service.UserService;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class UserControllerIntegrationTest {
                 "blmike@gmail.com",
                 "89009990099");
 
-        List<UserInfo> allUsers= Arrays.asList(buildUserInfo(alex), buildUserInfo(mike));
+        List<UserInfo> allUsers= Arrays.asList(Builder.buildUserInfo(alex), Builder.buildUserInfo(mike));
 
         given(service.findAllUsers()).willReturn(allUsers);
 
@@ -79,7 +80,7 @@ public class UserControllerIntegrationTest {
                 "aalexeew@gmail.com",
                 "89090009900");
 
-        UserInfo userInfo = buildUserInfo(alex);
+        UserInfo userInfo = Builder.buildUserInfo(alex);
 
         given(service.findUserById(20)).willReturn(userInfo);
 
