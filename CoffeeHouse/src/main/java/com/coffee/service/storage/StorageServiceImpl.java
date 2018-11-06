@@ -1,6 +1,7 @@
 package com.coffee.service.storage;
 
 import com.coffee.entity.Storage;
+import com.coffee.helpers.Builder;
 import com.coffee.model.HouseInfo;
 import com.coffee.model.StorageInfo;
 import com.coffee.repository.StorageRepository;
@@ -31,7 +32,7 @@ public class StorageServiceImpl implements StorageService{
     @Nonnull
     @Override
     public List<StorageInfo> findStorageForHouse(@Nonnull Integer houseId) {
-        return storageRepository.findByHouseId(houseId)
+        return storageRepository.findByHouse_Id(houseId)
                 .stream()
                 .map(this::buildStorageInfo)
                 .collect(Collectors.toList());
@@ -61,8 +62,8 @@ public class StorageServiceImpl implements StorageService{
         StorageInfo info = new StorageInfo();
         info.setId(storage.getId());
         info.setCount(storage.getCount());
-        info.setHouseId(storage.getHouseId());
-        info.setProductId(storage.getProductId());
+        info.setHouse(Builder.buildHouseInfo(storage.getHouse()));
+        info.setProduct(Builder.buildProductInfo(storage.getProduct()));
         return info;
     }
 
@@ -71,8 +72,8 @@ public class StorageServiceImpl implements StorageService{
         Storage storage = storageRepository.findById(storageInfo.getId()).orElse(null);
         storage.setId(storageInfo.getId());
         storage.setCount(storageInfo.getCount());
-        storage.setHouseId(storageInfo.getHouseId());
-        storage.setProductId(storageInfo.getProductId());
+        storage.setHouse(Builder.buildHouseByInfo(storageInfo.getHouse()));
+        storage.setProduct(Builder.buildProductByInfo(storageInfo.getProduct()));
         return storage;
     }
 }
