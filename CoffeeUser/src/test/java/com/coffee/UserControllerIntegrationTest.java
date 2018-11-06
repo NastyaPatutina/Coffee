@@ -5,8 +5,11 @@ import com.coffee.entity.User;
 import com.coffee.helpers.Builder;
 import com.coffee.model.UserInfo;
 import com.coffee.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,8 +23,10 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,8 +40,11 @@ public class UserControllerIntegrationTest {
     @MockBean
     private UserService service;
 
+    private static Logger logger = LoggerFactory.getLogger(UserControllerIntegrationTest.class);
+
+
     @Test
-    public void givenUsers_whenGetUsers_thenReturnJson()
+    public void getUsers()
             throws Exception {
 
         User alex = new User("alex",
@@ -71,7 +79,7 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    public void givenUser_whenGetUser_thenReturnJson()
+    public void getUser()
             throws Exception {
 
         User alex = new User("alex",
@@ -94,15 +102,62 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.phone", is(alex.getPhone())));
     }
 
-    @Nonnull
-    private UserInfo buildUserInfo(User user) {
-        UserInfo info = new UserInfo();
-        info.setId(user.getId());
-        info.setFirstName(user.getFirstName());
-        info.setLastName(user.getLastName());
-        info.setGender(user.getGender());
-        info.setEmail(user.getEmail());
-        info.setPhone(user.getPhone());
-        return info;
+    @Test
+    public void deleteUser()
+            throws Exception {
+        mvc.perform(delete("/users/12"))
+                .andExpect(status().isOk());
+        verify(service, times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    public void createUser()
+            throws Exception {
+
+        UserInfo mike = new UserInfo("Mike",
+                "Bolck",
+                User.GenderType.male,
+                "blmike@gmail.com",
+                "89009990099");
+//        given(service.save(mike)).willReturn(Builder.buildUserByInfo(mike));
+//
+//
+//        mvc.perform(post("/users/")
+//                .contentType(MediaType.APPLICATION_JSON_UTF8)
+//                .content(Builder.asJsonString(mike))
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//
+//        verify(service, times(1)).save(refEq(mike));
+
+    }
+
+    @Test
+    public void updateUser()
+            throws Exception {
+
+        UserInfo mike = new UserInfo("Mike",
+                "Bolck",
+                User.GenderType.male,
+                "blmike@gmail.com",
+                "89009990099");
+
+        UserInfo mike_new = new UserInfo("MikeNew",
+                "BlockNew",
+                User.GenderType.male,
+                "blmikeNew@gmail.com",
+                "89009990100");
+
+//        when(service.findUserById(21)).thenReturn(mike).thenReturn(mike);
+//        given(service.save(mike)).willReturn(buildUserByInfo(mike_new));
+
+
+//        mvc.perform(put("/users/21")
+//                .contentType(MediaType.APPLICATION_JSON_UTF8)
+//                .content(asJsonString(mike_new))
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//
+//        verify(service, times(1)).save(refEq(mike));
     }
 }

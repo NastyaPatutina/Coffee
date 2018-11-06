@@ -10,6 +10,16 @@ public class UserInfo {
     private String email;
     private String phone;
 
+    public UserInfo(String first_name, String last_name, User.GenderType gender, String email, String phone) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.gender = gender;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    public UserInfo() {}
+
     public Integer getId() {
         return id;
     }
