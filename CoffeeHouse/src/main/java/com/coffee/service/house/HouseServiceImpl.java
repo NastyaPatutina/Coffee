@@ -1,5 +1,6 @@
 package com.coffee.service.house;
 
+import com.coffee.helpers.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class HouseServiceImpl implements HouseService {
     public List<HouseInfo> findAllHouses() {
         return houseRepository.findAll()
                 .stream()
-                .map(this::buildHouseInfo)
+                .map(Builder::buildHouseInfo)
                 .collect(Collectors.toList());
     }
 
@@ -33,7 +34,7 @@ public class HouseServiceImpl implements HouseService {
     @Override
     @Transactional(readOnly = true)
     public HouseInfo findHouseById(@Nonnull Integer id) {
-        return houseRepository.findById(id).map(this::buildHouseInfo).orElse(null);
+        return houseRepository.findById(id).map(Builder::buildHouseInfo).orElse(null);
     }
 
     @Nullable
@@ -46,28 +47,6 @@ public class HouseServiceImpl implements HouseService {
     @Override
     @Transactional
     public House save(HouseInfo house) {
-        return houseRepository.save(buildHouseByInfo(house));
-    }
-
-    @Nonnull
-    private HouseInfo buildHouseInfo(House house) {
-        HouseInfo info = new HouseInfo();
-        info.setName(house.getName());
-        info.setId(house.getId());
-        info.setAddress(house.getAddress());
-        info.setLongitude(house.getLongitude());
-        info.setLatitude(house.getLatitude());
-        return info;
-    }
-
-    @Nonnull
-    private House buildHouseByInfo(HouseInfo houseInfo) {
-        House house = houseRepository.findById(houseInfo.getId()).orElse(null);
-        house.setName(houseInfo.getName());
-        house.setId(houseInfo.getId());
-        house.setAddress(houseInfo.getAddress());
-        house.setLongitude(houseInfo.getLongitude());
-        house.setLatitude(houseInfo.getLatitude());
-        return house;
+        return houseRepository.save(Builder.buildHouseByInfo(house));
     }
 }

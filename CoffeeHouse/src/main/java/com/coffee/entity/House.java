@@ -26,6 +26,17 @@ public class House {
     @Column(name = "latitude")
     private float latitude;
 
+    public House(String name, String address, float longitude, float latitude) {
+        this.name = name;
+        this.address = address;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+    public House() {
+
+    }
+
     public Integer getId() {
         return id;
     }
