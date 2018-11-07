@@ -2,8 +2,10 @@ package com.coffee.helpers;
 
 import com.coffee.entity.House;
 import com.coffee.entity.Product;
+import com.coffee.entity.Storage;
 import com.coffee.model.HouseInfo;
 import com.coffee.model.ProductInfo;
+import com.coffee.model.StorageInfo;
 
 import javax.annotation.Nonnull;
 
@@ -45,5 +47,26 @@ public class Builder {
         house.setLongitude(houseInfo.getLongitude());
         house.setLatitude(houseInfo.getLatitude());
         return house;
+    }
+
+
+    @Nonnull
+    public static StorageInfo buildStorageInfo(Storage storage) {
+        StorageInfo info = new StorageInfo();
+        info.setId(storage.getId());
+        info.setCount(storage.getCount());
+        info.setHouse(Builder.buildHouseInfo(storage.getHouse()));
+        info.setProduct(Builder.buildProductInfo(storage.getProduct()));
+        return info;
+    }
+
+    @Nonnull
+    public static Storage buildStorageByInfo(StorageInfo storageInfo) {
+        Storage storage = new Storage();
+        storage.setId(storageInfo.getId());
+        storage.setCount(storageInfo.getCount());
+        storage.setHouse(Builder.buildHouseByInfo(storageInfo.getHouse()));
+        storage.setProduct(Builder.buildProductByInfo(storageInfo.getProduct()));
+        return storage;
     }
 }

@@ -46,10 +46,10 @@ public class ProductControllerIntegrationTest {
     public void getProducts()
             throws Exception {
 
-        Product alex = new Product("coffe1");
-        Product mike = new Product("coffe2");
+        Product coffee1 = new Product("coffee1");
+        Product coffee2 = new Product("coffee2");
 
-        List<ProductInfo> allProducts= Arrays.asList(Builder.buildProductInfo(alex), Builder.buildProductInfo(mike));
+        List<ProductInfo> allProducts= Arrays.asList(Builder.buildProductInfo(coffee1), Builder.buildProductInfo(coffee2));
 
         given(service.findAllProducts()).willReturn(allProducts);
 
@@ -57,24 +57,24 @@ public class ProductControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is(alex.getName())))
-                .andExpect(jsonPath("$[1].name", is(mike.getName())));
+                .andExpect(jsonPath("$[0].name", is(coffee1.getName())))
+                .andExpect(jsonPath("$[1].name", is(coffee2.getName())));
     }
 
     @Test
     public void getProduct()
             throws Exception {
 
-        Product alex = new Product("coffee3");
+        Product coffee3 = new Product("coffee3");
 
-        ProductInfo productInfo = Builder.buildProductInfo(alex);
+        ProductInfo productInfo = Builder.buildProductInfo(coffee3);
 
         given(service.findProductById(20)).willReturn(productInfo);
 
         mvc.perform(get("/products/20")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is(alex.getName())));
+                .andExpect(jsonPath("$.name", is(coffee3.getName())));
     }
 
     @Test

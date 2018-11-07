@@ -25,7 +25,7 @@ public class StorageServiceImpl implements StorageService{
     public List<StorageInfo> findAllStorage() {
         return storageRepository.findAll()
                 .stream()
-                .map(this::buildStorageInfo)
+                .map(Builder::buildStorageInfo)
                 .collect(Collectors.toList());
     }
 
@@ -34,7 +34,7 @@ public class StorageServiceImpl implements StorageService{
     public List<StorageInfo> findStorageForHouse(@Nonnull Integer houseId) {
         return storageRepository.findByHouse_Id(houseId)
                 .stream()
-                .map(this::buildStorageInfo)
+                .map(Builder::buildStorageInfo)
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +42,7 @@ public class StorageServiceImpl implements StorageService{
     @Override
     @Transactional(readOnly = true)
     public StorageInfo findStorageById(@Nonnull Integer id) {
-        return storageRepository.findById(id).map(this::buildStorageInfo).orElse(null);
+        return storageRepository.findById(id).map(Builder::buildStorageInfo).orElse(null);
     }
 
     @Override
@@ -54,26 +54,6 @@ public class StorageServiceImpl implements StorageService{
     @Override
     @Transactional
     public Storage save(StorageInfo storage) {
-        return storageRepository.save(buildStorageByInfo(storage));
-    }
-
-    @Nonnull
-    private StorageInfo buildStorageInfo(Storage storage) {
-        StorageInfo info = new StorageInfo();
-        info.setId(storage.getId());
-        info.setCount(storage.getCount());
-        info.setHouse(Builder.buildHouseInfo(storage.getHouse()));
-        info.setProduct(Builder.buildProductInfo(storage.getProduct()));
-        return info;
-    }
-
-    @Nonnull
-    private Storage buildStorageByInfo(StorageInfo storageInfo) {
-        Storage storage = storageRepository.findById(storageInfo.getId()).orElse(null);
-        storage.setId(storageInfo.getId());
-        storage.setCount(storageInfo.getCount());
-        storage.setHouse(Builder.buildHouseByInfo(storageInfo.getHouse()));
-        storage.setProduct(Builder.buildProductByInfo(storageInfo.getProduct()));
-        return storage;
+        return storageRepository.save(Builder.buildStorageByInfo(storage));
     }
 }

@@ -25,6 +25,14 @@ public class Storage {
     @JoinColumn(name = "house_id", nullable = false)
     private House house;
 
+    public Storage(House house, Product product, Integer count) {
+        this.count = count;
+        this.product = product;
+        this.house = house;
+    }
+
+    public Storage() {}
+
     public House getHouse() {
         return house;
     }
@@ -45,16 +53,8 @@ public class Storage {
         return product.getId();
     }
 
-    public void setProductId(Integer product_id) {
-        this.product.setId(product_id);
-    }
-
     public Integer getHouseId() {
         return house.getId();
-    }
-
-    public void setHouseId(Integer house_id) {
-        this.house.setId(house_id);
     }
 
     public Integer getCount() {

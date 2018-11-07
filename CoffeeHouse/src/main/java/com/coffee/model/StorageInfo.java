@@ -18,18 +18,8 @@ public class StorageInfo {
         return house.getId();
     }
 
-    public void setHouseId(Integer house_id) {
-//        TODO
-//        this.house.setId(house_id);
-    }
-
     public Integer getProductId() {
         return product.getId();
-    }
-
-    public void setProductId(Integer product_id) {
-//        TODO
-//        this.product.setId(product_id);
     }
 
     public ProductInfo getProduct() {
