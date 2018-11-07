@@ -25,6 +25,14 @@ public class Order {
     @Column(name = "coffee_house_id")
     private Integer coffeeHouseId;
 
+    public Order(Integer userId, Recipe recipe, Integer coffeeHouseId) {
+        this.userId = userId;
+        this.recipe = recipe;
+        this.coffeeHouseId = coffeeHouseId;
+    }
+
+    public Order(){}
+
     public Integer getId() {
         return id;
     }
