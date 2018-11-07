@@ -1,10 +1,14 @@
 package com.coffee.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class RecipeIngredientInfo {
     private Integer id;
     private Integer product_id;
-    private Integer recipe_id;
+
+    @JsonIgnore
+    private RecipeInfo recipe;
     private Integer count;
 
     public Integer getId() {
@@ -24,11 +28,15 @@ public class RecipeIngredientInfo {
     }
 
     public Integer getRecipeId() {
-        return recipe_id;
+        return recipe.getId();
     }
 
-    public void setRecipeId(Integer recipe_id) {
-        this.recipe_id = recipe_id;
+    public RecipeInfo getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(RecipeInfo recipe) {
+        this.recipe = recipe;
     }
 
     public Integer getCount() {

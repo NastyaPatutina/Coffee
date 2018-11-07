@@ -53,10 +53,6 @@ public class Order {
         return recipe.getId();
     }
 
-    public void setRecipeId(Integer recipe_id) {
-        this.recipe.setId(recipe_id);
-    }
-
     public Integer getCoffeeHouseId() {
         return coffeeHouseId;
     }

@@ -25,7 +25,7 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}/ingredients")
-    public Set<RecipeIngredientInfo> recipeIngredientById(@PathVariable Integer id) {
+    public List<RecipeIngredientInfo> recipeIngredientById(@PathVariable Integer id) {
         return recipeService.findRecipeById(id).getRecipeIngredients();
     }
 

@@ -1,7 +1,10 @@
 package com.coffee.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 import javax.persistence.*;
@@ -18,17 +21,18 @@ public class RecipeIngredient {
     @Column(name = "product_id")
     private Integer product_id;
 
-
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(Recipe recipe) {
+    public RecipeIngredient(Integer product_id, Recipe recipe, Integer count) {
+        this.product_id = product_id;
         this.recipe = recipe;
+        this.count = count;
     }
 
-    @ManyToOne
+    public RecipeIngredient() {
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="recipe_id", nullable=false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Recipe recipe;
 
     @Column(name = "count")
@@ -43,6 +47,13 @@ public class RecipeIngredient {
         this.id = id;
     }
 
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
 
     public Integer getProductId() {
         return product_id;
@@ -54,10 +65,6 @@ public class RecipeIngredient {
 
     public Integer getRecipeId() {
         return recipe.getId();
-    }
-
-    public void setRecipeId(Integer recipe_id) {
-        this.recipe.setId(recipe_id);
     }
 
     public Integer getCount() {
@@ -89,7 +96,7 @@ public class RecipeIngredient {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(product_id)
-                .append(recipe.getId())
+                .append(recipe.hashCode())
                 .append(count)
                 .toHashCode();
     }
@@ -99,7 +106,7 @@ public class RecipeIngredient {
         return MoreObjects
                 .toStringHelper(this)
                 .add("product_id", product_id)
-                .add("recipe_id", recipe.getId())
+                .add("recipe", recipe.toString())
                 .add("count", count)
                 .toString();
     }

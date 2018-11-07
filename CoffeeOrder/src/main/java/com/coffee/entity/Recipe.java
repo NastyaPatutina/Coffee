@@ -6,6 +6,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,8 +24,17 @@ public class Recipe {
     @Column(name = "cost")
     private Integer cost;
 
-    @OneToMany(mappedBy="recipes")
-    private Set<RecipeIngredient> recipeIngredients;
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy="recipe", orphanRemoval = true)
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+
+    public Recipe(String name, Integer cost) {
+        this.name = name;
+        this.cost = cost;
+    }
+    public Recipe() {
+    }
 
     public Integer getId() {
         return id;
@@ -48,8 +60,12 @@ public class Recipe {
         this.cost = cost;
     }
 
-    public Set<RecipeIngredient> getRecipeIngredients() {
+    public List<RecipeIngredient> getRecipeIngredients() {
         return recipeIngredients;
+    }
+
+    public void setRecipeIngredients(ArrayList<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
     }
 
     @Override
