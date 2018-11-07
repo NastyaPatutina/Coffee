@@ -1,5 +1,6 @@
 package com.coffee.service.recipeIngredient;
 import com.coffee.entity.RecipeIngredient;
+import com.coffee.helpers.Builder;
 import com.coffee.model.RecipeIngredientInfo;
 import com.coffee.repository.RecipeIngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,14 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
     public List<RecipeIngredientInfo> findAllRecipeIngredients() {
         return recipeIngredientRepository.findAll()
                 .stream()
-                .map(this::buildRecipeIngredientInfo)
+                .map(Builder::buildRecipeIngredientInfo)
                 .collect(Collectors.toList());
     }
 
     @Nullable
     @Override
     public RecipeIngredientInfo findRecipeIngredientById(@Nonnull Integer id) {
-        return recipeIngredientRepository.findById(id).map(this::buildRecipeIngredientInfo).orElse(null);
+        return recipeIngredientRepository.findById(id).map(Builder::buildRecipeIngredientInfo).orElse(null);
     }
 
     @Override
@@ -41,25 +42,6 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
     @Override
     @Transactional
     public RecipeIngredient save(RecipeIngredientInfo recipeIngredientInfo) {
-        return recipeIngredientRepository.save(buildRecipeIngredientByInfo(recipeIngredientInfo));
-    }
-
-    @Nonnull
-    private RecipeIngredientInfo buildRecipeIngredientInfo(RecipeIngredient recipeIngredient) {
-        RecipeIngredientInfo info = new RecipeIngredientInfo();
-        info.setId(recipeIngredient.getId());
-        info.setProductId(recipeIngredient.getProductId());
-        info.setRecipeId(recipeIngredient.getRecipeId());
-        info.setCount(recipeIngredient.getCount());
-        return info;
-    }
-
-    @Nonnull
-    private RecipeIngredient buildRecipeIngredientByInfo(RecipeIngredientInfo recipeIngredientInfo) {
-        RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(recipeIngredientInfo.getId()).orElse(null);
-        recipeIngredient.setProductId(recipeIngredientInfo.getProductId());
-        recipeIngredient.setRecipeId(recipeIngredientInfo.getRecipeId());
-        recipeIngredient.setCount(recipeIngredientInfo.getCount());
-        return recipeIngredient;
+        return recipeIngredientRepository.save(Builder.buildRecipeIngredientByInfo(recipeIngredientInfo));
     }
 }
