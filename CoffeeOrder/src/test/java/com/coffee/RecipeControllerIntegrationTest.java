@@ -5,6 +5,7 @@ import com.coffee.entity.Recipe;
 import com.coffee.entity.RecipeIngredient;
 import com.coffee.helpers.Builder;
 import com.coffee.model.RecipeInfo;
+import com.coffee.model.RecipeWithIngredientsInfo;
 import com.coffee.service.recipe.RecipeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,9 +48,9 @@ public class RecipeControllerIntegrationTest {
         Recipe recipe2 = new Recipe("Recipe 2", 300);
         Recipe recipe3 = new Recipe("Recipe 3", 150);
 
-        List<RecipeInfo> allRecipes= Arrays.asList(Builder.buildRecipeInfo(recipe1),
-                Builder.buildRecipeInfo(recipe2),
-                Builder.buildRecipeInfo(recipe3));
+        List<RecipeWithIngredientsInfo> allRecipes= Arrays.asList(Builder.buildRecipeInfoWithIngredients(recipe1),
+                Builder.buildRecipeInfoWithIngredients(recipe2),
+                Builder.buildRecipeInfoWithIngredients(recipe3));
 
         given(service.findAllRecipes()).willReturn(allRecipes);
 
@@ -71,7 +72,7 @@ public class RecipeControllerIntegrationTest {
 
 
         Recipe recipe3 = new Recipe("Recipe 3", 150);
-        RecipeInfo recipeInfo = Builder.buildRecipeInfo(recipe3);
+        RecipeWithIngredientsInfo recipeInfo = Builder.buildRecipeInfoWithIngredients(recipe3);
 
         given(service.findRecipeById(20)).willReturn(recipeInfo);
 
@@ -92,7 +93,7 @@ public class RecipeControllerIntegrationTest {
         recipeIngredients.add(new RecipeIngredient(2, recipe3, 10));
         recipe3.setRecipeIngredients(recipeIngredients);
 
-        RecipeInfo recipeInfo = Builder.buildRecipeInfo(recipe3);
+        RecipeWithIngredientsInfo recipeInfo = Builder.buildRecipeInfoWithIngredients(recipe3);
 
         given(service.findRecipeById(20)).willReturn(recipeInfo);
 

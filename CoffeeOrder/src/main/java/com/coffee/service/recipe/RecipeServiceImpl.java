@@ -3,6 +3,7 @@ package com.coffee.service.recipe;
 import com.coffee.entity.Recipe;
 import com.coffee.helpers.Builder;
 import com.coffee.model.RecipeInfo;
+import com.coffee.model.RecipeWithIngredientsInfo;
 import com.coffee.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +22,17 @@ public class RecipeServiceImpl implements RecipeService {
     @Nonnull
     @Override
     @Transactional(readOnly = true)
-    public List<RecipeInfo> findAllRecipes() {
+    public List<RecipeWithIngredientsInfo> findAllRecipes() {
         return recipeRepository.findAll()
                 .stream()
-                .map(Builder::buildRecipeInfo)
+                .map(Builder::buildRecipeInfoWithIngredients)
                 .collect(Collectors.toList());
     }
 
     @Nullable
     @Override
-    public RecipeInfo findRecipeById(@Nonnull Integer id) {
-        return recipeRepository.findById(id).map(Builder::buildRecipeInfo).orElse(null);
+    public RecipeWithIngredientsInfo findRecipeById(@Nonnull Integer id) {
+        return recipeRepository.findById(id).map(Builder::buildRecipeInfoWithIngredients).orElse(null);
     }
 
     @Override

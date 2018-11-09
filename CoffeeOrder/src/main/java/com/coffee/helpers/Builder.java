@@ -3,9 +3,7 @@ package com.coffee.helpers;
 import com.coffee.entity.Order;
 import com.coffee.entity.Recipe;
 import com.coffee.entity.RecipeIngredient;
-import com.coffee.model.OrderInfo;
-import com.coffee.model.RecipeInfo;
-import com.coffee.model.RecipeIngredientInfo;
+import com.coffee.model.*;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -19,9 +17,17 @@ public class Builder {
         info.setId(recipe.getId());
         info.setName(recipe.getName());
         info.setCost(recipe.getCost());
-        ArrayList<RecipeIngredientInfo> riInfo = new ArrayList<>();
+        return info;
+    }
+    @Nonnull
+    public static RecipeWithIngredientsInfo buildRecipeInfoWithIngredients(Recipe recipe) {
+        RecipeWithIngredientsInfo info = new RecipeWithIngredientsInfo();
+        info.setId(recipe.getId());
+        info.setName(recipe.getName());
+        info.setCost(recipe.getCost());
+        ArrayList<OnlyIngredientInfo> riInfo = new ArrayList<>();
         for(RecipeIngredient ri: recipe.getRecipeIngredients()) {
-            riInfo.add(buildRecipeIngredientInfo(ri, info));
+            riInfo.add(buildOnlyIngredientInfo(ri, info));
         }
         info.setRecipeIngredients(riInfo);
         return info;
@@ -69,6 +75,15 @@ public class Builder {
         info.setId(recipeIngredient.getId());
         info.setProductId(recipeIngredient.getProductId());
         info.setRecipe(recipe);
+        info.setCount(recipeIngredient.getCount());
+        return info;
+    }
+
+    @Nonnull
+    public static OnlyIngredientInfo buildOnlyIngredientInfo(RecipeIngredient recipeIngredient, RecipeInfo recipe) {
+        OnlyIngredientInfo info = new OnlyIngredientInfo();
+        info.setId(recipeIngredient.getId());
+        info.setProductId(recipeIngredient.getProductId());
         info.setCount(recipeIngredient.getCount());
         return info;
     }

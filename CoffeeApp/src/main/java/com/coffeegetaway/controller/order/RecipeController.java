@@ -1,6 +1,8 @@
 package com.coffeegetaway.controller.order;
 
+import com.coffee.model.OnlyIngredientInfo;
 import com.coffee.model.RecipeInfo;
+import com.coffee.model.RecipeWithIngredientsInfo;
 import com.coffeegetaway.controller.house.ProductController;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,28 +24,44 @@ public class RecipeController {
     private String default_urlTarget = "http://localhost:8081/recipes/";
 
     @GetMapping("/{id}")
-    public RecipeInfo recipeById(@PathVariable Integer id) {
+    public RecipeWithIngredientsInfo recipeById(@PathVariable Integer id) {
         String urlParameters = "";
         String urlTarget = default_urlTarget + id.toString();
         ObjectMapper objectMapper = new ObjectMapper();
         String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
-        RecipeInfo res = null;
+        RecipeWithIngredientsInfo res = null;
         try {
-            res = objectMapper.readValue(res_requst, RecipeInfo.class);
+            res = objectMapper.readValue(res_requst, RecipeWithIngredientsInfo.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return res;
     }
 
+    @GetMapping("/{id}/ingredients")
+    public List<OnlyIngredientInfo> recipeIngredientById(@PathVariable Integer id) {
+        String urlParameters = "";
+        String urlTarget = default_urlTarget + id.toString() + "/ingredients";
+        ObjectMapper objectMapper = new ObjectMapper();
+        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
+        List<OnlyIngredientInfo>  res = null;
+        try {
+            res = objectMapper.readValue(res_requst,new TypeReference<List<OnlyIngredientInfo>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+
     @GetMapping
-    public List<RecipeInfo> allRecipes() {
+    public List<RecipeWithIngredientsInfo> allRecipes() {
         String urlParameters = "";
         String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET", logger);
         ObjectMapper objectMapper = new ObjectMapper();
-        List<RecipeInfo> res = null;
+        List<RecipeWithIngredientsInfo> res = null;
         try {
-            res = objectMapper.readValue(res_requst, new TypeReference<List<RecipeInfo>>(){});
+            res = objectMapper.readValue(res_requst, new TypeReference<List<RecipeWithIngredientsInfo>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }

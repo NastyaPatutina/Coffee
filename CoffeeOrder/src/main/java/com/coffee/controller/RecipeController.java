@@ -1,8 +1,10 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Recipe;
+import com.coffee.model.OnlyIngredientInfo;
 import com.coffee.model.RecipeInfo;
 import com.coffee.model.RecipeIngredientInfo;
+import com.coffee.model.RecipeWithIngredientsInfo;
 import com.coffee.service.recipe.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +22,17 @@ public class RecipeController {
     private RecipeService recipeService;
 
     @GetMapping("/{id}")
-    public RecipeInfo recipeById(@PathVariable Integer id) {
+    public RecipeWithIngredientsInfo recipeById(@PathVariable Integer id) {
         return recipeService.findRecipeById(id);
     }
 
     @GetMapping("/{id}/ingredients")
-    public List<RecipeIngredientInfo> recipeIngredientById(@PathVariable Integer id) {
+    public List<OnlyIngredientInfo> recipeIngredientById(@PathVariable Integer id) {
         return recipeService.findRecipeById(id).getRecipeIngredients();
     }
 
     @GetMapping
-    public List<RecipeInfo> allRecipes() {
+    public List<RecipeWithIngredientsInfo> allRecipes() {
         return recipeService.findAllRecipes();
     }
 

@@ -76,7 +76,7 @@ public class HouseController {
             }
             for (RecipeIngredientInfo recipeIngredientInfo: recipeIngredientsInfo) {
                 for (StorageInfo storageInfo: storage) {
-                    if (recipeIngredientInfo.getProductId() == storageInfo.getProductId() && recipeIngredientInfo.getCount() < storageInfo.getCount()) {
+                    if (recipeIngredientInfo.getProductId() == storageInfo.getProduct().getId() && recipeIngredientInfo.getCount() < storageInfo.getCount()) {
                         res.remove(recipeInfo);
                     }
                 }
