@@ -14,14 +14,6 @@ public class StorageInfo {
         this.id = id;
     }
 
-    public Integer getHouseId() {
-        return house.getId();
-    }
-
-    public Integer getProductId() {
-        return product.getId();
-    }
-
     public ProductInfo getProduct() {
         return product;
     }
