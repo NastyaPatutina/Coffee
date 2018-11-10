@@ -49,7 +49,7 @@ public class ProductController {
 
         ProductInfo productOptional = productService.findProductById(id);
 
-        if (productOptional != null)
+        if (productOptional == null)
             return ResponseEntity.notFound().build();
 
         product.setId(id);

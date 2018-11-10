@@ -57,7 +57,7 @@ public class RecipeController {
 
         RecipeInfo recipeOptional = recipeService.findRecipeById(id);
 
-        if (recipeOptional != null)
+        if (recipeOptional == null)
             return ResponseEntity.notFound().build();
 
         recipe.setId(id);

@@ -48,7 +48,7 @@ public class RecipeIngredientController {
 
         RecipeIngredientInfo recipeIngredientOptional = recipeIngredientService.findRecipeIngredientById(id);
 
-        if (recipeIngredientOptional != null)
+        if (recipeIngredientOptional == null)
             return ResponseEntity.notFound().build();
 
         recipeIngredient.setId(id);

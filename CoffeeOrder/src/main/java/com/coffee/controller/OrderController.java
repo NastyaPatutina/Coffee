@@ -55,7 +55,7 @@ public class OrderController {
 
         OrderInfo orderOptional = orderService.findOrderById(id);
 
-        if (orderOptional != null)
+        if (orderOptional == null)
             return ResponseEntity.notFound().build();
 
         order.setId(id);

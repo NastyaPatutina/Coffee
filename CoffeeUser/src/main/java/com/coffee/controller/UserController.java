@@ -28,7 +28,10 @@ public class UserController {
 
     @GetMapping
     public List<UserInfo> allUsers() {
-        return userService.findAllUsers();
+        List<UserInfo> rr =  userService.findAllUsers();
+        System.out.println("Hello");
+        rr.get(1);
+        return rr;
     }
 
     @DeleteMapping("/{id}")
@@ -52,7 +55,7 @@ public class UserController {
 
         UserInfo userOptional = userService.findUserById(id);
 
-        if (userOptional != null) {
+        if (userOptional == null) {
             logger.warn("Warning!!! No user with id = " + id);
             return ResponseEntity.notFound().build();
         }
