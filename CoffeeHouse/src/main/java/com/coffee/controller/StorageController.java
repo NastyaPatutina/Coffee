@@ -2,6 +2,7 @@ package com.coffee.controller;
 
 import com.coffee.entity.Storage;
 import com.coffee.model.StorageInfo;
+import com.coffee.model.StorageMiniInfo;
 import com.coffee.service.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class StorageController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createStorage(@RequestBody StorageInfo storageInfo) {
+    public ResponseEntity<Object> createStorage(@RequestBody StorageMiniInfo storageInfo) {
         Storage savedStorage = storageService.save(storageInfo);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -50,11 +51,11 @@ public class StorageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateStorage(@RequestBody StorageInfo storage, @PathVariable Integer id) {
+    public ResponseEntity<Object> updateStorage(@RequestBody StorageMiniInfo storage, @PathVariable Integer id) {
 
         StorageInfo storageOptional = storageService.findStorageById(id);
 
-        if (storageOptional != null)
+        if (storageOptional == null)
             return ResponseEntity.notFound().build();
 
         storage.setId(id);

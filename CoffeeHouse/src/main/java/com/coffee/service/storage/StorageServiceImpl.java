@@ -4,6 +4,7 @@ import com.coffee.entity.Storage;
 import com.coffee.helpers.Builder;
 import com.coffee.model.HouseInfo;
 import com.coffee.model.StorageInfo;
+import com.coffee.model.StorageMiniInfo;
 import com.coffee.repository.StorageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class StorageServiceImpl implements StorageService{
 
     @Override
     @Transactional
-    public Storage save(StorageInfo storage) {
+    public Storage save(StorageMiniInfo storage) {
         return storageRepository.save(Builder.buildStorageByInfo(storage));
     }
 }

@@ -3,6 +3,7 @@ package com.coffee.service.storage;
 import com.coffee.entity.Storage;
 import com.coffee.model.HouseInfo;
 import com.coffee.model.StorageInfo;
+import com.coffee.model.StorageMiniInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,5 +21,5 @@ public interface StorageService {
 
     void deleteById(@Nonnull Integer id);
 
-    Storage save(StorageInfo product);
+    Storage save(StorageMiniInfo product);
 }
