@@ -84,4 +84,48 @@ public class ProductControllerIntegrationTest {
                 .andExpect(status().isOk());
         verify(service, times(1)).deleteById(anyInt());
     }
+
+    @Test
+    public void createProduct()
+            throws Exception {
+
+        Product product1 = new Product("Product1");
+        ProductInfo product1Info = Builder.buildProductInfo(product1);
+
+        given(service.save(refEq(product1Info))).willReturn(product1);
+
+
+        mvc.perform(post("/products/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(product1Info))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        verify(service, times(1)).save(refEq(product1Info));
+
+    }
+
+    @Test
+    public void updateProduct()
+            throws Exception {
+
+        Product product1 = new Product("Product1");
+        ProductInfo product1Info = Builder.buildProductInfo(product1);
+        Product product_new = new Product("ProductNew");
+        ProductInfo product1NewInfo = Builder.buildProductInfo(product_new);
+
+        product1NewInfo.setId(21);
+
+        given(service.findProductById(21)).willReturn(product1Info);
+        given(service.save(refEq(product1NewInfo))).willReturn(product_new);
+
+
+        mvc.perform(put("/products/21")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(product1NewInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).save(refEq(product1NewInfo));
+    }
 }

@@ -5,7 +5,9 @@ import com.coffee.entity.House;
 import com.coffee.entity.Product;
 import com.coffee.entity.Storage;
 import com.coffee.helpers.Builder;
+import com.coffee.model.HouseInfo;
 import com.coffee.model.StorageInfo;
+import com.coffee.model.StorageMiniInfo;
 import com.coffee.service.storage.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -152,5 +154,68 @@ public class StorageControllerIntegrationTest {
         mvc.perform(delete("/storage/12"))
                 .andExpect(status().isOk());
         verify(service, times(1)).deleteById(anyInt());
+    }
+
+
+    @Test
+    public void createStorage()
+            throws Exception {
+
+        House house = new House("CoffeeHouse 1", "c.Trololo", (float)0.0001, (float)-6.6888);
+        Product coffee = new Product("coffee2");
+
+        Storage storage = new Storage();
+        storage.setHouse(house);
+        storage.setProduct(coffee);
+        storage.setCount(300);
+        StorageMiniInfo storageInfo = Builder.buildStorageMiniInfo(storage);
+
+        given(service.save(refEq(storageInfo))).willReturn(storage);
+
+
+        mvc.perform(post("/storage/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(storageInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        verify(service, times(1)).save(refEq(storageInfo));
+
+    }
+
+    @Test
+    public void updateStorage()
+            throws Exception {
+
+
+        House house = new House("CoffeeHouse 1", "c.Trololo", (float)0.0001, (float)-6.6888);
+        Product coffee = new Product("coffee2");
+
+        Storage storage = new Storage();
+        storage.setHouse(house);
+        storage.setProduct(coffee);
+        storage.setCount(300);
+        StorageInfo storageInfo = Builder.buildStorageInfo(storage);
+
+        Storage storageNew = new Storage();
+        storageNew.setHouse(house);
+        storageNew.setProduct(coffee);
+        storageNew.setCount(200);
+
+        StorageMiniInfo storageNewInfo = Builder.buildStorageMiniInfo(storageNew);
+
+        storageNewInfo.setId(21);
+
+        given(service.findStorageById(21)).willReturn(storageInfo);
+        given(service.save(refEq(storageNewInfo))).willReturn(storageNew);
+
+
+        mvc.perform(put("/storage/21")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(storageNewInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).save(refEq(storageNewInfo));
     }
 }

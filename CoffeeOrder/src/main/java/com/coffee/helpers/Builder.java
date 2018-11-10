@@ -4,6 +4,7 @@ import com.coffee.entity.Order;
 import com.coffee.entity.Recipe;
 import com.coffee.entity.RecipeIngredient;
 import com.coffee.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -95,5 +96,16 @@ public class Builder {
         recipeIngredient.setRecipe(buildRecipeByInfo(recipeIngredientInfo.getRecipe()));
         recipeIngredient.setCount(recipeIngredientInfo.getCount());
         return recipeIngredient;
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            final String jsonContent = mapper.writeValueAsString(obj);
+            System.out.println(jsonContent);
+            return jsonContent;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

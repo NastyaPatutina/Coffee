@@ -1,7 +1,6 @@
 package com.coffee;
 
 import com.coffee.controller.HouseController;
-import com.coffee.controller.ProductController;
 import com.coffee.entity.House;
 import com.coffee.helpers.Builder;
 import com.coffee.model.HouseInfo;
@@ -91,5 +90,49 @@ public class HouseControllerIntegrationTest {
         mvc.perform(delete("/houses/12"))
                 .andExpect(status().isOk());
         verify(service, times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    public void createHouse()
+            throws Exception {
+
+        House house1 = new House("CoffeeHouse 1", "c.Trololo", (float)0.01235, (float)-6.7895);
+        HouseInfo house1Info = Builder.buildHouseInfo(house1);
+
+        given(service.save(refEq(house1Info))).willReturn(house1);
+
+
+        mvc.perform(post("/houses/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(house1Info))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        verify(service, times(1)).save(refEq(house1Info));
+
+    }
+
+    @Test
+    public void updateHouse()
+            throws Exception {
+
+        House house1 = new House("CoffeeHouse !!!!", "c.Trolololo", (float)0.0135, (float)-6.795);
+        HouseInfo house1Info = Builder.buildHouseInfo(house1);
+        House house_new = new House("New CoffeeHouse 1", "c.Trololo", (float)0.01235, (float)-6.7895);
+        HouseInfo house1NewInfo = Builder.buildHouseInfo(house_new);
+
+        house1NewInfo.setId(21);
+
+        given(service.findHouseById(21)).willReturn(house1Info);
+        given(service.save(refEq(house1NewInfo))).willReturn(house_new);
+
+
+        mvc.perform(put("/houses/21")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(house1NewInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).save(refEq(house1NewInfo));
     }
 }
