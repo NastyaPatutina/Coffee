@@ -59,12 +59,12 @@ public class OrderControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].userId", is(order1.getUserId())))
-                .andExpect(jsonPath("$[0].recipeId", is(order1.getRecipeId())))
+                .andExpect(jsonPath("$[0].recipe.id", is(order1.getRecipeId())))
                 .andExpect(jsonPath("$[0].coffeeHouseId", is(order1.getCoffeeHouseId())))
                 .andExpect(jsonPath("$[1].userId", is(order2.getUserId())))
-                .andExpect(jsonPath("$[1].recipeId", is(order2.getRecipeId())))
+                .andExpect(jsonPath("$[1].recipe.id", is(order2.getRecipeId())))
                 .andExpect(jsonPath("$[1].coffeeHouseId", is(order2.getCoffeeHouseId())))
-                .andExpect(jsonPath("$[2].recipeId", is(order3.getRecipeId())))
+                .andExpect(jsonPath("$[2].recipe.id", is(order3.getRecipeId())))
                 .andExpect(jsonPath("$[2].coffeeHouseId", is(order3.getCoffeeHouseId())));
     }
 
@@ -88,12 +88,12 @@ public class OrderControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].userId", is(order1.getUserId())))
-                .andExpect(jsonPath("$[0].recipeId", is(order1.getRecipeId())))
+                .andExpect(jsonPath("$[0].recipe.id", is(order1.getRecipe().getId())))
                 .andExpect(jsonPath("$[0].coffeeHouseId", is(order1.getCoffeeHouseId())))
                 .andExpect(jsonPath("$[1].userId", is(order2.getUserId())))
-                .andExpect(jsonPath("$[1].recipeId", is(order2.getRecipeId())))
+                .andExpect(jsonPath("$[1].recipe.id", is(order2.getRecipe().getId())))
                 .andExpect(jsonPath("$[1].coffeeHouseId", is(order2.getCoffeeHouseId())))
-                .andExpect(jsonPath("$[2].recipeId", is(order3.getRecipeId())))
+                .andExpect(jsonPath("$[2].recipe.id", is(order3.getRecipe().getId())))
                 .andExpect(jsonPath("$[2].coffeeHouseId", is(order3.getCoffeeHouseId())));
     }
 
@@ -117,12 +117,12 @@ public class OrderControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].userId", is(order1.getUserId())))
-                .andExpect(jsonPath("$[0].recipeId", is(order1.getRecipeId())))
+                .andExpect(jsonPath("$[0].recipe.id", is(order1.getRecipeId())))
                 .andExpect(jsonPath("$[0].coffeeHouseId", is(order1.getCoffeeHouseId())))
                 .andExpect(jsonPath("$[1].userId", is(order2.getUserId())))
-                .andExpect(jsonPath("$[1].recipeId", is(order2.getRecipeId())))
+                .andExpect(jsonPath("$[1].recipe.id", is(order2.getRecipeId())))
                 .andExpect(jsonPath("$[1].coffeeHouseId", is(order2.getCoffeeHouseId())))
-                .andExpect(jsonPath("$[2].recipeId", is(order3.getRecipeId())))
+                .andExpect(jsonPath("$[2].recipe.id", is(order3.getRecipeId())))
                 .andExpect(jsonPath("$[2].coffeeHouseId", is(order3.getCoffeeHouseId())));
     }
 

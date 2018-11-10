@@ -32,10 +32,6 @@ public class OrderInfo {
         this.recipe = recipe;
     }
 
-    public Integer getRecipeId() {
-        return recipe.getId();
-    }
-
     public Integer getCoffeeHouseId() {
         return coffee_house_id;
     }
