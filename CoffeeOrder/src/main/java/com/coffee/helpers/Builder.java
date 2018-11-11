@@ -4,13 +4,19 @@ import com.coffee.entity.Order;
 import com.coffee.entity.Recipe;
 import com.coffee.entity.RecipeIngredient;
 import com.coffee.model.*;
+import com.coffee.repository.RecipeIngredientRepository;
+import com.coffee.repository.RecipeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Builder {
+
+    @Autowired
+    private static RecipeRepository recipeRepository;
 
     @Nonnull
     public static RecipeInfo buildRecipeInfo(Recipe recipe) {
@@ -51,6 +57,26 @@ public class Builder {
         info.setCoffeeHouseId(order.getCoffeeHouseId());
         return info;
     }
+
+    @Nonnull
+    public static OrderMiniInfo buildOrderMiniInfo(Order order) {
+        OrderMiniInfo info = new OrderMiniInfo();
+        info.setId(order.getId());
+        info.setUserId(order.getUserId());
+        info.setRecipeId(order.getRecipe().getId());
+        info.setCoffeeHouseId(order.getCoffeeHouseId());
+        return info;
+    }
+
+    @Nonnull
+    public static Order buildOrderByInfo(OrderMiniInfo orderInfo) {
+        Order order = new Order();
+        order.setUserId(orderInfo.getUserId());
+        order.setRecipe(recipeRepository.findById(orderInfo.getRecipeId()).orElse(null));
+        order.setCoffeeHouseId(orderInfo.getCoffeeHouseId());
+        return order;
+    }
+
 
     @Nonnull
     public static Order buildOrderByInfo(OrderInfo orderInfo) {
