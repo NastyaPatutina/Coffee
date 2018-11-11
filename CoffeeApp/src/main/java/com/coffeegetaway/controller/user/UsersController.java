@@ -1,7 +1,7 @@
 package com.coffeegetaway.controller.user;
 
-import com.coffee.model.OrderInfo;
-import com.coffee.model.UserInfo;
+import com.coffee.model.order.order.OrderInfo;
+import com.coffee.model.user.UserInfo;
 import com.coffeegetaway.controller.house.ProductController;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;

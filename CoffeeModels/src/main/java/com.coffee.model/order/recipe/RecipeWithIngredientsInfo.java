@@ -1,4 +1,7 @@
-package com.coffee.model;
+package com.coffee.model.order.recipe;
+
+import com.coffee.model.order.recipe.RecipeInfo;
+import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
 
 import java.util.ArrayList;
 import java.util.List;

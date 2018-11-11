@@ -1,4 +1,7 @@
-package com.coffee.model;
+package com.coffee.model.house.storage;
+
+import com.coffee.model.house.HouseInfo;
+import com.coffee.model.house.ProductInfo;
 
 public class StorageInfo {
     private Integer id;

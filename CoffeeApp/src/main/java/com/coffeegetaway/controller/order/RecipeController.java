@@ -1,8 +1,8 @@
 package com.coffeegetaway.controller.order;
 
-import com.coffee.model.OnlyIngredientInfo;
-import com.coffee.model.RecipeInfo;
-import com.coffee.model.RecipeWithIngredientsInfo;
+import com.coffee.model.order.recipe.RecipeInfo;
+import com.coffee.model.order.recipe.RecipeWithIngredientsInfo;
+import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
 import com.coffeegetaway.controller.house.ProductController;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;

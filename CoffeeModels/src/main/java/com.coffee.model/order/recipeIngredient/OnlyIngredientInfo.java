@@ -1,4 +1,4 @@
-package com.coffee.model;
+package com.coffee.model.order.recipeIngredient;
 
 public class OnlyIngredientInfo {
     private Integer id;

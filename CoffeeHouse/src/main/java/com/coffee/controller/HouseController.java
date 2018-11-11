@@ -1,13 +1,10 @@
 package com.coffee.controller;
 
 import com.coffee.entity.House;
-import com.coffee.entity.House;
-import com.coffee.helpers.Builder;
-import com.coffee.model.HouseInfo;
-import com.coffee.model.HouseInfo;
+
+import com.coffee.model.house.*;
 import com.coffee.service.house.HouseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

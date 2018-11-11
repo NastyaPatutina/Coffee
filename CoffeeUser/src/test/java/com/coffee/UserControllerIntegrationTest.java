@@ -3,9 +3,9 @@ package com.coffee;
 import com.coffee.controller.UserController;
 import com.coffee.entity.User;
 import com.coffee.helpers.Builder;
-import com.coffee.model.UserInfo;
+import com.coffee.model.helper.JsonMapper;
+import com.coffee.model.user.*;
 import com.coffee.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,12 +48,12 @@ public class UserControllerIntegrationTest {
 
         User alex = new User("alex",
                 "Alexeew",
-                User.GenderType.male,
+                UserInfo.GenderType.male,
                 "aalexeew@gmail.com",
                 "89090009900");
         User mike = new User("Mike",
                 "Bolck",
-                User.GenderType.male,
+                UserInfo.GenderType.male,
                 "blmike@gmail.com",
                 "89009990099");
 
@@ -84,7 +83,7 @@ public class UserControllerIntegrationTest {
 
         User alex = new User("alex",
                 "Alexeew",
-                User.GenderType.male,
+                UserInfo.GenderType.male,
                 "aalexeew@gmail.com",
                 "89090009900");
 
@@ -116,7 +115,7 @@ public class UserControllerIntegrationTest {
 
         UserInfo mike = new UserInfo("Mike",
                 "Bolck",
-                User.GenderType.male,
+                UserInfo.GenderType.male,
                 "blmike@gmail.com",
                 "89009990099");
         given(service.save(refEq(mike))).willReturn(Builder.buildUserByInfo(mike));
@@ -124,7 +123,7 @@ public class UserControllerIntegrationTest {
 
         mvc.perform(post("/users/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(mike))
+                .content(JsonMapper.asJsonString(mike))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -138,7 +137,7 @@ public class UserControllerIntegrationTest {
 
         User mike = new User("Mike",
                 "Bolck",
-                User.GenderType.male,
+                UserInfo.GenderType.male,
                 "blmike@gmail.com",
                 "89009990099");
 
@@ -146,7 +145,7 @@ public class UserControllerIntegrationTest {
 
         User mike_new = new User("MikeNew",
                 "BlockNew",
-                User.GenderType.male,
+                UserInfo.GenderType.male,
                 "blmikeNew@gmail.com",
                 "89009990100");
 
@@ -159,7 +158,7 @@ public class UserControllerIntegrationTest {
 
         mvc.perform(put("/users/21")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(mikeNewInfo))
+                .content(JsonMapper.asJsonString(mikeNewInfo))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

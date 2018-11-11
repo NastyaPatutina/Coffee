@@ -1,11 +1,9 @@
-package com.coffee.model;
+package com.coffee.model.order.order;
 
-import com.coffee.entity.Recipe;
-
-public class OrderInfo {
+public class OrderMiniInfo {
     private Integer id;
     private Integer user_id;
-    private RecipeInfo recipe;
+    private Integer recipe_id;
     private Integer coffee_house_id;
 
     public Integer getId() {
@@ -24,12 +22,12 @@ public class OrderInfo {
         this.user_id = user_id;
     }
 
-    public RecipeInfo getRecipe() {
-        return recipe;
+    public Integer getRecipeId() {
+        return recipe_id;
     }
 
-    public void setRecipe(RecipeInfo recipe) {
-        this.recipe = recipe;
+    public void setRecipeId(Integer recipe_id) {
+        this.recipe_id = recipe_id;
     }
 
     public Integer getCoffeeHouseId() {

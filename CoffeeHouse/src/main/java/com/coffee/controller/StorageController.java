@@ -1,8 +1,7 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Storage;
-import com.coffee.model.StorageInfo;
-import com.coffee.model.StorageMiniInfo;
+import com.coffee.model.house.storage.*;
 import com.coffee.service.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

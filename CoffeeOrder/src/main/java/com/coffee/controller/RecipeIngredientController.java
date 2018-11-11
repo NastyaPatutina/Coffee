@@ -1,8 +1,7 @@
 package com.coffee.controller;
 
 import com.coffee.entity.RecipeIngredient;
-import com.coffee.model.RecipeIngredientInfo;
-import com.coffee.model.RecipeMiniIngredientInfo;
+import com.coffee.model.order.recipeIngredient.*;
 import com.coffee.service.recipeIngredient.RecipeIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

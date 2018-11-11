@@ -1,8 +1,9 @@
 package com.coffee.entity;
+
+import com.coffee.model.user.UserInfo;
 import com.google.common.base.MoreObjects;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 
 import javax.persistence.*;
 
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User {
 
-    public User(String first_name, String last_name, GenderType gender, String email, String phone) {
+    public User(String first_name, String last_name, UserInfo.GenderType gender, String email, String phone) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.gender = gender;
@@ -19,8 +20,6 @@ public class User {
     }
 
     public User() {}
-
-    public static enum GenderType {male, female}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +32,7 @@ public class User {
     private String last_name;
 
     @Enumerated(EnumType.STRING)
-    private GenderType gender;
+    private UserInfo.GenderType gender;
 
     @Column(name = "email", length = 20)
     private String email;
@@ -67,11 +66,11 @@ public class User {
         this.last_name = last_name;
     }
 
-    public GenderType getGender() {
+    public UserInfo.GenderType getGender() {
         return gender;
     }
 
-    public void setGender(GenderType gender) {
+    public void setGender(UserInfo.GenderType gender) {
         this.gender = gender;
     }
 

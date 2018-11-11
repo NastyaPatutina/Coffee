@@ -2,7 +2,7 @@ package com.coffee.service.product;
 
 import com.coffee.entity.Product;
 import com.coffee.helpers.Builder;
-import com.coffee.model.ProductInfo;
+import com.coffee.model.house.ProductInfo;
 import com.coffee.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

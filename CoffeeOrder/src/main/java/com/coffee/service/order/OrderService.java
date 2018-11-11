@@ -1,8 +1,7 @@
 package com.coffee.service.order;
 
 import com.coffee.entity.Order;
-import com.coffee.model.OrderInfo;
-import com.coffee.model.OrderMiniInfo;
+import com.coffee.model.order.order.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

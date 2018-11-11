@@ -1,7 +1,7 @@
 package com.coffee.service.product;
 
 import com.coffee.entity.Product;
-import com.coffee.model.ProductInfo;
+import com.coffee.model.house.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

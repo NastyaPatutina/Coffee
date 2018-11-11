@@ -1,6 +1,6 @@
 package com.coffee.controller;
 import com.coffee.entity.User;
-import com.coffee.model.UserInfo;
+import com.coffee.model.user.*;
 import com.coffee.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +28,7 @@ public class UserController {
 
     @GetMapping
     public List<UserInfo> allUsers() {
-        List<UserInfo> rr =  userService.findAllUsers();
-        System.out.println("Hello");
-        rr.get(1);
-        return rr;
+        return userService.findAllUsers();
     }
 
     @DeleteMapping("/{id}")

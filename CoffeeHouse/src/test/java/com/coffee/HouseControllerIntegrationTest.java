@@ -3,9 +3,9 @@ package com.coffee;
 import com.coffee.controller.HouseController;
 import com.coffee.entity.House;
 import com.coffee.helpers.Builder;
-import com.coffee.model.HouseInfo;
+import com.coffee.model.helper.JsonMapper;
+import com.coffee.model.house.HouseInfo;
 import com.coffee.service.house.HouseService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -104,7 +104,7 @@ public class HouseControllerIntegrationTest {
 
         mvc.perform(post("/houses/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(house1Info))
+                .content(JsonMapper.asJsonString(house1Info))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -129,7 +129,7 @@ public class HouseControllerIntegrationTest {
 
         mvc.perform(put("/houses/21")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(house1NewInfo))
+                .content(JsonMapper.asJsonString(house1NewInfo))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

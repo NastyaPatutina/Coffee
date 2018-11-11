@@ -1,13 +1,12 @@
 package com.coffee.service.house;
 
+import com.coffee.entity.House;
 import com.coffee.helpers.Builder;
+import com.coffee.model.house.HouseInfo;
+import com.coffee.repository.HouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.coffee.repository.HouseRepository;
-import com.coffee.entity.House;
-import com.coffee.model.HouseInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

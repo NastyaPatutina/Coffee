@@ -15,5 +15,6 @@
         <module>CoffeeHouse</module>
         <module>CoffeeOrder</module>
         <module>CoffeeApp</module>
+        <module>CoffeeModels</module>
     </modules>
 </project>

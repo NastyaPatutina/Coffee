@@ -1,10 +1,8 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Recipe;
-import com.coffee.model.OnlyIngredientInfo;
-import com.coffee.model.RecipeInfo;
-import com.coffee.model.RecipeIngredientInfo;
-import com.coffee.model.RecipeWithIngredientsInfo;
+import com.coffee.model.order.recipe.*;
+import com.coffee.model.order.recipeIngredient.*;
 import com.coffee.service.recipe.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +11,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/recipes")

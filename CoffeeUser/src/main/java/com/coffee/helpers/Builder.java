@@ -1,7 +1,7 @@
 package com.coffee.helpers;
 
 import com.coffee.entity.User;
-import com.coffee.model.UserInfo;
+import com.coffee.model.user.UserInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.annotation.Nonnull;
@@ -28,16 +28,5 @@ public class Builder {
         user.setEmail(userInfo.getEmail());
         user.setPhone(userInfo.getPhone());
         return user;
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            final String jsonContent = mapper.writeValueAsString(obj);
-            System.out.println(jsonContent);
-            return jsonContent;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

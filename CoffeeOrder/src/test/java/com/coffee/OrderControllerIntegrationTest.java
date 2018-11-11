@@ -4,8 +4,8 @@ import com.coffee.controller.OrderController;
 import com.coffee.entity.Recipe;
 import com.coffee.entity.Order;
 import com.coffee.helpers.Builder;
-import com.coffee.model.OrderInfo;
-import com.coffee.model.OrderMiniInfo;
+import com.coffee.model.helper.JsonMapper;
+import com.coffee.model.order.order.*;
 import com.coffee.service.order.OrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -166,7 +166,7 @@ public class OrderControllerIntegrationTest {
 
         mvc.perform(post("/orders/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(orderInfo))
+                .content(JsonMapper.asJsonString(orderInfo))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -192,7 +192,7 @@ public class OrderControllerIntegrationTest {
 
         mvc.perform(put("/orders/21")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(orderNewInfo))
+                .content(JsonMapper.asJsonString(orderNewInfo))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

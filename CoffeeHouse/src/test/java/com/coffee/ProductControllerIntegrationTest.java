@@ -3,9 +3,9 @@ package com.coffee;
 import com.coffee.controller.ProductController;
 import com.coffee.entity.Product;
 import com.coffee.helpers.Builder;
-import com.coffee.model.ProductInfo;
+import com.coffee.model.helper.JsonMapper;
+import com.coffee.model.house.ProductInfo;
 import com.coffee.service.product.ProductService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -97,7 +97,7 @@ public class ProductControllerIntegrationTest {
 
         mvc.perform(post("/products/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(product1Info))
+                .content(JsonMapper.asJsonString(product1Info))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -122,7 +122,7 @@ public class ProductControllerIntegrationTest {
 
         mvc.perform(put("/products/21")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(product1NewInfo))
+                .content(JsonMapper.asJsonString(product1NewInfo))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

@@ -1,16 +1,17 @@
-package com.coffee.model;
-
-import com.coffee.entity.User;
+package com.coffee.model.user;
 
 public class UserInfo {
+
+    public static enum GenderType {male, female}
+
     private Integer id;
     private String first_name;
     private String last_name;
-    private User.GenderType gender;
+    private GenderType gender;
     private String email;
     private String phone;
 
-    public UserInfo(String first_name, String last_name, User.GenderType gender, String email, String phone) {
+    public UserInfo(String first_name, String last_name, GenderType gender, String email, String phone) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.gender = gender;
@@ -44,11 +45,11 @@ public class UserInfo {
         this.last_name = last_name;
     }
 
-    public User.GenderType getGender() {
+    public GenderType getGender() {
         return gender;
     }
 
-    public void setGender(User.GenderType gender) {
+    public void setGender(GenderType gender) {
         this.gender = gender;
     }
 

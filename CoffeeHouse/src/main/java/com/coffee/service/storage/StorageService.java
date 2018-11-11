@@ -1,9 +1,8 @@
 package com.coffee.service.storage;
 
 import com.coffee.entity.Storage;
-import com.coffee.model.HouseInfo;
-import com.coffee.model.StorageInfo;
-import com.coffee.model.StorageMiniInfo;
+
+import com.coffee.model.house.storage.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

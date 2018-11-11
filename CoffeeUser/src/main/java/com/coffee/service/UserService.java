@@ -1,7 +1,7 @@
 package com.coffee.service;
 
 import com.coffee.entity.User;
-import com.coffee.model.UserInfo;
+import com.coffee.model.user.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

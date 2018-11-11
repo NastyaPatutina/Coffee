@@ -3,8 +3,9 @@ package com.coffee.helpers;
 import com.coffee.entity.Order;
 import com.coffee.entity.Recipe;
 import com.coffee.entity.RecipeIngredient;
-import com.coffee.model.*;
-import com.coffee.repository.RecipeIngredientRepository;
+import com.coffee.model.order.order.*;
+import com.coffee.model.order.recipe.*;
+import com.coffee.model.order.recipeIngredient.*;
 import com.coffee.repository.RecipeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ public class Builder {
 
     @Autowired
     private static RecipeRepository recipeRepository;
+
+//   ******************************** Recipe ********************************
 
     @Nonnull
     public static RecipeInfo buildRecipeInfo(Recipe recipe) {
@@ -47,6 +50,7 @@ public class Builder {
         recipe.setCost(recipeInfo.getCost());
         return recipe;
     }
+//   ******************************** Order ********************************
 
     @Nonnull
     public static OrderInfo buildOrderInfo(Order order) {
@@ -78,14 +82,7 @@ public class Builder {
     }
 
 
-    @Nonnull
-    public static Order buildOrderByInfo(OrderInfo orderInfo) {
-        Order order = new Order();
-        order.setUserId(orderInfo.getUserId());
-        order.setRecipe(buildRecipeByInfo(orderInfo.getRecipe()));
-        order.setCoffeeHouseId(orderInfo.getCoffeeHouseId());
-        return order;
-    }
+//   ******************************** Recipe Ingredient ********************************
 
     @Nonnull
     public static RecipeIngredientInfo buildRecipeIngredientInfo(RecipeIngredient recipeIngredient) {
@@ -127,31 +124,11 @@ public class Builder {
     }
 
     @Nonnull
-    public static RecipeIngredient buildRecipeIngredientByInfo(RecipeIngredientInfo recipeIngredientInfo) {
-        RecipeIngredient recipeIngredient = new RecipeIngredient();
-        recipeIngredient.setProductId(recipeIngredientInfo.getProductId());
-        recipeIngredient.setRecipe(buildRecipeByInfo(recipeIngredientInfo.getRecipe()));
-        recipeIngredient.setCount(recipeIngredientInfo.getCount());
-        return recipeIngredient;
-    }
-
-    @Nonnull
     public static RecipeIngredient buildRecipeIngredientByMiniInfo(RecipeMiniIngredientInfo recipeIngredientInfo) {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
         recipeIngredient.setProductId(recipeIngredientInfo.getProductId());
         recipeIngredient.setRecipe(recipeRepository.findById(recipeIngredientInfo.getRecipeId()).orElse(null));
         recipeIngredient.setCount(recipeIngredientInfo.getCount());
         return recipeIngredient;
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            final String jsonContent = mapper.writeValueAsString(obj);
-            System.out.println(jsonContent);
-            return jsonContent;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

@@ -1,10 +1,10 @@
 package com.coffeegetaway.controller.order;
 
+import com.coffee.model.order.order.OrderInfo;
 import com.coffeegetaway.controller.house.ProductController;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.coffee.model.OrderInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -57,7 +57,7 @@ public class OrdersController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createOrder(@RequestBody OrderInfo orderInfo) {
+    public ResponseEntity<Object> createOrder(@RequestBody OrderInfo order) {
         return null;
     }
 

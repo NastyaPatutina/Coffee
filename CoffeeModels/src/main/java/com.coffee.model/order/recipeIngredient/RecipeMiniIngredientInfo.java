@@ -1,4 +1,6 @@
-package com.coffee.model;
+package com.coffee.model.order.recipeIngredient;
+
+import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
 
 public class RecipeMiniIngredientInfo extends OnlyIngredientInfo {
     private Integer recipe_id;

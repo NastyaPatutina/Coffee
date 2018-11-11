@@ -2,7 +2,7 @@ package com.coffee.service;
 
 import com.coffee.entity.User;
 import com.coffee.helpers.Builder;
-import com.coffee.model.UserInfo;
+import com.coffee.model.user.*;
 import com.coffee.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

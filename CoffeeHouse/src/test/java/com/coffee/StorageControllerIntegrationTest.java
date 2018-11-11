@@ -5,9 +5,8 @@ import com.coffee.entity.House;
 import com.coffee.entity.Product;
 import com.coffee.entity.Storage;
 import com.coffee.helpers.Builder;
-import com.coffee.model.HouseInfo;
-import com.coffee.model.StorageInfo;
-import com.coffee.model.StorageMiniInfo;
+import com.coffee.model.helper.JsonMapper;
+import com.coffee.model.house.storage.*;
 import com.coffee.service.storage.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -175,7 +174,7 @@ public class StorageControllerIntegrationTest {
 
         mvc.perform(post("/storage/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(storageInfo))
+                .content(JsonMapper.asJsonString(storageInfo))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -212,7 +211,7 @@ public class StorageControllerIntegrationTest {
 
         mvc.perform(put("/storage/21")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(storageNewInfo))
+                .content(JsonMapper.asJsonString(storageNewInfo))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

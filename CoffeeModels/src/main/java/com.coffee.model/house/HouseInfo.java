@@ -1,4 +1,4 @@
-package com.coffee.model;
+package com.coffee.model.house;
 
 public class HouseInfo {
     private String name;

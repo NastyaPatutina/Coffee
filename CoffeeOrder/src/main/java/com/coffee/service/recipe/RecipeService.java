@@ -1,8 +1,7 @@
 package com.coffee.service.recipe;
 
 import com.coffee.entity.Recipe;
-import com.coffee.model.RecipeInfo;
-import com.coffee.model.RecipeWithIngredientsInfo;
+import com.coffee.model.order.recipe.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

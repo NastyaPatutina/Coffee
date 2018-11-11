@@ -1,8 +1,7 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Order;
-import com.coffee.model.OrderInfo;
-import com.coffee.model.OrderMiniInfo;
+import com.coffee.model.order.order.*;
 import com.coffee.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

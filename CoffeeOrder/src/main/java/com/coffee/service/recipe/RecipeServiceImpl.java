@@ -2,8 +2,7 @@ package com.coffee.service.recipe;
 
 import com.coffee.entity.Recipe;
 import com.coffee.helpers.Builder;
-import com.coffee.model.RecipeInfo;
-import com.coffee.model.RecipeWithIngredientsInfo;
+import com.coffee.model.order.recipe.*;
 import com.coffee.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

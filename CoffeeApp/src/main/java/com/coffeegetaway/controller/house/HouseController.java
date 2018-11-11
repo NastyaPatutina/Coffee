@@ -1,6 +1,9 @@
 package com.coffeegetaway.controller.house;
 
-import com.coffee.model.*;
+import com.coffee.model.house.HouseInfo;
+import com.coffee.model.house.storage.StorageInfo;
+import com.coffee.model.order.recipe.RecipeWithIngredientsInfo;
+import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

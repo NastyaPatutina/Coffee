@@ -2,8 +2,7 @@ package com.coffee.service.storage;
 
 import com.coffee.entity.Storage;
 import com.coffee.helpers.Builder;
-import com.coffee.model.StorageInfo;
-import com.coffee.model.StorageMiniInfo;
+import com.coffee.model.house.storage.*;
 import com.coffee.repository.StorageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

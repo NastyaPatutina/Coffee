@@ -1,8 +1,7 @@
 package com.coffee.service.recipeIngredient;
 
 import com.coffee.entity.RecipeIngredient;
-import com.coffee.model.RecipeIngredientInfo;
-import com.coffee.model.RecipeMiniIngredientInfo;
+import com.coffee.model.order.recipeIngredient.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

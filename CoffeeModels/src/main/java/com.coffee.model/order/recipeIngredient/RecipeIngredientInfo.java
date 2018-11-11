@@ -1,5 +1,8 @@
-package com.coffee.model;
+package com.coffee.model.order.recipeIngredient;
 
+
+import com.coffee.model.order.recipe.RecipeInfo;
+import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
 
 public class RecipeIngredientInfo extends OnlyIngredientInfo {
     private RecipeInfo recipe;

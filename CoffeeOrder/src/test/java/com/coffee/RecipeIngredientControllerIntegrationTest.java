@@ -4,8 +4,8 @@ import com.coffee.controller.RecipeIngredientController;
 import com.coffee.entity.Recipe;
 import com.coffee.entity.RecipeIngredient;
 import com.coffee.helpers.Builder;
-import com.coffee.model.RecipeIngredientInfo;
-import com.coffee.model.RecipeMiniIngredientInfo;
+import com.coffee.model.helper.JsonMapper;
+import com.coffee.model.order.recipeIngredient.*;
 import com.coffee.service.recipeIngredient.RecipeIngredientService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,16 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -113,7 +106,7 @@ public class RecipeIngredientControllerIntegrationTest {
 
         mvc.perform(post("/recipe_ingredients/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(recipeIngredientInfo))
+                .content(JsonMapper.asJsonString(recipeIngredientInfo))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -143,7 +136,7 @@ public class RecipeIngredientControllerIntegrationTest {
 
         mvc.perform(put("/recipe_ingredients/21")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(Builder.asJsonString(recipeIngredientNewInfo))
+                .content(JsonMapper.asJsonString(recipeIngredientNewInfo))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

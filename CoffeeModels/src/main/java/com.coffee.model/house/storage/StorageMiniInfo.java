@@ -1,4 +1,4 @@
-package com.coffee.model;
+package com.coffee.model.house.storage;
 
 public class StorageMiniInfo {
     private Integer id;
