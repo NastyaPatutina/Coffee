@@ -5,6 +5,7 @@ import com.coffee.entity.Recipe;
 import com.coffee.entity.RecipeIngredient;
 import com.coffee.helpers.Builder;
 import com.coffee.model.RecipeIngredientInfo;
+import com.coffee.model.RecipeMiniIngredientInfo;
 import com.coffee.service.recipeIngredient.RecipeIngredientService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -90,4 +98,56 @@ public class RecipeIngredientControllerIntegrationTest {
                 .andExpect(status().isOk());
         verify(service, times(1)).deleteById(anyInt());
     }
+
+    @Test
+    public void createRecipeIngredient()
+            throws Exception {
+
+        Recipe recipe1 = new Recipe("Recipe 1", 50);
+
+        RecipeIngredient recipeIngredient3 = new RecipeIngredient(1, recipe1, 10);
+        RecipeMiniIngredientInfo recipeIngredientInfo = Builder.buildRecipeIngredientMiniInfo(recipeIngredient3);
+
+        given(service.save(refEq(recipeIngredientInfo))).willReturn(recipeIngredient3);
+
+
+        mvc.perform(post("/recipe_ingredients/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(recipeIngredientInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        verify(service, times(1)).save(refEq(recipeIngredientInfo));
+
+    }
+
+    @Test
+    public void updateRecipeIngredient()
+            throws Exception {
+
+        Recipe recipe1 = new Recipe("Recipe 1", 50);
+
+        RecipeIngredient recipeIngredient3 = new RecipeIngredient(1, recipe1, 10);
+        RecipeIngredientInfo recipeIngredientInfo = Builder.buildRecipeIngredientInfo(recipeIngredient3);
+
+        Recipe recipe2 = new Recipe("Recipe 2", 50);
+
+        RecipeIngredient recipeIngredientNew3 = new RecipeIngredient(2, recipe2, 12);
+        RecipeMiniIngredientInfo recipeIngredientNewInfo = Builder.buildRecipeIngredientMiniInfo(recipeIngredient3);
+
+        recipeIngredientNewInfo.setId(21);
+
+        given(service.findRecipeIngredientById(21)).willReturn(recipeIngredientInfo);
+        given(service.save(refEq(recipeIngredientNewInfo))).willReturn(recipeIngredientNew3);
+
+
+        mvc.perform(put("/recipe_ingredients/21")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(recipeIngredientNewInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).save(refEq(recipeIngredientNewInfo));
+    }
+
 }

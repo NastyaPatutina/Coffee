@@ -5,6 +5,7 @@ import com.coffee.entity.Recipe;
 import com.coffee.entity.Order;
 import com.coffee.helpers.Builder;
 import com.coffee.model.OrderInfo;
+import com.coffee.model.OrderMiniInfo;
 import com.coffee.service.order.OrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -149,5 +150,52 @@ public class OrderControllerIntegrationTest {
         mvc.perform(delete("/orders/12"))
                 .andExpect(status().isOk());
         verify(service, times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    public void createHouse()
+            throws Exception {
+
+        Recipe recipe1 = new Recipe("Recipe 1", 50);
+
+        Order order3 = new Order(1, recipe1, 10);
+        OrderMiniInfo orderInfo = Builder.buildOrderMiniInfo(order3);
+
+        given(service.save(refEq(orderInfo))).willReturn(order3);
+
+
+        mvc.perform(post("/orders/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(orderInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        verify(service, times(1)).save(refEq(orderInfo));
+
+    }
+
+    @Test
+    public void updateHouse()
+            throws Exception {
+        Recipe recipe1 = new Recipe("Recipe 1", 50);
+
+        Order order3 = new Order(1, recipe1, 10);
+        OrderInfo orderInfo = Builder.buildOrderInfo(order3);
+        Order order_new = new Order(1, recipe1, 10);
+        OrderMiniInfo orderNewInfo = Builder.buildOrderMiniInfo(order3);
+
+        orderNewInfo.setId(21);
+
+        given(service.findOrderById(21)).willReturn(orderInfo);
+        given(service.save(refEq(orderNewInfo))).willReturn(order_new);
+
+
+        mvc.perform(put("/orders/21")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(orderNewInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).save(refEq(orderNewInfo));
     }
 }

@@ -69,8 +69,6 @@ public class RecipeControllerIntegrationTest {
     @Test
     public void getRecipe()
             throws Exception {
-
-
         Recipe recipe3 = new Recipe("Recipe 3", 150);
         RecipeWithIngredientsInfo recipeInfo = Builder.buildRecipeInfoWithIngredients(recipe3);
 
@@ -112,5 +110,48 @@ public class RecipeControllerIntegrationTest {
         mvc.perform(delete("/recipes/12"))
                 .andExpect(status().isOk());
         verify(service, times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    public void createRecipe()
+            throws Exception {
+        Recipe recipe1 = new Recipe("Recipe 3", 150);
+        RecipeInfo recipe1Info = Builder.buildRecipeInfo(recipe1);
+
+        given(service.save(refEq(recipe1Info))).willReturn(recipe1);
+
+
+        mvc.perform(post("/recipes/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(recipe1Info))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        verify(service, times(1)).save(refEq(recipe1Info));
+
+    }
+
+    @Test
+    public void updateRecipe()
+            throws Exception {
+
+        Recipe recipe1 = new Recipe("Recipe 3", 150);
+        RecipeWithIngredientsInfo recipe1Info = Builder.buildRecipeInfoWithIngredients(recipe1);
+        Recipe recipe_new = new Recipe("Recipe 1", 200);
+        RecipeInfo recipe1NewInfo = Builder.buildRecipeInfo(recipe_new);
+
+        recipe1NewInfo.setId(21);
+
+        given(service.findRecipeById(21)).willReturn(recipe1Info);
+        given(service.save(refEq(recipe1NewInfo))).willReturn(recipe_new);
+
+
+        mvc.perform(put("/recipes/21")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(recipe1NewInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).save(refEq(recipe1NewInfo));
     }
 }
