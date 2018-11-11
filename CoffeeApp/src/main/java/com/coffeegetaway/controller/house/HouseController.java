@@ -1,10 +1,6 @@
 package com.coffeegetaway.controller.house;
 
-import com.coffee.model.HouseInfo;
-import com.coffee.model.RecipeInfo;
-import com.coffee.model.RecipeIngredientInfo;
-import com.coffee.model.StorageInfo;
-import com.coffee.repository.RecipeIngredientRepository;
+import com.coffee.model.*;
 import com.coffeegetaway.helpers.CoffeeRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -41,7 +38,7 @@ public class HouseController {
     }
 
     @GetMapping("/{id}/available_recipes")
-    public List<RecipeInfo> HouseAvailableRecipes(@PathVariable Integer id) {
+    public List<RecipeWithIngredientsInfo> HouseAvailableRecipes(@PathVariable Integer id) {
 
         String urlParameters = "";
         String urlTarget = "http://localhost:8080/storage/?house_id=" + id.toString();
@@ -57,33 +54,39 @@ public class HouseController {
         urlParameters = "";
         res_requst = CoffeeRequest.generate("http://localhost:8081/recipes/", urlParameters, "GET", logger);
         objectMapper = new ObjectMapper();
-        List<RecipeInfo> recipesInfo = null;
+        List<RecipeWithIngredientsInfo> recipesInfo = null;
         try {
-            recipesInfo = objectMapper.readValue(res_requst, new TypeReference<List<RecipeInfo>>(){});
+            recipesInfo = objectMapper.readValue(res_requst, new TypeReference<List<RecipeWithIngredientsInfo>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }
-        List<RecipeInfo> res = recipesInfo;
-        for (RecipeInfo recipeInfo: recipesInfo) {
-            urlParameters = "";
-            res_requst = CoffeeRequest.generate("http://localhost:8081/recipes/" + recipeInfo.getId() + "/ingredients", urlParameters, "GET", logger);
-            objectMapper = new ObjectMapper();
-            List<RecipeIngredientInfo> recipeIngredientsInfo = null;
-            try {
-                recipeIngredientsInfo = objectMapper.readValue(res_requst, new TypeReference<List<RecipeIngredientInfo>>(){});
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            for (RecipeIngredientInfo recipeIngredientInfo: recipeIngredientsInfo) {
-                for (StorageInfo storageInfo: storage) {
-                    if (recipeIngredientInfo.getProductId() == storageInfo.getProduct().getId() && recipeIngredientInfo.getCount() < storageInfo.getCount()) {
-                        res.remove(recipeInfo);
+        List<RecipeWithIngredientsInfo> res = new ArrayList<>(recipesInfo);
+
+        for (RecipeWithIngredientsInfo recipeInfo: recipesInfo) {
+            for (OnlyIngredientInfo recipeIngredientInfo: recipeInfo.getRecipeIngredients()) {
+                if (isProductInStorageList(storage, recipeIngredientInfo.getProductId())) {
+                    for (StorageInfo storageInfo : storage) {
+                        if (recipeIngredientInfo.getProductId() == storageInfo.getProduct().getId() &&
+                                recipeIngredientInfo.getCount() > storageInfo.getCount()) {
+                            res.remove(recipeInfo);
+                        }
                     }
+                } else {
+                    res.remove(recipeInfo);
                 }
             }
         }
 
         return res;
+    }
+
+    private Boolean isProductInStorageList(List<StorageInfo> storage, Integer product_id) {
+        for (StorageInfo storageInfo : storage) {
+            if (product_id == storageInfo.getProduct().getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @GetMapping
