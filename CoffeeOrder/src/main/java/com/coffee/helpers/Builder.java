@@ -96,6 +96,17 @@ public class Builder {
         info.setCount(recipeIngredient.getCount());
         return info;
     }
+
+    @Nonnull
+    public static RecipeMiniIngredientInfo buildRecipeIngredientMiniInfo(RecipeIngredient recipeIngredient) {
+        RecipeMiniIngredientInfo info = new RecipeMiniIngredientInfo();
+        info.setId(recipeIngredient.getId());
+        info.setProductId(recipeIngredient.getProductId());
+        info.setRecipeId(recipeIngredient.getRecipe().getId());
+        info.setCount(recipeIngredient.getCount());
+        return info;
+    }
+
     @Nonnull
     public static RecipeIngredientInfo buildRecipeIngredientInfo(RecipeIngredient recipeIngredient, RecipeInfo recipe) {
         RecipeIngredientInfo info = new RecipeIngredientInfo();
@@ -120,6 +131,15 @@ public class Builder {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
         recipeIngredient.setProductId(recipeIngredientInfo.getProductId());
         recipeIngredient.setRecipe(buildRecipeByInfo(recipeIngredientInfo.getRecipe()));
+        recipeIngredient.setCount(recipeIngredientInfo.getCount());
+        return recipeIngredient;
+    }
+
+    @Nonnull
+    public static RecipeIngredient buildRecipeIngredientByMiniInfo(RecipeMiniIngredientInfo recipeIngredientInfo) {
+        RecipeIngredient recipeIngredient = new RecipeIngredient();
+        recipeIngredient.setProductId(recipeIngredientInfo.getProductId());
+        recipeIngredient.setRecipe(recipeRepository.findById(recipeIngredientInfo.getRecipeId()).orElse(null));
         recipeIngredient.setCount(recipeIngredientInfo.getCount());
         return recipeIngredient;
     }

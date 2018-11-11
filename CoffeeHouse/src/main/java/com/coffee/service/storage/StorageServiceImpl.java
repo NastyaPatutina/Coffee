@@ -2,7 +2,6 @@ package com.coffee.service.storage;
 
 import com.coffee.entity.Storage;
 import com.coffee.helpers.Builder;
-import com.coffee.model.HouseInfo;
 import com.coffee.model.StorageInfo;
 import com.coffee.model.StorageMiniInfo;
 import com.coffee.repository.StorageRepository;

@@ -2,6 +2,7 @@ package com.coffee.service.recipeIngredient;
 
 import com.coffee.entity.RecipeIngredient;
 import com.coffee.model.RecipeIngredientInfo;
+import com.coffee.model.RecipeMiniIngredientInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,5 +17,5 @@ public interface RecipeIngredientService {
 
     void deleteById(@Nonnull Integer id);
 
-    RecipeIngredient save(RecipeIngredientInfo userInfo);
+    RecipeIngredient save(RecipeMiniIngredientInfo userInfo);
 }

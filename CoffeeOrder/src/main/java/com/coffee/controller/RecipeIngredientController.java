@@ -2,6 +2,7 @@ package com.coffee.controller;
 
 import com.coffee.entity.RecipeIngredient;
 import com.coffee.model.RecipeIngredientInfo;
+import com.coffee.model.RecipeMiniIngredientInfo;
 import com.coffee.service.recipeIngredient.RecipeIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class RecipeIngredientController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createRecipeIngredient(@RequestBody RecipeIngredientInfo recipeIngredientInfo) {
+    public ResponseEntity<Object> createRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredientInfo) {
         RecipeIngredient savedRecipeIngredient = recipeIngredientService.save(recipeIngredientInfo);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -44,7 +45,8 @@ public class RecipeIngredientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateRecipeIngredient(@RequestBody RecipeIngredientInfo recipeIngredient, @PathVariable Integer id) {
+    public ResponseEntity<Object> updateRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredient,
+                                                         @PathVariable Integer id) {
 
         RecipeIngredientInfo recipeIngredientOptional = recipeIngredientService.findRecipeIngredientById(id);
 
