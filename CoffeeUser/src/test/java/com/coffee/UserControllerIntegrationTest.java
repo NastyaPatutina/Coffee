@@ -119,16 +119,16 @@ public class UserControllerIntegrationTest {
                 User.GenderType.male,
                 "blmike@gmail.com",
                 "89009990099");
-//        given(service.save(mike)).willReturn(Builder.buildUserByInfo(mike));
-//
-//
-//        mvc.perform(post("/users/")
-//                .contentType(MediaType.APPLICATION_JSON_UTF8)
-//                .content(Builder.asJsonString(mike))
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//
-//        verify(service, times(1)).save(refEq(mike));
+        given(service.save(refEq(mike))).willReturn(Builder.buildUserByInfo(mike));
+
+
+        mvc.perform(post("/users/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(mike))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        verify(service, times(1)).save(refEq(mike));
 
     }
 
@@ -136,28 +136,33 @@ public class UserControllerIntegrationTest {
     public void updateUser()
             throws Exception {
 
-        UserInfo mike = new UserInfo("Mike",
+        User mike = new User("Mike",
                 "Bolck",
                 User.GenderType.male,
                 "blmike@gmail.com",
                 "89009990099");
 
-        UserInfo mike_new = new UserInfo("MikeNew",
+        UserInfo mikeInfo = Builder.buildUserInfo(mike);
+
+        User mike_new = new User("MikeNew",
                 "BlockNew",
                 User.GenderType.male,
                 "blmikeNew@gmail.com",
                 "89009990100");
 
-//        when(service.findUserById(21)).thenReturn(mike).thenReturn(mike);
-//        given(service.save(mike)).willReturn(buildUserByInfo(mike_new));
+        UserInfo mikeNewInfo = Builder.buildUserInfo(mike_new);
+
+        mikeNewInfo.setId(21);
+        when(service.findUserById(21)).thenReturn(mikeInfo);
+        given(service.save(refEq(mikeNewInfo))).willReturn(mike_new);
 
 
-//        mvc.perform(put("/users/21")
-//                .contentType(MediaType.APPLICATION_JSON_UTF8)
-//                .content(asJsonString(mike_new))
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//
-//        verify(service, times(1)).save(refEq(mike));
+        mvc.perform(put("/users/21")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(Builder.asJsonString(mikeNewInfo))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).save(refEq(mikeNewInfo));
     }
 }
