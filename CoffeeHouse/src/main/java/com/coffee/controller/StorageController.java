@@ -1,9 +1,12 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Storage;
+import com.coffee.helpers.Builder;
+import com.coffee.model.house.ProductInfo;
 import com.coffee.model.house.storage.*;
 import com.coffee.service.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -39,18 +42,14 @@ public class StorageController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createStorage(@RequestBody StorageMiniInfo storageInfo) {
+    public ResponseEntity<StorageInfo> createStorage(@RequestBody StorageMiniInfo storageInfo) {
         Storage savedStorage = storageService.save(storageInfo);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedStorage.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
-
+        return new ResponseEntity<StorageInfo>(Builder.buildStorageInfo(savedStorage), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateStorage(@RequestBody StorageMiniInfo storage, @PathVariable Integer id) {
+    public ResponseEntity<StorageInfo> updateStorage(@RequestBody StorageMiniInfo storage, @PathVariable Integer id) {
 
         StorageInfo storageOptional = storageService.findStorageById(id);
 
@@ -59,8 +58,8 @@ public class StorageController {
 
         storage.setId(id);
 
-        storageService.save(storage);
+        Storage savedStorage = storageService.save(storage);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<StorageInfo>(Builder.buildStorageInfo(savedStorage), HttpStatus.OK);
     }
 }

@@ -2,9 +2,12 @@ package com.coffee.controller;
 
 import com.coffee.entity.House;
 
+import com.coffee.entity.Product;
+import com.coffee.helpers.Builder;
 import com.coffee.model.house.*;
 import com.coffee.service.house.HouseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,18 +38,15 @@ public class HouseController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createHouse(@RequestBody HouseInfo houseInfo) {
+    public ResponseEntity<HouseInfo> createHouse(@RequestBody HouseInfo houseInfo) {
         House savedHouse = houseService.save(houseInfo);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedHouse.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<HouseInfo>(Builder.buildHouseInfo(savedHouse), HttpStatus.CREATED);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateHouse(@RequestBody HouseInfo house, @PathVariable Integer id) {
+    public ResponseEntity<HouseInfo> updateHouse(@RequestBody HouseInfo house, @PathVariable Integer id) {
 
         HouseInfo houseOptional = houseService.findHouseById(id);
 
@@ -55,8 +55,8 @@ public class HouseController {
 
         house.setId(id);
 
-        houseService.save(house);
+        House savedHouse = houseService.save(house);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<HouseInfo>(Builder.buildHouseInfo(savedHouse), HttpStatus.OK);
     }
 }

@@ -1,9 +1,11 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Product;
+import com.coffee.helpers.Builder;
 import com.coffee.model.house.*;
 import com.coffee.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -34,18 +36,15 @@ public class ProductController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createProduct(@RequestBody ProductInfo productInfo) {
+    public ResponseEntity<ProductInfo> createProduct(@RequestBody ProductInfo productInfo) {
         Product savedProduct = productService.save(productInfo);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedProduct.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<ProductInfo>(Builder.buildProductInfo(savedProduct), HttpStatus.CREATED);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateProduct(@RequestBody ProductInfo product, @PathVariable Integer id) {
+    public ResponseEntity<ProductInfo> updateProduct(@RequestBody ProductInfo product, @PathVariable Integer id) {
 
         ProductInfo productOptional = productService.findProductById(id);
 
@@ -54,8 +53,8 @@ public class ProductController {
 
         product.setId(id);
 
-        productService.save(product);
+        Product savedProduct = productService.save(product);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<ProductInfo>(Builder.buildProductInfo(savedProduct), HttpStatus.OK);
     }
 }

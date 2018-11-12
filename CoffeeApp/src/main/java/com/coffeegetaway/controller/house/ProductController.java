@@ -1,16 +1,19 @@
 package com.coffeegetaway.controller.house;
 
 import com.coffee.model.house.ProductInfo;
-import com.coffeegetaway.helpers.CoffeeRequest;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/products")
@@ -22,51 +25,50 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ProductInfo ProductById(@PathVariable Integer id) {
-        String urlParameters = "";
+        RestTemplate restTemplate = new RestTemplate();
         String urlTarget = default_urlTarget + id.toString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
-        logger.info(res_requst);
-        ProductInfo res = null;
-        try {
-            res = objectMapper.readValue(res_requst, ProductInfo.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
+        ProductInfo result = restTemplate.getForObject(urlTarget, ProductInfo.class);
+        return result;
     }
 
     @GetMapping
     public List<ProductInfo> allProducts() {
+        RestTemplate restTemplate = new RestTemplate();
 
-        String urlParameters = "";
-        String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET", logger);
-        logger.info(res_requst);
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<ProductInfo> res = null;
-        try {
-            res = objectMapper.readValue(res_requst, new TypeReference<List<ProductInfo>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
+        ResponseEntity<List<ProductInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<ProductInfo>>(){});
+        return result.getBody();
     }
 
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Integer id) {
-        String urlParameters = "";
-        String urlTarget = default_urlTarget + id.toString();
-        CoffeeRequest.generate(urlTarget, urlParameters,"DELETE", logger);
+        String urlTarget = default_urlTarget + "{id}";
+        Map<String, String> params = new HashMap<>();
+        params.put("id", id.toString());
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete (urlTarget,  params );
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createProduct(@RequestBody ProductInfo productInfo) {
-        return null;
+    public ResponseEntity<ProductInfo> createProduct(@RequestBody ProductInfo productInfo) {
+        RestTemplate restTemplate = new RestTemplate();
 
+        HttpEntity<ProductInfo> request = new HttpEntity<>(productInfo);
+        ProductInfo result = restTemplate.postForObject(default_urlTarget, request, ProductInfo.class);
+        if (result == null)
+            return new ResponseEntity<>((ProductInfo) null, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<ProductInfo>(result, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateProduct(@RequestBody ProductInfo product, @PathVariable Integer id) {
-        return null;
+    public ResponseEntity<ProductInfo> updateProduct(@RequestBody ProductInfo product, @PathVariable Integer id) {
+        String urlTarget = default_urlTarget + id.toString();
+        HttpEntity<ProductInfo> request = new HttpEntity<>(product);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<ProductInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, ProductInfo.class);
+        return result;
+
     }
 }

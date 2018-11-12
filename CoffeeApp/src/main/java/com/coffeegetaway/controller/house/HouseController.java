@@ -4,17 +4,20 @@ import com.coffee.model.house.HouseInfo;
 import com.coffee.model.house.storage.StorageInfo;
 import com.coffee.model.order.recipe.RecipeWithIngredientsInfo;
 import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
-import com.coffeegetaway.helpers.CoffeeRequest;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/houses")
@@ -26,43 +29,32 @@ public class HouseController {
 
     @GetMapping("/{id}")
     public HouseInfo houseById(@PathVariable Integer id) {
-
-        String urlParameters = "";
+        RestTemplate restTemplate = new RestTemplate();
         String urlTarget = default_urlTarget + id.toString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
-        HouseInfo res = null;
-        try {
-            res = objectMapper.readValue(res_requst, HouseInfo.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
+        HouseInfo result = restTemplate.getForObject(urlTarget, HouseInfo.class);
+        return result;
     }
 
     @GetMapping("/{id}/available_recipes")
     public List<RecipeWithIngredientsInfo> HouseAvailableRecipes(@PathVariable Integer id) {
+        RestTemplate restTemplate = new RestTemplate();
 
-        String urlParameters = "";
         String urlTarget = "http://localhost:8080/storage/?house_id=" + id.toString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
-        List<StorageInfo> storage = null;
-        try {
-            storage = objectMapper.readValue(res_requst, new TypeReference<List<StorageInfo>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        urlParameters = "";
-        res_requst = CoffeeRequest.generate("http://localhost:8081/recipes/", urlParameters, "GET", logger);
-        objectMapper = new ObjectMapper();
-        List<RecipeWithIngredientsInfo> recipesInfo = null;
-        try {
-            recipesInfo = objectMapper.readValue(res_requst, new TypeReference<List<RecipeWithIngredientsInfo>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ResponseEntity<List<StorageInfo>> storage_requst = restTemplate.exchange(urlTarget, HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<StorageInfo>>(){});
+        List<StorageInfo> storage = storage_requst.getBody();
+
+        restTemplate = new RestTemplate();
+        urlTarget = "http://localhost:8081/recipes/";
+
+        ResponseEntity<List<RecipeWithIngredientsInfo>> ri_requst = restTemplate.exchange(urlTarget, HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<RecipeWithIngredientsInfo>>(){});
+
+        List<RecipeWithIngredientsInfo> recipesInfo = ri_requst.getBody();
+
         List<RecipeWithIngredientsInfo> res = new ArrayList<>(recipesInfo);
 
         for (RecipeWithIngredientsInfo recipeInfo: recipesInfo) {
@@ -95,36 +87,43 @@ public class HouseController {
     @GetMapping
     public List<HouseInfo> allHouses() {
 
-        String urlParameters = "";
-        String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET", logger);
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<HouseInfo> res = null;
-        try {
-            res = objectMapper.readValue(res_requst, new TypeReference<List<HouseInfo>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<List<HouseInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<HouseInfo>>(){});
+        return result.getBody();
 
     }
 
     @DeleteMapping("/{id}")
     public void deleteHouse(@PathVariable Integer id) {
-        String urlParameters = "";
-        String urlTarget = default_urlTarget + id.toString();
-        CoffeeRequest.generate(urlTarget, urlParameters,"DELETE", logger);
+        String urlTarget = default_urlTarget + "{id}";
+        Map<String, String> params = new HashMap<>();
+        params.put("id", id.toString());
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(urlTarget,  params );
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createHouse(@RequestBody HouseInfo houseInfo) {
-        return null;
+    public ResponseEntity<HouseInfo> createHouse(@RequestBody HouseInfo houseInfo) {
+        RestTemplate restTemplate = new RestTemplate();
 
+        HttpEntity<HouseInfo> request = new HttpEntity<>(houseInfo);
+        HouseInfo result = restTemplate.postForObject(default_urlTarget, request, HouseInfo.class);
+        if (result == null)
+            return new ResponseEntity<>((HouseInfo) null, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<HouseInfo>(result, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateHouse(@RequestBody HouseInfo house, @PathVariable Integer id) {
-
-        return null;
+    public ResponseEntity<HouseInfo> updateHouse(@RequestBody HouseInfo house, @PathVariable Integer id) {
+        String urlTarget = default_urlTarget + id.toString();
+        HttpEntity<HouseInfo> request = new HttpEntity<>(house);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<HouseInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, HouseInfo.class);
+        return result;
 
     }
 }
