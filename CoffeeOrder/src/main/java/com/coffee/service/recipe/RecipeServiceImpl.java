@@ -42,7 +42,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public Recipe save(RecipeInfo recipeInfo) {
-        return recipeRepository.save(Builder.buildRecipeByInfo(recipeInfo));
+    public Recipe save(Recipe recipeInfo) {
+        return recipeRepository.save(recipeInfo);
     }
 }

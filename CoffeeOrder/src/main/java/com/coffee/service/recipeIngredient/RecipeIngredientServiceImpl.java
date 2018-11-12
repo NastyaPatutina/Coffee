@@ -41,7 +41,7 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
 
     @Override
     @Transactional
-    public RecipeIngredient save(RecipeMiniIngredientInfo recipeIngredientInfo) {
-        return recipeIngredientRepository.save(Builder.buildRecipeIngredientByMiniInfo(recipeIngredientInfo));
+    public RecipeIngredient save(RecipeIngredient recipeIngredient) {
+        return recipeIngredientRepository.save(recipeIngredient);
     }
 }

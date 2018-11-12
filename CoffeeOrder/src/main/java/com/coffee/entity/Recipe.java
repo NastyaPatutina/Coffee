@@ -68,6 +68,10 @@ public class Recipe {
         this.recipeIngredients = recipeIngredients;
     }
 
+    public void addRecipeIngredients(RecipeIngredient recipeIngredient) {
+        this.recipeIngredients.add(recipeIngredient);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

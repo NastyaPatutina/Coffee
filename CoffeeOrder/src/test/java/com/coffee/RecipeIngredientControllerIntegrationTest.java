@@ -101,7 +101,7 @@ public class RecipeIngredientControllerIntegrationTest {
         RecipeIngredient recipeIngredient3 = new RecipeIngredient(1, recipe1, 10);
         RecipeMiniIngredientInfo recipeIngredientInfo = Builder.buildRecipeIngredientMiniInfo(recipeIngredient3);
 
-        given(service.save(refEq(recipeIngredientInfo))).willReturn(recipeIngredient3);
+        given(service.save(refEq(recipeIngredient3))).willReturn(recipeIngredient3);
 
 
         mvc.perform(post("/recipe_ingredients/")
@@ -110,7 +110,7 @@ public class RecipeIngredientControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        verify(service, times(1)).save(refEq(recipeIngredientInfo));
+        verify(service, times(1)).save(refEq(recipeIngredient3));
 
     }
 
@@ -131,7 +131,7 @@ public class RecipeIngredientControllerIntegrationTest {
         recipeIngredientNewInfo.setId(21);
 
         given(service.findRecipeIngredientById(21)).willReturn(recipeIngredientInfo);
-        given(service.save(refEq(recipeIngredientNewInfo))).willReturn(recipeIngredientNew3);
+        given(service.save(refEq(recipeIngredientNew3))).willReturn(recipeIngredientNew3);
 
 
         mvc.perform(put("/recipe_ingredients/21")
@@ -140,7 +140,7 @@ public class RecipeIngredientControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(service, times(1)).save(refEq(recipeIngredientNewInfo));
+        verify(service, times(1)).save(refEq(recipeIngredientNew3));
     }
 
 }
