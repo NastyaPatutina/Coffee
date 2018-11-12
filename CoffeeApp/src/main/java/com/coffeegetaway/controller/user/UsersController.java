@@ -3,16 +3,19 @@ package com.coffeegetaway.controller.user;
 import com.coffee.model.order.order.OrderInfo;
 import com.coffee.model.user.UserInfo;
 import com.coffeegetaway.controller.house.ProductController;
-import com.coffeegetaway.helpers.CoffeeRequest;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -23,73 +26,64 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public UserInfo userById(@PathVariable Integer id) {
-        String urlParameters = "";
+
+        RestTemplate restTemplate = new RestTemplate();
         String urlTarget = default_urlTarget + id.toString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
-        UserInfo res = null;
-        try {
-            res = objectMapper.readValue(res_requst, UserInfo.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
+        UserInfo result = restTemplate.getForObject(urlTarget, UserInfo.class);
+        return result;
     }
 
     @GetMapping("/{id}/orders")
     public List<OrderInfo> userOrdersById(@PathVariable Integer id) {
-        String urlParameters = "";
-        String urlTarget = default_urlTarget + id.toString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
-        UserInfo user = null;
-        try {
-            user = objectMapper.readValue(res_requst, UserInfo.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String urlTarget = "http://localhost:8081/orders/?used_id=" + id;
+        RestTemplate restTemplate = new RestTemplate();
 
-        urlParameters = "";
-        urlTarget = "http://localhost:8081/orders/?used_id=" + user.getId();
-        objectMapper = new ObjectMapper();
-        res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
-        List<OrderInfo> res = null;
-        try {
-            res = objectMapper.readValue(res_requst, new TypeReference<List<OrderInfo>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
+        ResponseEntity<List<OrderInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<OrderInfo>>(){});
+        return result.getBody();
     }
 
     @GetMapping
     public List<UserInfo> allUsers() {
-        String urlParameters = "";
-        String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET", logger);
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<UserInfo> res = null;
-        try {
-            res = objectMapper.readValue(res_requst, new TypeReference<List<UserInfo>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<List<UserInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<UserInfo>>(){});
+        return result.getBody();
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Integer id) {
-        String urlParameters = "";
-        String urlTarget = default_urlTarget + id.toString();
-        CoffeeRequest.generate(urlTarget, urlParameters,"DELETE", logger);
+
+        String urlTarget = default_urlTarget + "{id}";
+        Map<String, String> params = new HashMap<>();
+        params.put("id", id.toString());
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete (urlTarget,  params );
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createUser(@RequestBody UserInfo userInfo) {
-        return null;
+    public ResponseEntity<UserInfo> createUser(@RequestBody UserInfo userInfo) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpEntity<UserInfo> request = new HttpEntity<>(userInfo);
+        UserInfo result = restTemplate.postForObject(default_urlTarget, request, UserInfo.class);
+        if (result == null)
+            return new ResponseEntity<>((UserInfo) null, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<UserInfo>(result, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@RequestBody UserInfo user, @PathVariable Integer id) {
-        return null;
+    public ResponseEntity<UserInfo> updateUser(@RequestBody UserInfo user, @PathVariable Integer id) {
+        String urlTarget = default_urlTarget + id.toString();
+        HttpEntity<UserInfo> request = new HttpEntity<>(user);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<UserInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, UserInfo.class);
+        return result;
+
     }
 }

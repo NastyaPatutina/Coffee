@@ -24,7 +24,7 @@ public class ProductController {
     private String default_urlTarget = "http://localhost:8080/products/";
 
     @GetMapping("/{id}")
-    public ProductInfo ProductById(@PathVariable Integer id) {
+    public ProductInfo productById(@PathVariable Integer id) {
         RestTemplate restTemplate = new RestTemplate();
         String urlTarget = default_urlTarget + id.toString();
         ProductInfo result = restTemplate.getForObject(urlTarget, ProductInfo.class);

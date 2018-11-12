@@ -1,17 +1,21 @@
 package com.coffeegetaway.controller.order;
 
 import com.coffee.model.order.recipeIngredient.RecipeIngredientInfo;
+import com.coffee.model.order.recipeIngredient.RecipeMiniIngredientInfo;
 import com.coffeegetaway.controller.house.ProductController;
-import com.coffeegetaway.helpers.CoffeeRequest;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/recipe_ingredients")
@@ -23,47 +27,51 @@ public class RecipeIngredientController {
 
     @GetMapping("/{id}")
     public RecipeIngredientInfo recipeIngredientById(@PathVariable Integer id) {
-        String urlParameters = "";
+        RestTemplate restTemplate = new RestTemplate();
         String urlTarget = default_urlTarget + id.toString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String res_requst = CoffeeRequest.generate(urlTarget, urlParameters,"GET", logger);
-        RecipeIngredientInfo res = null;
-        try {
-            res = objectMapper.readValue(res_requst, RecipeIngredientInfo.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
+        RecipeIngredientInfo result = restTemplate.getForObject(urlTarget, RecipeIngredientInfo.class);
+        return result;
     }
 
     @GetMapping
     public List<RecipeIngredientInfo> allRecipeIngredients() {
-        String urlParameters = "";
-        String res_requst = CoffeeRequest.generate(default_urlTarget, urlParameters, "GET", logger);
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<RecipeIngredientInfo> res = null;
-        try {
-            res = objectMapper.readValue(res_requst, new TypeReference<List<RecipeIngredientInfo>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<List<RecipeIngredientInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<RecipeIngredientInfo>>(){});
+        return result.getBody();
     }
 
     @DeleteMapping("/{id}")
     public void deleteRecipeIngredient(@PathVariable Integer id) {
-        String urlParameters = "";
-        String urlTarget = default_urlTarget + id.toString();
-        CoffeeRequest.generate(urlTarget, urlParameters,"DELETE", logger);
+        String urlTarget = default_urlTarget + "{id}";
+        Map<String, String> params = new HashMap<>();
+        params.put("id", id.toString());
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete (urlTarget,  params );
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createRecipeIngredient(@RequestBody RecipeIngredientInfo recipeIngredientInfo) {
-        return null;
-    }
+    public ResponseEntity<RecipeIngredientInfo> createRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredientInfo) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpEntity<RecipeMiniIngredientInfo> request = new HttpEntity<>(recipeIngredientInfo);
+        RecipeIngredientInfo result = restTemplate.postForObject(default_urlTarget, request, RecipeIngredientInfo.class);
+        if (result == null)
+            return new ResponseEntity<>((RecipeIngredientInfo) null, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<RecipeIngredientInfo>(result, HttpStatus.CREATED);    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateRecipeIngredient(@RequestBody RecipeIngredientInfo recipeIngredient, @PathVariable Integer id) {
-        return null;
+    public ResponseEntity<RecipeIngredientInfo> updateRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredient,
+                                                                       @PathVariable Integer id) {
+
+        String urlTarget = default_urlTarget + id.toString();
+        HttpEntity<RecipeMiniIngredientInfo> request = new HttpEntity<>(recipeIngredient);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<RecipeIngredientInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, RecipeIngredientInfo.class);
+        return result;
     }
 }

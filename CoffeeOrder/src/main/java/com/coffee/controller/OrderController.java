@@ -1,9 +1,12 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Order;
+import com.coffee.helpers.Builder;
+import com.coffee.model.house.ProductInfo;
 import com.coffee.model.order.order.*;
 import com.coffee.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -40,18 +43,15 @@ public class OrderController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createOrder(@RequestBody OrderMiniInfo orderInfo) {
+    public ResponseEntity<OrderInfo> createOrder(@RequestBody OrderMiniInfo orderInfo) {
         Order savedOrder = orderService.save(orderInfo);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedOrder.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<OrderInfo>(Builder.buildOrderInfo(savedOrder), HttpStatus.CREATED);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateOrder(@RequestBody OrderMiniInfo order, @PathVariable Integer id) {
+    public ResponseEntity<OrderInfo> updateOrder(@RequestBody OrderMiniInfo order, @PathVariable Integer id) {
 
         OrderInfo orderOptional = orderService.findOrderById(id);
 
@@ -60,8 +60,8 @@ public class OrderController {
 
         order.setId(id);
 
-        orderService.save(order);
+        Order savedOrder = orderService.save(order);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<OrderInfo>(Builder.buildOrderInfo(savedOrder), HttpStatus.OK);
     }
 }

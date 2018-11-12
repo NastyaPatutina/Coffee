@@ -160,7 +160,7 @@ public class UserControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JsonMapper.asJsonString(mikeNewInfo))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
 
         verify(service, times(1)).save(refEq(mikeNewInfo));
     }

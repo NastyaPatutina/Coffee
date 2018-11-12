@@ -194,7 +194,7 @@ public class OrderControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JsonMapper.asJsonString(orderNewInfo))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
 
         verify(service, times(1)).save(refEq(orderNewInfo));
     }

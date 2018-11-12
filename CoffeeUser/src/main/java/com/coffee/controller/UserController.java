@@ -1,15 +1,16 @@
 package com.coffee.controller;
+
 import com.coffee.entity.User;
-import com.coffee.model.user.*;
+import com.coffee.helpers.Builder;
+import com.coffee.model.user.UserInfo;
 import com.coffee.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -37,18 +38,15 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createUser(@RequestBody UserInfo userInfo) {
+    public ResponseEntity<UserInfo> createUser(@RequestBody UserInfo userInfo) {
         User savedUser = userService.save(userInfo);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedUser.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<UserInfo>(Builder.buildUserInfo(savedUser), HttpStatus.CREATED);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@RequestBody UserInfo user, @PathVariable Integer id) {
+    public ResponseEntity<UserInfo> updateUser(@RequestBody UserInfo user, @PathVariable Integer id) {
 
         UserInfo userOptional = userService.findUserById(id);
 
@@ -59,8 +57,8 @@ public class UserController {
 
         user.setId(id);
 
-        userService.save(user);
+        User savedUser = userService.save(user);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<UserInfo>(Builder.buildUserInfo(savedUser), HttpStatus.OK);
     }
 }

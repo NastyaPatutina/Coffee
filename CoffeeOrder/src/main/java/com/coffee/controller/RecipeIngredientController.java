@@ -1,9 +1,12 @@
 package com.coffee.controller;
 
 import com.coffee.entity.RecipeIngredient;
+import com.coffee.helpers.Builder;
+import com.coffee.model.order.recipe.RecipeWithIngredientsInfo;
 import com.coffee.model.order.recipeIngredient.*;
 import com.coffee.service.recipeIngredient.RecipeIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -33,18 +36,15 @@ public class RecipeIngredientController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredientInfo) {
+    public ResponseEntity<RecipeIngredientInfo> createRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredientInfo) {
         RecipeIngredient savedRecipeIngredient = recipeIngredientService.save(recipeIngredientInfo);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedRecipeIngredient.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<RecipeIngredientInfo>(Builder.buildRecipeIngredientInfo(savedRecipeIngredient), HttpStatus.CREATED);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredient,
+    public ResponseEntity<RecipeIngredientInfo> updateRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredient,
                                                          @PathVariable Integer id) {
 
         RecipeIngredientInfo recipeIngredientOptional = recipeIngredientService.findRecipeIngredientById(id);
@@ -54,8 +54,8 @@ public class RecipeIngredientController {
 
         recipeIngredient.setId(id);
 
-        recipeIngredientService.save(recipeIngredient);
+        RecipeIngredient savedRecipeIngredient = recipeIngredientService.save(recipeIngredient);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<RecipeIngredientInfo>(Builder.buildRecipeIngredientInfo(savedRecipeIngredient), HttpStatus.OK);
     }
 }

@@ -1,10 +1,13 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Recipe;
+import com.coffee.helpers.Builder;
+import com.coffee.model.order.order.OrderInfo;
 import com.coffee.model.order.recipe.*;
 import com.coffee.model.order.recipeIngredient.*;
 import com.coffee.service.recipe.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -39,18 +42,15 @@ public class RecipeController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createRecipe(@RequestBody RecipeInfo recipeInfo) {
+    public ResponseEntity<RecipeWithIngredientsInfo> createRecipe(@RequestBody RecipeInfo recipeInfo) {
         Recipe savedRecipe = recipeService.save(recipeInfo);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedRecipe.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<RecipeWithIngredientsInfo>(Builder.buildRecipeInfoWithIngredients(savedRecipe), HttpStatus.CREATED);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateRecipe(@RequestBody RecipeInfo recipe, @PathVariable Integer id) {
+    public ResponseEntity<RecipeWithIngredientsInfo> updateRecipe(@RequestBody RecipeInfo recipe, @PathVariable Integer id) {
 
         RecipeInfo recipeOptional = recipeService.findRecipeById(id);
 
@@ -59,8 +59,8 @@ public class RecipeController {
 
         recipe.setId(id);
 
-        recipeService.save(recipe);
+        Recipe savedRecipe = recipeService.save(recipe);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<RecipeWithIngredientsInfo>(Builder.buildRecipeInfoWithIngredients(savedRecipe), HttpStatus.OK);
     }
 }
