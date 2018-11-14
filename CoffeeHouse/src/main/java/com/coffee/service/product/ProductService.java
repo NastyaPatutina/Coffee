@@ -16,5 +16,7 @@ public interface ProductService {
 
     void deleteById(@Nonnull Integer id);
 
+    Product saveAndAddToStorage(ProductInfo product);
+
     Product save(ProductInfo product);
 }

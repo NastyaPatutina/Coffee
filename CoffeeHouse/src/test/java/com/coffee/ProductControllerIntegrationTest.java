@@ -92,8 +92,7 @@ public class ProductControllerIntegrationTest {
         Product product1 = new Product("Product1");
         ProductInfo product1Info = Builder.buildProductInfo(product1);
 
-        given(service.save(refEq(product1Info))).willReturn(product1);
-
+        given(service.saveAndAddToStorage(refEq(product1Info))).willReturn(product1);
 
         mvc.perform(post("/products/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -101,7 +100,7 @@ public class ProductControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        verify(service, times(1)).save(refEq(product1Info));
+        verify(service, times(1)).saveAndAddToStorage(refEq(product1Info));
 
     }
 

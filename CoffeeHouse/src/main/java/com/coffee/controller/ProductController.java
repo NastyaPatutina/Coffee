@@ -1,9 +1,13 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Product;
+import com.coffee.entity.Storage;
 import com.coffee.helpers.Builder;
 import com.coffee.model.house.*;
+import com.coffee.model.house.storage.StorageMiniInfo;
+import com.coffee.service.house.HouseService;
 import com.coffee.service.product.ProductService;
+import com.coffee.service.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +41,7 @@ public class ProductController {
 
     @PostMapping("/")
     public ResponseEntity<ProductInfo> createProduct(@RequestBody ProductInfo productInfo) {
-        Product savedProduct = productService.save(productInfo);
+        Product savedProduct = productService.saveAndAddToStorage(productInfo);
 
         return new ResponseEntity<ProductInfo>(Builder.buildProductInfo(savedProduct), HttpStatus.CREATED);
 
