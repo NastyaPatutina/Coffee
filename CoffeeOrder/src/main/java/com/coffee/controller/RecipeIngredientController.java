@@ -37,7 +37,7 @@ public class RecipeIngredientController {
 
     @PostMapping("/")
     public ResponseEntity<RecipeIngredientInfo> createRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredientInfo) {
-        RecipeIngredient savedRecipeIngredient = recipeIngredientService.save(Builder.buildRecipeIngredientByMiniInfo(recipeIngredientInfo));
+        RecipeIngredient savedRecipeIngredient = recipeIngredientService.save(recipeIngredientInfo);
 
         return new ResponseEntity<RecipeIngredientInfo>(Builder.buildRecipeIngredientInfo(savedRecipeIngredient), HttpStatus.CREATED);
 
@@ -54,7 +54,7 @@ public class RecipeIngredientController {
 
         recipeIngredient.setId(id);
 
-        RecipeIngredient savedRecipeIngredient = recipeIngredientService.save(Builder.buildRecipeIngredientByMiniInfo(recipeIngredient));
+        RecipeIngredient savedRecipeIngredient = recipeIngredientService.save(recipeIngredient);
 
         return new ResponseEntity<RecipeIngredientInfo>(Builder.buildRecipeIngredientInfo(savedRecipeIngredient), HttpStatus.OK);
     }

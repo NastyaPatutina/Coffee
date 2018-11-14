@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class RecipeIngredientServiceImpl implements RecipeIngredientService {
+
     @Autowired
     private RecipeIngredientRepository recipeIngredientRepository;
 
@@ -41,7 +42,7 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
 
     @Override
     @Transactional
-    public RecipeIngredient save(RecipeIngredient recipeIngredient) {
-        return recipeIngredientRepository.save(recipeIngredient);
+    public RecipeIngredient save(RecipeMiniIngredientInfo recipeMiniIngredientInfo) {
+        return recipeIngredientRepository.save(Builder.buildRecipeIngredientByMiniInfo(recipeMiniIngredientInfo));
     }
 }

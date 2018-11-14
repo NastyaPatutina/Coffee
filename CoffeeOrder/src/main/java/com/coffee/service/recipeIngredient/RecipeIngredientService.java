@@ -16,5 +16,5 @@ public interface RecipeIngredientService {
 
     void deleteById(@Nonnull Integer id);
 
-    RecipeIngredient save(RecipeIngredient recipeIngredient);
+    RecipeIngredient save(RecipeMiniIngredientInfo recipeMiniIngredientInfo);
 }

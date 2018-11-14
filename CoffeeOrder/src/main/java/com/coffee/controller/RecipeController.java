@@ -1,18 +1,15 @@
 package com.coffee.controller;
 
 import com.coffee.entity.Recipe;
-import com.coffee.entity.RecipeIngredient;
 import com.coffee.helpers.Builder;
 import com.coffee.model.order.recipe.*;
 import com.coffee.model.order.recipeIngredient.*;
 import com.coffee.service.recipe.RecipeService;
-import com.coffee.service.recipeIngredient.RecipeIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,9 +17,6 @@ import java.util.List;
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;
-
-    @Autowired
-    private RecipeIngredientService recipeIngredientService;
 
     @GetMapping("/{id}")
     public RecipeWithIngredientsInfo recipeById(@PathVariable Integer id) {
@@ -46,11 +40,7 @@ public class RecipeController {
 
     @PostMapping("/")
     public ResponseEntity<RecipeWithIngredientsInfo> createRecipe(@RequestBody RecipeWithIngredientsInfo recipeInfo) {
-        Recipe savedRecipe = recipeService.save(Builder.buildRecipeByInfo(recipeInfo));
-
-        for (OnlyIngredientInfo oiInfo : recipeInfo.getRecipeIngredients()) {
-            savedRecipe.addRecipeIngredients(recipeIngredientService.save(Builder.buildRecipeMiniIngredientInfo(oiInfo, savedRecipe)));
-        }
+        Recipe savedRecipe = recipeService.save(recipeInfo);
 
         return new ResponseEntity<RecipeWithIngredientsInfo>(Builder.buildRecipeInfoWithIngredients(savedRecipe), HttpStatus.CREATED);
     }
@@ -65,7 +55,7 @@ public class RecipeController {
 
         recipe.setId(id);
 
-        Recipe savedRecipe = recipeService.save(Builder.buildRecipeByInfo(recipe));
+        Recipe savedRecipe = recipeService.save(recipe);
 
         return new ResponseEntity<RecipeWithIngredientsInfo>(Builder.buildRecipeInfoWithIngredients(savedRecipe), HttpStatus.OK);
     }

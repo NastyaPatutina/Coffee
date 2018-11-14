@@ -3,6 +3,8 @@ package com.coffee.service.recipe;
 import com.coffee.entity.Recipe;
 import com.coffee.helpers.Builder;
 import com.coffee.model.order.recipe.*;
+import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
+import com.coffee.repository.RecipeIngredientRepository;
 import com.coffee.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ import java.util.stream.Collectors;
 public class RecipeServiceImpl implements RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private RecipeIngredientRepository recipeIngredientRepository;
 
     @Nonnull
     @Override
@@ -42,7 +47,18 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public Recipe save(Recipe recipeInfo) {
-        return recipeRepository.save(recipeInfo);
+    public Recipe save(RecipeWithIngredientsInfo recipeInfo) {
+        Recipe recipe = recipeRepository.save(Builder.buildRecipeByInfo(recipeInfo));
+
+        for (OnlyIngredientInfo oiInfo : recipeInfo.getRecipeIngredients()) {
+            recipe.addRecipeIngredients(recipeIngredientRepository.save(Builder.buildRecipeMiniIngredientInfo(oiInfo, recipe)));
+        }
+        return recipe;
+    }
+
+    @Override
+    @Transactional
+    public Recipe save(RecipeInfo recipeInfo) {
+        return recipeRepository.save(Builder.buildRecipeByInfo(recipeInfo));
     }
 }
