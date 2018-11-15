@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-public class UsersController {
+public class UserController {
 
     private static Logger logger = LoggerFactory.getLogger(ProductController.class);
 
