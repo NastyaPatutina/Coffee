@@ -3,8 +3,10 @@ package com.coffeegetaway.controller.order;
 import com.coffee.model.order.recipeIngredient.RecipeIngredientInfo;
 import com.coffee.model.order.recipeIngredient.RecipeMiniIngredientInfo;
 import com.coffeegetaway.controller.house.ProductController;
+import com.coffeegetaway.service.order.RecipeIngredientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -23,55 +25,32 @@ public class RecipeIngredientController {
 
     private static Logger logger = LoggerFactory.getLogger(ProductController.class);
 
-    private String default_urlTarget = "http://localhost:8081/recipe_ingredients/";
+    @Autowired
+    private RecipeIngredientService recipeIngredientService;
 
     @GetMapping("/{id}")
     public RecipeIngredientInfo recipeIngredientById(@PathVariable Integer id) {
-        RestTemplate restTemplate = new RestTemplate();
-        String urlTarget = default_urlTarget + id.toString();
-        RecipeIngredientInfo result = restTemplate.getForObject(urlTarget, RecipeIngredientInfo.class);
-        return result;
+        return recipeIngredientService.findRecipeIngredientById(id);
     }
 
     @GetMapping
     public List<RecipeIngredientInfo> allRecipeIngredients() {
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        ResponseEntity<List<RecipeIngredientInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<RecipeIngredientInfo>>(){});
-        return result.getBody();
+        return recipeIngredientService.allRecipeIngredients();
     }
 
     @DeleteMapping("/{id}")
     public void deleteRecipeIngredient(@PathVariable Integer id) {
-        String urlTarget = default_urlTarget + "{id}";
-        Map<String, String> params = new HashMap<>();
-        params.put("id", id.toString());
-
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete (urlTarget,  params );
+        recipeIngredientService.deleteRecipeIngredient(id);
     }
 
     @PostMapping("/")
     public ResponseEntity<RecipeIngredientInfo> createRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredientInfo) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<RecipeMiniIngredientInfo> request = new HttpEntity<>(recipeIngredientInfo);
-        RecipeIngredientInfo result = restTemplate.postForObject(default_urlTarget, request, RecipeIngredientInfo.class);
-        if (result == null)
-            return new ResponseEntity<>((RecipeIngredientInfo) null, HttpStatus.NOT_ACCEPTABLE);
-        return new ResponseEntity<RecipeIngredientInfo>(result, HttpStatus.CREATED);    }
+        return recipeIngredientService.createRecipeIngredient(recipeIngredientInfo);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<RecipeIngredientInfo> updateRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredient,
                                                                        @PathVariable Integer id) {
-
-        String urlTarget = default_urlTarget + id.toString();
-        HttpEntity<RecipeMiniIngredientInfo> request = new HttpEntity<>(recipeIngredient);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<RecipeIngredientInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, RecipeIngredientInfo.class);
-        return result;
+        return recipeIngredientService.updateRecipeIngredient(recipeIngredient, id);
     }
 }
