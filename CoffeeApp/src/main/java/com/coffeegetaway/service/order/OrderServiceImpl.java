@@ -30,16 +30,34 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderInfo> allOrders(Optional<Integer> userId, Optional<Integer> coffeeHouseId) {
+    public List<OrderInfo> allOrders() {
+        RestTemplate restTemplate = new RestTemplate();
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
+        ResponseEntity<List<OrderInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<OrderInfo>>(){});
+        return result.getBody();
+    }
+
+    @Override
+    public List<OrderInfo> allOrdersbyUser(Integer userId) {
         RestTemplate restTemplate = new RestTemplate();
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
 
-        if (userId.isPresent()) {
-            builder.queryParam("user_id", userId);
-        }
-        if (coffeeHouseId.isPresent()) {
-            builder.queryParam("coffee_house_id", coffeeHouseId);
-        }
+        builder.queryParam("user_id", userId);
+
+        ResponseEntity<List<OrderInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<OrderInfo>>(){});
+        return result.getBody();
+    }
+
+    @Override
+    public List<OrderInfo> allOrdersByCoffeeHouse(Integer coffeeHouseId) {
+        RestTemplate restTemplate = new RestTemplate();
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
+
+        builder.queryParam("coffee_house_id", coffeeHouseId);
 
         ResponseEntity<List<OrderInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
                 null,

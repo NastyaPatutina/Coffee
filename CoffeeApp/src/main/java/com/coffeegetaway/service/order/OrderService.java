@@ -10,7 +10,11 @@ import java.util.Optional;
 public interface OrderService {
     OrderInfo findOrderById(Integer id);
 
-    List<OrderInfo> allOrders(Optional<Integer> userId, Optional<Integer> coffeeHouseId);
+    List<OrderInfo> allOrders();
+
+    List<OrderInfo> allOrdersbyUser(Integer userId);
+
+    List<OrderInfo> allOrdersByCoffeeHouse(Integer coffeeHouseId);
 
     void deleteOrder(Integer id);
 

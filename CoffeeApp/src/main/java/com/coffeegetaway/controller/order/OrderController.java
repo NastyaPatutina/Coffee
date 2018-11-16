@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/orders")
-public class OrdersController {
+public class OrderController {
 
     private static Logger logger = LoggerFactory.getLogger(ProductController.class);
 
@@ -38,7 +38,13 @@ public class OrdersController {
     @GetMapping
     public List<OrderInfo> allOrders(@RequestParam("user_id") Optional<Integer> userId,
                                      @RequestParam("coffee_house_id") Optional<Integer> coffeeHouseId) {
-        return orderService.allOrders(userId, coffeeHouseId);
+        if (userId.isPresent()) {
+            return orderService.allOrdersbyUser(userId.get());
+        }
+        if (coffeeHouseId.isPresent()) {
+            return orderService.allOrdersByCoffeeHouse(coffeeHouseId.get());
+        }
+        return orderService.allOrders();
     }
 
     @DeleteMapping("/{id}")
