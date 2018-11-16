@@ -44,7 +44,6 @@ public class HouseServiceImpl implements HouseService {
         RestTemplate restTemplate = new RestTemplate();
 
         String urlTarget = "http://localhost:8080/storage/?house_id=" + id.toString();
-
         ResponseEntity<List<StorageInfo>> storage_requst = restTemplate.exchange(urlTarget, HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<StorageInfo>>(){});
@@ -52,39 +51,12 @@ public class HouseServiceImpl implements HouseService {
 
         restTemplate = new RestTemplate();
         urlTarget = "http://localhost:8081/recipes/";
-
         ResponseEntity<List<RecipeWithIngredientsInfo>> ri_requst = restTemplate.exchange(urlTarget, HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<RecipeWithIngredientsInfo>>(){});
-
         List<RecipeWithIngredientsInfo> recipesInfo = ri_requst.getBody();
 
-        List<RecipeWithIngredientsInfo> res = new ArrayList<>(recipesInfo);
-
-        for (RecipeWithIngredientsInfo recipeInfo: recipesInfo) {
-            for (OnlyIngredientInfo recipeIngredientInfo: recipeInfo.getRecipeIngredients()) {
-                if (isProductInStorageList(storage, recipeIngredientInfo.getProductId())) {
-                    for (StorageInfo storageInfo : storage) {
-                        if (recipeIngredientInfo.getProductId() == storageInfo.getProduct().getId() &&
-                                recipeIngredientInfo.getCount() > storageInfo.getCount()) {
-                            res.remove(recipeInfo);
-                        }
-                    }
-                } else {
-                    res.remove(recipeInfo);
-                }
-            }
-        }
-        return res;
-    }
-
-    private Boolean isProductInStorageList(List<StorageInfo> storage, Integer product_id) {
-        for (StorageInfo storageInfo : storage) {
-            if (product_id == storageInfo.getProduct().getId()) {
-                return true;
-            }
-        }
-        return false;
+        return findAvailableRecipe(recipesInfo, storage);
     }
 
     @Override
@@ -115,5 +87,41 @@ public class HouseServiceImpl implements HouseService {
         if (result == null)
             return new ResponseEntity<>((HouseInfo) null, HttpStatus.NOT_ACCEPTABLE);
         return new ResponseEntity<HouseInfo>(result, HttpStatus.CREATED);
+    }
+
+    private List<RecipeWithIngredientsInfo> findAvailableRecipe(List<RecipeWithIngredientsInfo> recipesInfo, List<StorageInfo> storage) {
+        List<RecipeWithIngredientsInfo> res = new ArrayList<>(recipesInfo);
+
+        for (RecipeWithIngredientsInfo recipeInfo: recipesInfo) {
+            for (OnlyIngredientInfo recipeIngredientInfo: recipeInfo.getRecipeIngredients()) {
+                if (isProductInStorageList(storage, recipeIngredientInfo.getProductId())) {
+                    if (isIngredientAvailiable(storage, recipeIngredientInfo)) {
+                        res.remove(recipeInfo);
+                    }
+                } else {
+                    res.remove(recipeInfo);
+                }
+            }
+        }
+        return res;
+    }
+
+    private Boolean isIngredientAvailiable(List<StorageInfo> storage, OnlyIngredientInfo recipeIngredientInfo) {
+        for (StorageInfo storageInfo : storage) {
+            if (recipeIngredientInfo.getProductId() == storageInfo.getProduct().getId() &&
+                    recipeIngredientInfo.getCount() > storageInfo.getCount()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Boolean isProductInStorageList(List<StorageInfo> storage, Integer product_id) {
+        for (StorageInfo storageInfo : storage) {
+            if (product_id == storageInfo.getProduct().getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

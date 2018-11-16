@@ -76,6 +76,22 @@ public class RecipeServiceImpl implements RecipeService {
                 new ParameterizedTypeReference<List<ProductInfo>>(){});
         List<ProductInfo> products = products_result.getBody();
 
+        if (!createProducts(recipeInfo, products))
+            return new ResponseEntity<RecipeWithProducts>((RecipeWithProducts) null, HttpStatus.NOT_ACCEPTABLE);
+
+        restTemplate = new RestTemplate();
+
+        HttpEntity<RecipeWithIngredientsInfo> request = new HttpEntity<>(buildRecipeWithIngredientsInfo(recipeInfo));
+        RecipeWithIngredientsInfo result = restTemplate.postForObject(default_urlTarget, request, RecipeWithIngredientsInfo.class);
+        if (result == null)
+            return new ResponseEntity<>((RecipeWithProducts) null, HttpStatus.NOT_ACCEPTABLE);
+
+
+        return new ResponseEntity<RecipeWithProducts>(buildRecipeWithProducts(result, products), HttpStatus.CREATED);
+    }
+
+    private Boolean createProducts(RecipeWithProducts recipeInfo, List<ProductInfo> products){
+
         for (RecipeIngredientWithProductInfo riInfo:recipeInfo.getRecipeIngredients()){
             if (riInfo.getProduct().getId() == null) {
                 for(ProductInfo pInfo: products) {
@@ -88,27 +104,27 @@ public class RecipeServiceImpl implements RecipeService {
                     ProductInfo productInfo = new ProductInfo();
                     productInfo.setName(riInfo.getProduct().getName());
 
-                    restTemplate = new RestTemplate();
+                    ProductInfo result = createProduct(productInfo);
+                    if (result == null) {
+                        return false;
+                    }
 
-                    HttpEntity<ProductInfo> request = new HttpEntity<>(productInfo);
-                    ProductInfo result = restTemplate.postForObject("http://localhost:8080/products/", request, ProductInfo.class);
-                    if (result == null)
-                        return new ResponseEntity<RecipeWithProducts>((RecipeWithProducts) null, HttpStatus.NOT_ACCEPTABLE);
                     riInfo.getProduct().setId(result.getId());
                     products.add(result);
                 }
             }
         }
+        return true;
+    }
 
-        restTemplate = new RestTemplate();
+    private ProductInfo createProduct(ProductInfo productInfo ) {
+        RestTemplate restTemplate = new RestTemplate();
 
-        HttpEntity<RecipeWithIngredientsInfo> request = new HttpEntity<>(buildRecipeWithIngredientsInfo(recipeInfo));
-        RecipeWithIngredientsInfo result = restTemplate.postForObject(default_urlTarget, request, RecipeWithIngredientsInfo.class);
+        HttpEntity<ProductInfo> request = new HttpEntity<>(productInfo);
+        ProductInfo result = restTemplate.postForObject("http://localhost:8080/products/", request, ProductInfo.class);
         if (result == null)
-            return new ResponseEntity<>((RecipeWithProducts) null, HttpStatus.NOT_ACCEPTABLE);
-
-
-        return new ResponseEntity<RecipeWithProducts>(buildRecipeWithProducts(result, products), HttpStatus.CREATED);
+            return null;
+        return result;
     }
 
     private RecipeWithIngredientsInfo buildRecipeWithIngredientsInfo(RecipeWithProducts recipeInfo) {
