@@ -11,7 +11,9 @@ import java.util.Optional;
 public interface StorageService {
     StorageInfo findStorageById(Integer id);
 
-    List<StorageInfo> allStorage(Optional<Integer> houseId);
+    List<StorageInfo> allStorage();
+
+    List<StorageInfo> allStorageForHouse(Integer houseId);
 
     void deleteStorage(Integer id);
 

@@ -36,7 +36,10 @@ public class StorageController {
 
     @GetMapping
     public List<StorageInfo> allStorages(@RequestParam("house_id") Optional<Integer> houseId) {
-        return storageService.allStorage(houseId);
+        if (houseId.isPresent()) {
+            return storageService.allStorageForHouse(houseId.get());
+        }
+        return storageService.allStorage();
     }
 
     @DeleteMapping("/{id}")

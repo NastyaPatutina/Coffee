@@ -32,12 +32,22 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public List<StorageInfo> allStorage(Optional<Integer> houseId) {
+    public List<StorageInfo> allStorage() {
         RestTemplate restTemplate = new RestTemplate();
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
-        if (houseId.isPresent()) {
-            builder.queryParam("house_id", houseId);
-        }
+
+        ResponseEntity<List<StorageInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<StorageInfo>>(){});
+        return result.getBody();
+    }
+
+
+    @Override
+    public List<StorageInfo> allStorageForHouse(Integer houseId) {
+        RestTemplate restTemplate = new RestTemplate();
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
+        builder.queryParam("house_id", houseId);
 
         ResponseEntity<List<StorageInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
                 null,
