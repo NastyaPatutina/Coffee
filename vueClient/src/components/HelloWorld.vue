@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'hello',
   data () {
     return {
       msg: 'Welcome to Coffee Admin'
