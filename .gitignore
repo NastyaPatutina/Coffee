@@ -25,3 +25,20 @@ CoffeeApp/target/
 
 
 \.idea/
+
+vueClient/build/
+
+.DS_Store
+vueClient/node_modules/
+vueClient/dist/
+vueClient/npm-debug.log*
+vueClient/yarn-debug.log*
+vueClient/yarn-error.log*
+
+# Editor directories and files
+vueClient/.idea
+vueClient/.vscode
+vueClient/*.suo
+vueClient/*.ntvs*
+vueClient/*.njsproj
+vueClient/*.sln
