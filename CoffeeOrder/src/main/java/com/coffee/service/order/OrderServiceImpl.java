@@ -4,6 +4,7 @@ import com.coffee.entity.Order;
 import com.coffee.helpers.Builder;
 import com.coffee.model.order.order.*;
 import com.coffee.repository.OrderRepository;
+import com.coffee.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+    @Autowired
+    private RecipeRepository recipeRepository;
+
     @Autowired
     private OrderRepository orderRepository;
 
@@ -63,6 +67,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order save(OrderMiniInfo orderInfo) {
-        return orderRepository.save(Builder.buildOrderByInfo(orderInfo));
+        return orderRepository.save(Builder.buildOrderByInfo(orderInfo, recipeRepository.findById(orderInfo.getRecipeId()).orElse(null)));
     }
 }

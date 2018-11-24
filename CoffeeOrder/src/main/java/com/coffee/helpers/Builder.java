@@ -92,6 +92,15 @@ public class Builder {
         return order;
     }
 
+    @Nonnull
+    public static Order buildOrderByInfo(OrderMiniInfo orderInfo, Recipe recipe) {
+        Order order = new Order();
+        order.setUserId(orderInfo.getUserId());
+        order.setRecipe(recipe);
+        order.setCoffeeHouseId(orderInfo.getCoffeeHouseId());
+        return order;
+    }
+
 
 //   ******************************** Recipe Ingredient ********************************
 
