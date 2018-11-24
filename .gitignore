@@ -23,6 +23,9 @@ CoffeeOrder/target/
 CoffeeApp/\.idea/
 CoffeeApp/target/
 
+CoffeeModels/target/
+CoffeeModels/\.idea/
+
 
 \.idea/
 

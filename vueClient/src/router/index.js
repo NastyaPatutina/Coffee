@@ -1,14 +1,14 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Orders from '@/components/order/Orders'
 import Order from '@/components/order/Order'
 import NewOrder from '@/components/order/NewOrder'
 import EditOrder from '@/components/order/EditOrder'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
+export default new VueRouter({
   mode: 'history',
   routes: [
     {
@@ -19,33 +19,28 @@ export default new Router({
     {
       path: '/orders',
       name: 'Orders',
-      component: Orders,
+      component: { render: h => h('router-view') },
       children: [
         {
-          path: ':id',
-          name: 'Order',
-          component: Order
+          path: '',
+          component: Orders
         },
-        // {
-        //   path: 'new',
-        //   name: 'NewOrder',
-        //   component: NewOrder
-        // },
+        {
+          path: 'new',
+          name: 'NewOrder',
+          component: NewOrder
+        },
         {
           path: 'edit',
           name: 'EditOrder',
           component: EditOrder
         },
         {
-          path: '',
-          component: Orders
+          path: ':id',
+          name: 'Order',
+          component: Order
         }
       ]
-    },
-    {
-      path: '/orders/new',
-      name: 'NewOrder',
-      component: NewOrder
     }
   ]
 })

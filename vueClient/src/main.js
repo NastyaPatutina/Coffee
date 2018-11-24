@@ -4,10 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import BootstrapVue from 'bootstrap-vue'
+import vSelect from 'vue-select'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+Vue.component('v-select', vSelect);
 Vue.use(BootstrapVue);
 
 /* eslint-disable no-new */
