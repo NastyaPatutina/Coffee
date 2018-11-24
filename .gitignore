@@ -29,8 +29,6 @@ CoffeeModels/\.idea/
 
 \.idea/
 
-vueClient/build/
-
 .DS_Store
 vueClient/node_modules/
 vueClient/dist/
