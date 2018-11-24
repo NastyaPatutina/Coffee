@@ -42,11 +42,13 @@ public class RecipeController {
     public ResponseEntity<RecipeWithIngredientsInfo> createRecipe(@RequestBody RecipeWithIngredientsInfo recipeInfo) {
         Recipe savedRecipe = recipeService.save(recipeInfo);
 
-        return new ResponseEntity<RecipeWithIngredientsInfo>(Builder.buildRecipeInfoWithIngredients(savedRecipe), HttpStatus.CREATED);
+        return new ResponseEntity<RecipeWithIngredientsInfo>(Builder.buildRecipeInfoWithIngredients(savedRecipe),
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RecipeWithIngredientsInfo> updateRecipe(@RequestBody RecipeInfo recipe, @PathVariable Integer id) {
+    public ResponseEntity<RecipeWithIngredientsInfo> updateRecipe(@RequestBody RecipeWithIngredientsInfo recipe,
+                                                                  @PathVariable Integer id) {
 
         RecipeInfo recipeOptional = recipeService.findRecipeById(id);
 

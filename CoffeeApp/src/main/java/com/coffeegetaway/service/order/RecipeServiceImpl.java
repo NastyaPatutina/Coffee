@@ -56,15 +56,28 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<RecipeWithIngredientsInfo> updateRecipe(RecipeInfo recipeInfo, Integer id) {
-        String urlTarget = default_urlTarget + id.toString();
-        HttpEntity<RecipeInfo> request = new HttpEntity<>(recipeInfo);
+    public ResponseEntity<RecipeWithProducts> updateRecipe(RecipeWithProducts recipeInfo, Integer id) {
         RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<List<ProductInfo>> products_result = restTemplate.exchange("http://localhost:8080/products/",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<ProductInfo>>(){});
+        List<ProductInfo> products = products_result.getBody();
+
+        if (!updateProducts(recipeInfo, products))
+            return new ResponseEntity<RecipeWithProducts>((RecipeWithProducts) null, HttpStatus.NOT_ACCEPTABLE);
+
+        restTemplate = new RestTemplate();
+
+        String urlTarget = default_urlTarget + id.toString();
+        HttpEntity<RecipeWithIngredientsInfo> request = new HttpEntity<>(buildRecipeWithIngredientsInfo(recipeInfo));
         ResponseEntity<RecipeWithIngredientsInfo> result = restTemplate.exchange(urlTarget,
                 HttpMethod.PUT,
                 request,
                 RecipeWithIngredientsInfo.class);
-        return result;
+
+        return new ResponseEntity<RecipeWithProducts>(buildRecipeWithProducts(result.getBody(), products), HttpStatus.OK);
     }
 
     @Override
@@ -94,25 +107,68 @@ public class RecipeServiceImpl implements RecipeService {
 
         for (RecipeIngredientWithProductInfo riInfo:recipeInfo.getRecipeIngredients()){
             if (riInfo.getProduct().getId() == null) {
-                for(ProductInfo pInfo: products) {
-                    if (pInfo.getName().replaceAll("\\s","").equals(riInfo.getProduct().getName().replaceAll("\\s",""))) {
-                        riInfo.getProduct().setId(pInfo.getId());
-                    }
-                }
-
-                if (riInfo.getProduct().getId() == null) {
-                    ProductInfo productInfo = new ProductInfo();
-                    productInfo.setName(riInfo.getProduct().getName());
-
-                    ProductInfo result = createProduct(productInfo);
-                    if (result == null) {
-                        return false;
-                    }
-
-                    riInfo.getProduct().setId(result.getId());
-                    products.add(result);
+                if(!createProducts(riInfo, products)){
+                    return false;
                 }
             }
+        }
+        return true;
+    }
+    private Boolean updateProducts(RecipeWithProducts recipeInfo, List<ProductInfo> products){
+
+        for (RecipeIngredientWithProductInfo riInfo:recipeInfo.getRecipeIngredients()){
+            if (riInfo.getProduct().getId() == null) {
+                if(!createProducts(riInfo, products)){
+                    return false;
+                }
+            } else {
+                if(!updateProducts(riInfo, products)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private Boolean updateProducts(RecipeIngredientWithProductInfo riInfo, List<ProductInfo> products) {
+        Boolean changed = false;
+        ProductInfo product = findProductById(products, riInfo.getProduct().getId());
+        if (product != null &&
+                product.getName().replaceAll("\\s","").equals(riInfo.getProduct().getName().replaceAll("\\s",""))){
+            changed = true;
+        }
+
+        if (changed) {
+            ProductInfo productInfo = new ProductInfo();
+            productInfo.setName(riInfo.getProduct().getName());
+
+            ProductInfo result = updateProduct(riInfo.getProduct().getId(), productInfo);
+            if (result == null) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+    private Boolean createProducts(RecipeIngredientWithProductInfo riInfo, List<ProductInfo> products) {
+        for(ProductInfo pInfo: products) {
+            if (pInfo.getName().replaceAll("\\s","")
+                    .equals(riInfo.getProduct().getName().replaceAll("\\s",""))) {
+                riInfo.getProduct().setId(pInfo.getId());
+            }
+        }
+
+        if (riInfo.getProduct().getId() == null) {
+            ProductInfo productInfo = new ProductInfo();
+            productInfo.setName(riInfo.getProduct().getName());
+
+            ProductInfo result = createProduct(productInfo);
+            if (result == null) {
+                return false;
+            }
+
+            riInfo.getProduct().setId(result.getId());
+            products.add(result);
         }
         return true;
     }
@@ -125,6 +181,18 @@ public class RecipeServiceImpl implements RecipeService {
         if (result == null)
             return null;
         return result;
+    }
+    private ProductInfo updateProduct(Integer id, ProductInfo productInfo) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpEntity<ProductInfo> request = new HttpEntity<>(productInfo);
+        ResponseEntity<ProductInfo> result = restTemplate.exchange("http://localhost:8080/products/" + id.toString(),
+                HttpMethod.PUT,
+                request,
+                ProductInfo.class);
+        if (result.getBody() == null)
+            return null;
+        return result.getBody();
     }
 
     private RecipeWithIngredientsInfo buildRecipeWithIngredientsInfo(RecipeWithProducts recipeInfo) {
@@ -165,7 +233,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeWithProducts;
     }
 
-    ProductInfo findProductById(List<ProductInfo> products, Integer productId) {
+    private ProductInfo findProductById(List<ProductInfo> products, Integer productId) {
         for (ProductInfo productInfo:products) {
             if (productInfo.getId() == productId)
                 return productInfo;

@@ -60,7 +60,7 @@ public class RecipeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RecipeWithIngredientsInfo> updateRecipe(@RequestBody RecipeInfo recipe, @PathVariable Integer id) {
+    public ResponseEntity<RecipeWithProducts> updateRecipe(@RequestBody RecipeWithProducts recipe, @PathVariable Integer id) {
         return recipeService.updateRecipe(recipe, id);
     }
 }

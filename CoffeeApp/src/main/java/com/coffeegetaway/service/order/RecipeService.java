@@ -14,7 +14,7 @@ public interface RecipeService {
 
     void deleteRecipe(Integer id);
 
-    ResponseEntity<RecipeWithIngredientsInfo> updateRecipe(RecipeInfo recipeInfo, Integer id);
+    ResponseEntity<RecipeWithProducts> updateRecipe(RecipeWithProducts recipeInfo, Integer id);
 
     ResponseEntity<RecipeWithProducts> createRecipe(RecipeWithProducts recipeInfo);
 }

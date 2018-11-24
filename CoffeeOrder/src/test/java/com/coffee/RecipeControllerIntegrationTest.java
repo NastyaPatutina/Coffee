@@ -138,9 +138,10 @@ public class RecipeControllerIntegrationTest {
         Recipe recipe1 = new Recipe("Recipe 3", 150);
         RecipeWithIngredientsInfo recipe1Info = Builder.buildRecipeInfoWithIngredients(recipe1);
         Recipe recipe_new = new Recipe("Recipe 1", 200);
-        RecipeInfo recipe1NewInfo = Builder.buildRecipeInfo(recipe_new);
-
+        RecipeWithIngredientsInfo recipe1NewInfo = Builder.buildRecipeInfoWithIngredients(recipe_new);
+        
         recipe1NewInfo.setId(21);
+        recipe_new.setId(21);
 
         given(service.findRecipeById(21)).willReturn(recipe1Info);
         given(service.save(refEq(recipe1NewInfo))).willReturn(recipe_new);

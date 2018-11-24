@@ -46,6 +46,7 @@ public class Builder {
     @Nonnull
     public static Recipe buildRecipeByInfo(RecipeInfo recipeInfo) {
         Recipe recipe = new Recipe();
+        recipe.setId(recipeInfo.getId());
         recipe.setName(recipeInfo.getName());
         recipe.setCost(recipeInfo.getCost());
         return recipe;
@@ -145,6 +146,7 @@ public class Builder {
     @Nonnull
     public static RecipeIngredient buildRecipeMiniIngredientInfo(OnlyIngredientInfo oiInfo, Recipe recipe) {
         RecipeIngredient recipeIngredient= new RecipeIngredient();
+        recipeIngredient.setId(oiInfo.getId());
         recipeIngredient.setRecipe(recipe);
         recipeIngredient.setCount(oiInfo.getCount());
         recipeIngredient.setProductId(oiInfo.getProductId());

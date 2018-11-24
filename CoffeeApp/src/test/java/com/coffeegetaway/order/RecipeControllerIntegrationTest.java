@@ -197,27 +197,64 @@ public class RecipeControllerIntegrationTest {
     @Test
     public void updateRecipe()
             throws Exception {
+        /* Исходные данные*/
+        RecipeWithProducts recipe3 = new RecipeWithProducts();
+        recipe3.setName("Recipe 3");
+        recipe3.setCost(150);
 
-        RecipeWithIngredientsInfo recipe1 = new RecipeWithIngredientsInfo();
-        recipe1.setName("Recipe New");
-        recipe1.setCost(170);
+        ArrayList<RecipeIngredientWithProductInfo> recipeIngredients = new ArrayList<>();
+        RecipeIngredientWithProductInfo oiInfo1 = new RecipeIngredientWithProductInfo();
+        ProductInfo prod = new ProductInfo();
+        prod.setName("Ololo");
+        oiInfo1.setProduct(prod);
+        oiInfo1.setCount(50);
+        oiInfo1.setId(16);
+        recipeIngredients.add(oiInfo1);
 
-        RecipeInfo recipe_new = new RecipeInfo();
-        recipe_new.setName("Recipe New");
-        recipe_new.setCost(170);
+        RecipeIngredientWithProductInfo oiInfo2 = new RecipeIngredientWithProductInfo();
+        ProductInfo prod2 = new ProductInfo();
+        prod2.setName("Ololo2");
+        oiInfo2.setProduct(prod2);
+        oiInfo2.setCount(10);
+        recipeIngredients.add(oiInfo2);
 
-        recipe_new.setId(21);
+        /* Результат*/
+        RecipeWithProducts recipe3Created = new RecipeWithProducts();
+        recipe3Created.setName("Recipe 3");
+        recipe3Created.setCost(150);
 
-        ResponseEntity<RecipeWithIngredientsInfo> res = new ResponseEntity<RecipeWithIngredientsInfo>(recipe1, HttpStatus.OK);
+        ArrayList<RecipeIngredientWithProductInfo> recipeIngredientsreated = new ArrayList<>();
+        RecipeIngredientWithProductInfo oiInfo1reated = new RecipeIngredientWithProductInfo();
+        ProductInfo prodreated  = new ProductInfo();
+        prodreated.setName("Ololo");
+        prodreated.setId(15);
+        oiInfo1reated.setProduct(prod);
+        oiInfo1reated.setCount(50);
+        oiInfo1reated.setId(16);
+        recipeIngredientsreated.add(oiInfo1);
 
-        given(service.updateRecipe(refEq(recipe_new), refEq(21))).willReturn(res);
+        RecipeIngredientWithProductInfo oiInfo2reated = new RecipeIngredientWithProductInfo();
+        ProductInfo prod2reated = new ProductInfo();
+        prod2reated.setName("Ololo2");
+        prod2reated.setId(17);
+        oiInfo2reated.setProduct(prod2);
+        oiInfo2reated.setCount(10);
+        oiInfo2reated.setId(18);
+        recipeIngredientsreated.add(oiInfo2);
+
+        recipe3Created.setRecipeIngredients(recipeIngredients);
+        recipe3Created.setId(19);
+
+        ResponseEntity<RecipeWithProducts> res = new ResponseEntity<RecipeWithProducts>(recipe3Created, HttpStatus.OK);
+
+        given(service.updateRecipe(refEq(recipe3), refEq(21))).willReturn(res);
 
         mvc.perform(put("/recipes/21")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(JsonMapper.asJsonString(recipe_new))
+                .content(JsonMapper.asJsonString(recipe3))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(service, times(1)).updateRecipe(refEq(recipe_new), refEq(21));
+        verify(service, times(1)).updateRecipe(refEq(recipe3), refEq(21));
     }
 }
