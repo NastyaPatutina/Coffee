@@ -31,7 +31,7 @@ export default new VueRouter({
           component: NewOrder
         },
         {
-          path: 'edit',
+          path: 'edit/:id',
           name: 'EditOrder',
           component: EditOrder
         },

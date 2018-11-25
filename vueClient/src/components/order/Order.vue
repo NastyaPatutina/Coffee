@@ -17,6 +17,12 @@
         <p>
           <strong>Coffee House: </strong>{{ info.data.coffeeHouseId }}
         </p>
+        <div class="container">
+          <div class="row">
+            <router-link :to="{name: 'EditOrder', params: { id: info.data.id }}" class="btn btn-primary nav-link col-lg-2">Edit Order</router-link>
+            <router-link to="/orders" class="btn nav-link col-lg-2">Back</router-link>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -45,16 +51,5 @@
 <style scoped>
   h1, h2 {
     font-weight: normal;
-  }
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-  a {
-    color: #42b983;
   }
 </style>

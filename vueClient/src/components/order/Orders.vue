@@ -4,7 +4,8 @@
     <div class="container">
       <div class="col-lg-1"></div>
       <div class="col-lg-11"  v-if="info != null">
-        <button type="button" class="btn btn-primary"><router-link :to="{name: 'NewOrder'}" class="nav-link">New Order</router-link></button>
+        <router-link :to="{name: 'NewOrder'}" class="btn btn-primary nav-link col-lg-2">New Order</router-link>
+        <br>
         <table class="table">
           <thead>
           <tr>
@@ -30,7 +31,21 @@
               {{item.coffeeHouseId}}
             </td>
             <td>
-              <button type="button" class="btn btn-primary"><router-link :to="{name: 'Order', params: { id: item.id }}" class="nav-link">Order</router-link></button>
+              <div class="container">
+                <div class="row">
+                  <router-link class="btn btn-primary nav-link col-lg-3" :to="{name: 'Order', params: { id: item.id }}">
+                    <font-awesome-icon icon="coffee" />
+                  </router-link>
+                  <div class="col-lg-1"></div>
+                  <router-link class="btn btn-primary nav-link col-lg-3" :to="{name: 'EditOrder', params: { id: item.id }}">
+                    <font-awesome-icon icon="edit" />
+                  </router-link>
+                  <div class="col-lg-1"></div>
+                  <router-link class="btn btn-danger nav-link col-lg-3 delete-btn" :to="{name: 'EditOrder', params: { id: item.id }}">
+                    <font-awesome-icon icon="trash" />
+                  </router-link>
+                </div>
+              </div>
             </td>
           </tr>
           </tbody>

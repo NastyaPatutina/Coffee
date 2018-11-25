@@ -7,12 +7,12 @@
       <form id="new_order_form" @submit="submitForm">
         <div class="form-group">
           <div class="col-lg-6">
-            <!--<p v-if="errors.length">-->
-              <!--<b>Пожалуйста исправьте указанные ошибки:</b>-->
-              <!--<ul>-->
-                <!--<li v-for="error in errors">{{ error }}</li>-->
-              <!--</ul>-->
-            <!--</p>-->
+            <p v-if="errors.length">
+              <b>Пожалуйста исправьте указанные ошибки:</b>
+              <ul>
+                <li v-for="error in errors">{{ error }}</li>
+              </ul>
+            </p>
               <v-select id="userId" v-model="userId" v-if="users != null" :options="users" placeholder="Select user">
               </v-select>
             <br>
@@ -23,7 +23,12 @@
               </v-select>
             <br>
             <p>
-              <input type="submit" value="Create" >
+            <div class="container">
+              <div class="row">
+                <input class="btn btn-primary" type="submit" value="Create" >
+                <router-link to="/orders" class="btn nav-link col-lg-2">Back</router-link>
+              </div>
+            </div>
             </p>
           </div>
         </div>
