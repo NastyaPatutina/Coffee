@@ -33,17 +33,21 @@
             <td>
               <div class="container">
                 <div class="row">
-                  <router-link class="btn btn-primary nav-link col-lg-3" :to="{name: 'Order', params: { id: item.id }}">
-                    <font-awesome-icon icon="coffee" />
-                  </router-link>
-                  <div class="col-lg-1"></div>
-                  <router-link class="btn btn-primary nav-link col-lg-3" :to="{name: 'EditOrder', params: { id: item.id }}">
-                    <font-awesome-icon icon="edit" />
-                  </router-link>
-                  <div class="col-lg-1"></div>
-                  <router-link class="btn btn-danger nav-link col-lg-3 delete-btn" :to="{name: 'EditOrder', params: { id: item.id }}">
-                    <font-awesome-icon icon="trash" />
-                  </router-link>
+                  <div class="col-lg-4">
+                    <router-link class="btn btn-primary col-lg-12" :to="{name: 'Order', params: { id: item.id }}">
+                      <font-awesome-icon icon="coffee" />
+                    </router-link>
+                  </div>
+                  <div class="col-lg-4">
+                    <router-link class="btn btn-primary col-lg-12" :to="{name: 'EditOrder', params: { id: item.id }}">
+                      <font-awesome-icon icon="edit" />
+                    </router-link>
+                  </div>
+                  <div class="col-lg-4">
+                    <button class="btn btn-danger col-lg-12 delete-btn" v-on:click="deleteEntity(item.id)">
+                      <font-awesome-icon icon="trash" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </td>
@@ -67,6 +71,18 @@
         info: null
       }
     },
+    methods: {
+    deleteEntity: function (id) {
+
+        axios
+          .delete('http://localhost:5055/orders/' + id)
+          .then(function (response) {
+            console.log("Deleted!", response);
+            window.location = 'http://localhost:5000/orders/';
+          });
+
+    }
+  },
     mounted() {
       axios
         .get('http://localhost:5055/orders')
