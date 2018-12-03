@@ -1,14 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
-import Orders from '@/components/order/Orders'
-import Order from '@/components/order/Order'
-import NewOrder from '@/components/order/NewOrder'
-import EditOrder from '@/components/order/EditOrder'
-import Recipes from '@/components/recipe/Recipes'
-import Recipe from '@/components/recipe/Recipe'
-import NewRecipe from '@/components/recipe/NewRecipe'
-import EditRecipe from '@/components/recipe/EditRecipe'
+
+import Orders from '@/components/order_service/order/Orders'
+import Order from '@/components/order_service/order/Order'
+import NewOrder from '@/components/order_service/order/NewOrder'
+import EditOrder from '@/components/order_service/order/EditOrder'
+import Recipes from '@/components/order_service/recipe/Recipes'
+import Recipe from '@/components/order_service/recipe/Recipe'
+import NewRecipe from '@/components/order_service/recipe/NewRecipe'
+import EditRecipe from '@/components/order_service/recipe/EditRecipe'
+import RecipeIngredients from '@/components/order_service/recipeIngredient/RecipeIngredients'
+import RecipeIngredient from '@/components/order_service/recipeIngredient/RecipeIngredient'
+import NewRecipeIngredient from '@/components/order_service/recipeIngredient/NewRecipeIngredient'
+import EditRecipeIngredient from '@/components/order_service/recipeIngredient/EditRecipeIngredient'
+
 
 Vue.use(VueRouter)
 
@@ -71,6 +77,33 @@ export default new VueRouter({
           component: EditRecipe
         }
       ]
+    },
+    {
+      path: '/recipe_ingredients',
+      name: 'RecipeIngredients',
+      component: { render: h => h('router-view') },
+      children: [
+        {
+          path: '',
+          component: RecipeIngredients
+        },
+        {
+          path: 'new',
+          name: 'NewRecipeIngredient',
+          component: NewRecipeIngredient
+        },
+        {
+          path: ':id',
+          name: 'RecipeIngredient',
+          component: RecipeIngredient
+        },
+        {
+          path: ':id/edit',
+          name: 'EditRecipeIngredient',
+          component: EditRecipeIngredient
+        }
+      ]
     }
+
   ]
 })

@@ -10,6 +10,9 @@
       <li class="nav-item">
         <router-link to="/recipes" class="nav-link">Recipes</router-link>
       </li>
+      <li class="nav-item">
+        <router-link to="/recipe_ingredients" class="nav-link">Recipe Ingredients</router-link>
+      </li>
     </ul>
     <router-view></router-view>
   </div>
