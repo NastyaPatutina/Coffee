@@ -5,13 +5,10 @@
         <a class="nav-link active" href="/">Home</a>
       </li>
       <li class="nav-item">
-        <router-link to="/orders"  class="nav-link">Orders</router-link>
+        <router-link to="/orders" class="nav-link">Orders</router-link>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+        <router-link to="/recipes" class="nav-link">Recipes</router-link>
       </li>
     </ul>
     <router-view></router-view>
