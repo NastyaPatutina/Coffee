@@ -13,6 +13,9 @@
       <li class="nav-item">
         <router-link to="/recipe_ingredients" class="nav-link">Recipe Ingredients</router-link>
       </li>
+      <li class="nav-item">
+        <router-link to="/products" class="nav-link">Products</router-link>
+      </li>
     </ul>
     <router-view></router-view>
   </div>

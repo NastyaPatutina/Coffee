@@ -15,6 +15,9 @@ import RecipeIngredient from '@/components/order_service/recipeIngredient/Recipe
 import NewRecipeIngredient from '@/components/order_service/recipeIngredient/NewRecipeIngredient'
 import EditRecipeIngredient from '@/components/order_service/recipeIngredient/EditRecipeIngredient'
 
+import Products from '@/components/house_service/product/Products'
+import NewProduct from '@/components/house_service/product/NewProduct'
+import EditProduct from '@/components/house_service/product/EditProduct'
 
 Vue.use(VueRouter)
 
@@ -101,6 +104,27 @@ export default new VueRouter({
           path: ':id/edit',
           name: 'EditRecipeIngredient',
           component: EditRecipeIngredient
+        }
+      ]
+    },
+    {
+      path: '/products',
+      name: 'Products',
+      component: { render: h => h('router-view') },
+      children: [
+        {
+          path: '',
+          component: Products
+        },
+        {
+          path: 'new',
+          name: 'NewProduct',
+          component: NewProduct
+        },
+        {
+          path: ':id/edit',
+          name: 'EditProduct',
+          component: EditProduct
         }
       ]
     }
