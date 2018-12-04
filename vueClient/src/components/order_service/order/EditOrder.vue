@@ -7,12 +7,12 @@
       <form id="edit_order_form" @submit="submitForm">
         <div class="form-group">
           <div class="col-lg-6">
-            <p v-if="errors.length">
-            <b>Пожалуйста исправьте указанные ошибки:</b>
-            <ul>
-            <li v-for="error in errors">{{ error }}</li>
-            </ul>
-            </p>
+            <div v-if="errors.length">
+              <b>Пожалуйста исправьте указанные ошибки:</b>
+              <ul>
+                <li v-for="error in errors">{{ error }}</li>
+              </ul>
+            </div>
             <v-select id="userId" v-model="userId" v-if="users != null" :options="users" placeholder="Select user">
             </v-select>
             <br>
@@ -126,8 +126,8 @@
               this.users = SelectIdAndValueForUser(response.data);
               var res = {};
               this.users.forEach(function(user) {
-                  if (user.value == response_f.data.userId)
-                    res = user;
+                if (user.value == response_f.data.userId)
+                  res = user;
               });
               this.userId = res;
             });

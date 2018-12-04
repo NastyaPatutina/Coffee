@@ -12,10 +12,12 @@
           <strong>Recipe Cost: </strong>{{ info.data.recipe.cost }}
         </p>
         <p>
-          <strong>User: </strong>{{ info.data.userId }}
+          <strong>User: </strong>
+          <UserName v-bind:id="info.data.userId"/>
         </p>
         <p>
-          <strong>Coffee House: </strong>{{ info.data.coffeeHouseId }}
+          <strong>Coffee House: </strong>
+          <HouseName v-bind:id="info.data.coffeeHouseId"/>
         </p>
         <div class="container">
           <div class="row">
@@ -30,9 +32,15 @@
 
 <script>
   import axios from 'axios'
+  import UserName from '../../user/UserName.vue'
+  import HouseName from '../../house_service/house/HouseName.vue'
 
   export default {
     name: 'order',
+    components: {
+      UserName,
+      HouseName
+    },
     data () {
       return {
         msg: 'Coffee Order',
