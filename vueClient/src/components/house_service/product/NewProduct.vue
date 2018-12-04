@@ -1,0 +1,87 @@
+<template>
+  <div class="new_product">
+    <h1>{{ msg }}</h1>
+    <br>
+    <div class="container">
+      <div class="col-lg-1"></div>
+      <form id="new_product_form" @submit="submitForm">
+        <div class="form-group">
+          <div class="col-lg-6">
+            <div v-if="errors.length">
+                <b>Пожалуйста исправьте указанные ошибки:</b>
+              <ul>
+                <li v-for="error in errors">{{ error }}</li>
+              </ul>
+            </div>
+            <input v-model="name" placeholder="Product name" class="form-control" >
+            <br>
+            <div class="container">
+              <div class="row">
+                <input class="btn btn-primary" type="submit" value="Create" >
+                <router-link to="/products" class="btn nav-link col-lg-2">Back</router-link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script>
+  import axios from 'axios'
+
+
+  function checkForm (e) {
+    if (e.name) {
+      return true;
+    }
+
+    e.errors = [];
+
+    if (!e.name) {
+      e.errors.push('Please, write product name.');
+    }
+
+    return false;
+  }
+
+  export default {
+    name: 'new_product',
+    data () {
+      return {
+        msg: 'New Coffee Product',
+        name: null,
+        errors: []
+      }
+    }, methods: {
+      submitForm: function (e) {
+
+        if (checkForm(this)){
+          console.log(this.name);
+          axios
+            .post('http://localhost:5055/products/', {
+              name: this.name
+            }, {
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*"
+              }})
+            .then(function (response) {
+              console.log(response);
+              window.location = 'http://localhost:5000/products/';
+            });
+        }
+        e.preventDefault();
+
+      }
+    }
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+  h1, h2 {
+    font-weight: normal;
+  }
+</style>
