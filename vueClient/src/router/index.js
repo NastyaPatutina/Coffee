@@ -25,6 +25,11 @@ import Storage from '@/components/house_service/storage/Storage'
 import NewStorage from '@/components/house_service/storage/NewStorage'
 import EditStorage from '@/components/house_service/storage/EditStorage'
 
+import Users from '@/components/user/Users'
+import User from '@/components/user/User'
+import NewUser from '@/components/user/NewUser'
+import EditUser from '@/components/user/EditUser'
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -173,6 +178,32 @@ export default new VueRouter({
           path: ':id/edit',
           name: 'EditStorage',
           component: EditStorage
+        }
+      ]
+    },
+    {
+      path: '/users',
+      name: 'User',
+      component: { render: h => h('router-view') },
+      children: [
+        {
+          path: '',
+          component: Users
+        },
+        {
+          path: 'new',
+          name: 'NewUser',
+          component: NewUser
+        },
+        {
+          path: ':id',
+          name: 'User',
+          component: User
+        },
+        {
+          path: ':id/edit',
+          name: 'EditUser',
+          component: EditUser
         }
       ]
     }

@@ -22,6 +22,9 @@
       <li class="nav-item">
         <router-link to="/storage" class="nav-link">Storage</router-link>
       </li>
+      <li class="nav-item">
+        <router-link to="/users" class="nav-link">Users</router-link>
+      </li>
     </ul>
     <router-view></router-view>
   </div>
