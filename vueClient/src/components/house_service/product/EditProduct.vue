@@ -1,10 +1,10 @@
 <template>
-  <div class="edit_order">
+  <div class="edit_product">
     <h1>{{ msg }}</h1>
     <br>
     <div class="container">
       <div class="col-lg-1"></div>
-      <form id="edit_order_form" @submit="submitForm">
+      <form id="edit_product_form" @submit="submitForm">
         <div class="form-group">
           <div class="col-lg-6">
             <div v-if="errors.length">

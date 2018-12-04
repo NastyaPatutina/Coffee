@@ -58,7 +58,6 @@
       submitForm: function (e) {
 
         if (checkForm(this)){
-          console.log(this.name);
           axios
             .post('http://localhost:5055/products/', {
               name: this.name
