@@ -11,10 +11,16 @@
         <p>
           <strong>Recipe Cost: </strong>{{ info.data.cost }}
         </p>
-        <p>
-          <!--TODO-->
-          <strong>Recipe Ingredients: </strong>{{ info.data.recipeIngredients }}
-        </p>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-10">
+          <strong>Recipe Ingredients: </strong>
+          <div v-for="recipeIngredient of info.data.recipeIngredients">
+            <hr>
+            <p>
+              <RecipeIngredientInfo v-bind:info="recipeIngredient"/>
+            </p>
+          </div>
+        </div>
         <div class="container">
           <div class="row">
             <router-link :to="{name: 'EditRecipe', params: { id: info.data.id }}" class="btn btn-primary nav-link col-lg-2">Edit Recipe</router-link>
@@ -28,9 +34,13 @@
 
 <script>
   import axios from 'axios'
+  import RecipeIngredientInfo from '../recipeIngredient/RecipeIngredientInfo.vue'
 
   export default {
     name: 'recipe',
+    components: {
+      RecipeIngredientInfo
+    },
     data () {
       return {
         msg: 'Coffee Recipe',

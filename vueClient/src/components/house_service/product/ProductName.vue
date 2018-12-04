@@ -1,7 +1,7 @@
 <template>
-  <div v-if="info != null" class="product_name">
+  <span v-if="info != null" class="product_name">
     {{ info.data.name }}
-  </div>
+  </span>
 </template>
 
 <script>
