@@ -21,6 +21,9 @@ import EditProduct from '@/components/house_service/product/EditProduct'
 import Houses from '@/components/house_service/house/Houses'
 import NewHouse from '@/components/house_service/house/NewHouse'
 import EditHouse from '@/components/house_service/house/EditHouse'
+import Storage from '@/components/house_service/storage/Storage'
+import NewStorage from '@/components/house_service/storage/NewStorage'
+import EditStorage from '@/components/house_service/storage/EditStorage'
 
 Vue.use(VueRouter)
 
@@ -149,6 +152,27 @@ export default new VueRouter({
           path: ':id/edit',
           name: 'EditHouse',
           component: EditHouse
+        }
+      ]
+    },
+    {
+      path: '/storage',
+      name: 'Storage',
+      component: { render: h => h('router-view') },
+      children: [
+        {
+          path: '',
+          component: Storage
+        },
+        {
+          path: 'new',
+          name: 'NewStorage',
+          component: NewStorage
+        },
+        {
+          path: ':id/edit',
+          name: 'EditStorage',
+          component: EditStorage
         }
       ]
     }
