@@ -1,0 +1,106 @@
+<template>
+  <div class="new_house">
+    <h1>{{ msg }}</h1>
+    <br>
+    <div class="container">
+      <div class="col-lg-1"></div>
+      <form id="new_house_form" @submit="submitForm">
+        <div class="form-group">
+          <div class="col-lg-6">
+            <div v-if="errors.length">
+              <b>Пожалуйста исправьте указанные ошибки:</b>
+              <ul>
+                <li v-for="error in errors">{{ error }}</li>
+              </ul>
+            </div>
+            <input v-model="name" placeholder="House name" class="form-control" >
+            <br>
+            <input v-model="address" placeholder="House address" class="form-control" >
+            <br>
+            <input type="number" v-model="longitude" placeholder="House longitude" class="form-control" min="-180" max="180" step=any>
+            <br>
+            <input type="number" v-model="latitude" placeholder="House latitude" class="form-control" min="-90" max="90" step=any>
+            <br>
+            <div class="container">
+              <div class="row">
+                <input class="btn btn-primary" type="submit" value="Create" >
+                <router-link to="/houses" class="btn nav-link col-lg-2">Back</router-link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script>
+  import axios from 'axios'
+
+  function checkForm (e) {
+    if (e.name && e.address &&
+      e.longitude && e.latitude) {
+      return true;
+    }
+
+    e.errors = [];
+
+    if (!e.name) {
+      e.errors.push('Please, write house name.');
+    }
+    if (!e.address) {
+      e.errors.push('Please, write house address.');
+    }
+    if (!e.longitude) {
+      e.errors.push('Please, write house longitude.');
+    }
+    if (!e.latitude) {
+      e.errors.push('Please, write house latitude.');
+    }
+    return false;
+  }
+
+  export default {
+    name: 'new_house',
+    data () {
+      return {
+        msg: 'New Coffee House',
+        name: null,
+        address: null,
+        longitude: null,
+        latitude: null,
+        errors: []
+      }
+    }, methods: {
+      submitForm: function (e) {
+
+        if (checkForm(this)){
+          axios
+            .post('http://localhost:5055/houses/', {
+              name: this.name,
+              address: this.address,
+              longitude: this.longitude,
+              latitude: this.latitude
+            }, {
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*"
+              }})
+            .then(function (response) {
+              console.log(response);
+              window.location = 'http://localhost:5000/houses/';
+            });
+        }
+        e.preventDefault();
+
+      }
+    }
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+  h1, h2 {
+    font-weight: normal;
+  }
+</style>
