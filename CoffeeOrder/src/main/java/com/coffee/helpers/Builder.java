@@ -16,9 +16,6 @@ import java.util.List;
 
 public class Builder {
 
-    @Autowired
-    private static RecipeRepository recipeRepository;
-
 //   ******************************** Recipe ********************************
 
     @Nonnull
@@ -83,14 +80,6 @@ public class Builder {
         return info;
     }
 
-    @Nonnull
-    public static Order buildOrderByInfo(OrderMiniInfo orderInfo) {
-        Order order = new Order();
-        order.setUserId(orderInfo.getUserId());
-        order.setRecipe(recipeRepository.findById(orderInfo.getRecipeId()).orElse(null));
-        order.setCoffeeHouseId(orderInfo.getCoffeeHouseId());
-        return order;
-    }
 
     @Nonnull
     public static Order buildOrderByInfo(OrderMiniInfo orderInfo, Recipe recipe) {
@@ -144,10 +133,10 @@ public class Builder {
     }
 
     @Nonnull
-    public static RecipeIngredient buildRecipeIngredientByMiniInfo(RecipeMiniIngredientInfo recipeIngredientInfo) {
+    public static RecipeIngredient buildRecipeIngredientByMiniInfo(RecipeMiniIngredientInfo recipeIngredientInfo, Recipe recipe) {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
         recipeIngredient.setProductId(recipeIngredientInfo.getProductId());
-        recipeIngredient.setRecipe(recipeRepository.findById(recipeIngredientInfo.getRecipeId()).orElse(null));
+        recipeIngredient.setRecipe(recipe);
         recipeIngredient.setCount(recipeIngredientInfo.getCount());
         return recipeIngredient;
     }
