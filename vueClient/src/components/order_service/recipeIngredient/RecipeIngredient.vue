@@ -9,15 +9,14 @@
           <strong>Recipe name: </strong>{{ info.data.recipe.name }}
         </p>
         <p>
-          <!--TODO-->
-          <strong>Product name: </strong>{{ info.data.productId}}
+          <strong>Product name: </strong><ProductName v-bind:id="info.data.productId"/>
         </p>
         <p>
           <strong>Product count: </strong>{{ info.data.count }}
         </p>
         <div class="container">
           <div class="row">
-            <router-link :to="{name: 'EditRecipeIngredients', params: { id: info.data.id }}" class="btn btn-primary nav-link col-lg-2">Edit Recipe Ingredient</router-link>
+            <router-link :to="{name: 'EditRecipeIngredients', params: { id: info.data.id }}" class="btn btn-primary nav-link col-lg-3">Edit Recipe Ingredient</router-link>
             <router-link to="/recipe_ingredients" class="btn nav-link col-lg-2">Back</router-link>
           </div>
         </div>
@@ -28,9 +27,13 @@
 
 <script>
   import axios from 'axios'
+  import ProductName from '../../house_service/product/ProductName.vue'
 
   export default {
     name: 'recipe_ingredients',
+    components: {
+      ProductName
+    },
     data () {
       return {
         msg: 'Coffee Recipe Ingredient',

@@ -1,5 +1,5 @@
 <template>
-  <div class="product_name">
+  <div v-if="info != null" class="product_name">
     {{ info.data.name }}
   </div>
 </template>
@@ -9,15 +9,23 @@
 
   export default {
     name: 'product_name',
+    props: {
+      id: {
+        type: Number,
+        required: true
+      }
+    },
     data () {
       return {
         info: null
       }
     },
     mounted() {
-      axios
-        .get('http://localhost:5055/products/' +  this.$route.params.id )
-        .then(response => (this.info = response));
+      if (this.id) {
+        axios
+          .get('http://localhost:5055/products/' + this.id)
+          .then(response => (this.info = response));
+      }
     }
   }
 </script>

@@ -4,7 +4,7 @@
     <div class="container">
       <div class="col-lg-1"></div>
       <div class="col-lg-11"  v-if="info != null">
-        <router-link :to="{name: 'NewRecipeIngredient'}" class="btn btn-primary nav-link col-lg-2">New Recipe Ingredient</router-link>
+        <router-link :to="{name: 'NewRecipeIngredient'}" class="btn btn-primary nav-link col-lg-3">New Recipe Ingredient</router-link>
         <br>
         <table class="table">
           <thead>
@@ -22,8 +22,7 @@
               {{item.id}}
             </th>
             <td>
-              <!--TODO-->
-              {{item.productId}}
+              <ProductName v-bind:id="item.productId"/>
             </td>
             <td>
               {{item.recipe.name}}
@@ -63,9 +62,13 @@
 
 <script>
   import axios from 'axios'
+  import ProductName from '../../house_service/product/ProductName.vue'
 
   export default {
     name: 'recipe_ingredients',
+    components: {
+      ProductName
+    },
     data () {
       return {
         msg: 'Coffee Recipe Ingredients',
