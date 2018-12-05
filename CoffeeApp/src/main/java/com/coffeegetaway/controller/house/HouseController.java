@@ -36,7 +36,7 @@ public class HouseController {
         return houseService.findHouseById(id);
     }
 
-    @GetMapping("/{id}/available_recipes")
+    @GetMapping("/{id}/recipes")
     public List<RecipeWithIngredientsInfo> HouseAvailableRecipes(@PathVariable Integer id) {
         return houseService.availableRecipesById(id);
     }
