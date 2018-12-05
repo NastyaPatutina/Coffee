@@ -21,7 +21,8 @@
         </p>
         <strong>Recipes:</strong>
         <div class="col-lg-1"></div>
-        <div class="col-lg-11"  v-if="recipes != null" v-for="item of recipes.data">
+        <div class="col-lg-11"  v-if="recipes != null">
+          <div v-for="item of recipes.data">
           <hr>
           <hr>
           <p>
@@ -38,6 +39,7 @@
             </div>
           </div>
           <br>
+          </div>
         </div>
         <div class="container">
           <div class="row">
