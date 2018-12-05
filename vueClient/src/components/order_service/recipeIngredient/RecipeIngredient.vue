@@ -11,7 +11,7 @@
         <RecipeIngredientInfo v-bind:info="info.data"/>
         <div class="container">
           <div class="row">
-            <router-link :to="{name: 'EditRecipeIngredients', params: { id: info.data.id }}" class="btn btn-primary nav-link col-lg-3">Edit Recipe Ingredient</router-link>
+            <router-link :to="{name: 'EditRecipeIngredient', params: { id: info.data.id }}" class="btn btn-primary nav-link col-lg-3">Edit Recipe Ingredient</router-link>
             <router-link to="/recipe_ingredients" class="btn nav-link col-lg-2">Back</router-link>
           </div>
         </div>

@@ -82,7 +82,7 @@
 
         if (checkForm(this)){
           axios
-            .post('http://localhost:5055/user/', {
+            .post('http://localhost:5055/users/', {
               first_name: this.first_name,
               last_name: this.last_name,
               gender: this.gender,
@@ -95,7 +95,7 @@
               }})
             .then(function (response) {
               console.log(response);
-              window.location = 'http://localhost:5000/user/' + response.data.id;
+              window.location = 'http://localhost:5000/users/' + response.data.id;
             });
         }
         e.preventDefault();
