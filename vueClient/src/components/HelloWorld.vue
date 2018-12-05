@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <img src="../assets/logoCoffee.jpg"class="center">
     <h1>{{ msg }}</h1>
   </div>
 </template>
@@ -30,5 +31,10 @@ li {
 }
 a {
   color: #42b983;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
