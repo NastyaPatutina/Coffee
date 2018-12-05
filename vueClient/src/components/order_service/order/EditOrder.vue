@@ -80,7 +80,7 @@
   }
 
   export default {
-    name: 'new_order',
+    name: 'edit_order',
     data () {
       return {
         msg: 'Edit Coffee Order',

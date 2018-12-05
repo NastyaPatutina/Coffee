@@ -28,8 +28,8 @@
               {{item.lastName}}
             </td>
             <td>
-              <font-awesome-icon icon="male" size="2x" v-if="item.gender === 'male'" />
-              <font-awesome-icon icon="female" size="2x" v-else />
+              <font-awesome-icon icon="male" size="2x" v-if="item.gender === 'male'" :style="{ color: 'lightblue' }" />
+              <font-awesome-icon icon="female" size="2x" v-else :style="{ color: 'pink' }"/>
             </td>
             <td>
               <div class="container">

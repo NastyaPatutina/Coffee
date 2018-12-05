@@ -72,7 +72,7 @@
   }
 
   export default {
-    name: 'new_product',
+    name: 'edit_house',
     data () {
       return {
         msg: 'Edit Coffee House',
@@ -99,7 +99,7 @@
               }})
             .then(function (response) {
               console.log(response);
-              // window.location = 'http://localhost:5000/houses/';
+              window.location = 'http://localhost:5000/houses/';
             });
         }
         e.preventDefault();

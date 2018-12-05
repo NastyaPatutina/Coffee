@@ -71,7 +71,7 @@
   }
 
   export default {
-    name: 'new_storage',
+    name: 'edit_storage',
     data () {
       return {
         msg: 'Edit Coffee Storage',

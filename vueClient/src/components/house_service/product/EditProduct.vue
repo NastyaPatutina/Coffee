@@ -43,7 +43,7 @@
   }
 
   export default {
-    name: 'new_product',
+    name: 'edit_product',
     data () {
       return {
         msg: 'Edit Coffee Product',
