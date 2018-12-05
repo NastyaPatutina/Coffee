@@ -4,11 +4,19 @@
     <br>
     <div class="container">
       <div class="col-lg-1"></div>
+      <div>
+        <b-alert variant="danger"
+                 dismissible
+                 :show="showDangerAlert"
+                 @dismissed="showDangerAlert=false">
+          Something went wrong... Sorry, try later...
+        </b-alert>
+      </div>
       <form id="new_order_form" @submit="submitForm">
         <div class="form-group">
           <div class="col-lg-6">
             <div v-if="errors.length">
-              <b>Пожалуйста исправьте указанные ошибки:</b>
+              <b>Please, correct this this mistakes:</b>
               <ul>
                 <li v-for="error in errors">{{ error }}</li>
               </ul>
@@ -87,6 +95,7 @@
     data () {
       return {
         msg: 'New Coffee Order',
+        showDangerAlert: false,
         userId: null,
         recipeId: null,
         houseId: null,
@@ -112,6 +121,10 @@
             .then(function (response) {
               console.log(response);
               window.location = 'http://localhost:5000/orders/' + response.data.id;
+            })
+            .catch(error => {
+              console.log(error);
+              this.showDangerAlert = true;
             });
         }
         e.preventDefault();
@@ -121,13 +134,25 @@
     mounted() {
       axios
         .get('http://localhost:5055/users/')
-        .then(response => (this.users = SelectIdAndValueForUser(response.data)));
+        .then(response => (this.users = SelectIdAndValueForUser(response.data)))
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
+        });
       axios
         .get('http://localhost:5055/houses/')
-        .then(response => (this.houses = SelectIdAndValueForCoffeeHouse(response.data)));
+        .then(response => (this.houses = SelectIdAndValueForCoffeeHouse(response.data)))
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
+        });
       axios
         .get('http://localhost:5055/recipes/')
-        .then(response => (this.recipes = SelectIdAndValueForRecipe(response.data)));
+        .then(response => (this.recipes = SelectIdAndValueForRecipe(response.data)))
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
+        });
     }
   }
 </script>

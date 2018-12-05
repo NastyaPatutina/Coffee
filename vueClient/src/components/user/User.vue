@@ -4,6 +4,14 @@
     <h1 v-else>{{ msg }}</h1>
     <div class="container">
       <div class="col-lg-1"></div>
+      <div>
+        <b-alert variant="danger"
+                 dismissible
+                 :show="showDangerAlert"
+                 @dismissed="showDangerAlert=false">
+          Something went wrong... Sorry, try later...
+        </b-alert>
+      </div>
       <div class="col-lg-11"  v-if="info != null">
         <p>
           <strong>First name: </strong>{{ info.data.firstName }}
@@ -41,13 +49,18 @@
     data () {
       return {
         msg: 'Coffee User',
+        showDangerAlert: false,
         info: null
       }
     },
     mounted() {
       axios
         .get('http://localhost:5055/users/' +  this.$route.params.id )
-        .then(response => (this.info = response));
+        .then(response => (this.info = response))
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
+        });
     }
   }
 </script>

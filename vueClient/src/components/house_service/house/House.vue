@@ -4,6 +4,14 @@
     <h1 v-else>{{ msg }}</h1>
     <div class="container">
       <div class="col-lg-1"></div>
+      <div>
+        <b-alert variant="danger"
+                 dismissible
+                 :show="showDangerAlert"
+                 @dismissed="showDangerAlert=false">
+          Something went wrong... Sorry, try later...
+        </b-alert>
+      </div>
       <div class="col-lg-11" v-if="info != null">
         <p>
           <strong>House name: </strong>{{ info.data.name }}
@@ -17,14 +25,11 @@
           <hr>
           <hr>
           <p>
-            <strong>Recipe name: </strong>{{ item.name }}
-          </p>
-          <p>
-            <strong>Recipe Cost: </strong>{{ item.cost }}
+            <strong>{{ item.name }}( {{ item.cost }} )</strong>
           </p>
           <div class="col-lg-2"></div>
           <div class="col-lg-10">
-            <strong>Recipe Ingredients: </strong>
+            <strong>Ingredients: </strong>
             <div v-for="recipeIngredient of item.recipeIngredients">
               <hr>
               <p>
@@ -40,6 +45,9 @@
             <router-link to="/houses" class="btn nav-link col-lg-2">Back</router-link>
           </div>
         </div>
+      </div>
+      <div class="col-lg-11"  v-else >
+        <strong>No available recipes</strong>
       </div>
     </div>
   </div>
@@ -58,16 +66,25 @@
       return {
         msg: 'Coffee House',
         recipes: null,
+        showDangerAlert: false,
         info: null
       }
     },
     mounted() {
       axios
         .get('http://localhost:5055/houses/' +  this.$route.params.id )
-        .then(response => (this.info = response));
+        .then(response => (this.info = response))
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
+        });
       axios
         .get('http://localhost:5055/houses/' +  this.$route.params.id + '/recipes')
-        .then(response => (this.recipes = response));
+        .then(response => (this.recipes = response))
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
+        });
     }
   }
 </script>

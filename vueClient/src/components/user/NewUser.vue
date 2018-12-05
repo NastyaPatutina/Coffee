@@ -4,11 +4,19 @@
     <br>
     <div class="container">
       <div class="col-lg-1"></div>
+      <div>
+        <b-alert variant="danger"
+                 dismissible
+                 :show="showDangerAlert"
+                 @dismissed="showDangerAlert=false">
+          Something went wrong... Sorry, try later...
+        </b-alert>
+      </div>
       <form id="new_user_form" @submit="submitForm">
         <div class="form-group">
           <div class="col-lg-6">
             <div v-if="errors.length">
-              <b>Пожалуйста исправьте указанные ошибки:</b>
+              <b>Please, correct this this mistakes:</b>
               <ul>
                 <li v-for="error in errors">{{ error }}</li>
               </ul>
@@ -70,6 +78,7 @@
     data () {
       return {
         msg: 'New Coffee User',
+        showDangerAlert: false,
         first_name: null,
         last_name: null,
         gender: null,
@@ -96,6 +105,10 @@
             .then(function (response) {
               console.log(response);
               window.location = 'http://localhost:5000/users/' + response.data.id;
+            })
+            .catch(error => {
+              console.log(error);
+              this.showDangerAlert = true;
             });
         }
         e.preventDefault();

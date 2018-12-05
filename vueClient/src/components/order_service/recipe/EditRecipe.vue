@@ -4,11 +4,19 @@
     <br>
     <div class="container">
       <div class="col-lg-1"></div>
+      <div>
+        <b-alert variant="danger"
+                 dismissible
+                 :show="showDangerAlert"
+                 @dismissed="showDangerAlert=false">
+          Something went wrong... Sorry, try later...
+        </b-alert>
+      </div>
       <form id="edit_recipe_form" @submit="submitForm">
         <div class="form-group">
           <div class="col-lg-6">
             <div v-if="errors.length">
-              <b>Пожалуйста исправьте указанные ошибки:</b>
+              <b>Please, correct this this mistakes:</b>
               <ul>
                 <li v-for="error in errors">{{ error }}</li>
               </ul>
@@ -39,6 +47,7 @@
     data () {
       return {
         msg: 'Edit Coffee recipe',
+        showDangerAlert: false,
         info: null,
         name: null,
         cost: null,
@@ -62,6 +71,10 @@
             .then(function (response) {
               console.log(response);
               window.location = 'http://localhost:5000/recipes/' + response.data.id;
+            })
+            .catch(error => {
+              console.log(error);
+              this.showDangerAlert = true;
             });
         }
         e.preventDefault();
@@ -75,6 +88,10 @@
           this.recipeIngredients = response_f.data.recipeIngredients;
           this.name = response_f.data.name;
           this.cost = response_f.data.cost;
+        })
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
         });
     }
   }

@@ -24,7 +24,10 @@
       if (this.id) {
         axios
           .get('http://localhost:5055/houses/' + this.id)
-          .then(response => (this.info = response));
+          .then(response => (this.info = response))
+          .catch(error => {
+            console.log(error);
+          });
       }
     }
   }

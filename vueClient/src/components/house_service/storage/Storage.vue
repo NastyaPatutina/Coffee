@@ -3,6 +3,14 @@
     <h1>{{msg}}</h1>
     <div class="container">
       <div class="col-lg-1"></div>
+      <div>
+        <b-alert variant="danger"
+                 dismissible
+                 :show="showDangerAlert"
+                 @dismissed="showDangerAlert=false">
+          Something went wrong... Sorry, try later...
+        </b-alert>
+      </div>
       <div class="col-lg-11"  v-if="info != null">
         <router-link :to="{name: 'NewStorage'}" class="btn btn-primary nav-link col-lg-2">New Storage</router-link>
         <br>
@@ -63,6 +71,7 @@
     data () {
       return {
         msg: 'Coffee Storage',
+        showDangerAlert: false,
         info: null
       }
     },
@@ -74,6 +83,10 @@
           .then(function (response) {
             console.log("Deleted!", response);
             window.location = 'http://localhost:5000/storage/';
+          })
+          .catch(error => {
+            console.log(error);
+            this.showDangerAlert = true;
           });
 
       }
@@ -81,7 +94,11 @@
     mounted() {
       axios
         .get('http://localhost:5055/storage')
-        .then(response => (this.info = response));
+        .then(response => (this.info = response))
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
+        });
     }
   }
 </script>
