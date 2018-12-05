@@ -33,12 +33,17 @@
             <td>
               <div class="container">
                 <div class="row">
-                  <div class="col-lg-6">
+                  <div class="col-lg-4">
+                    <router-link class="btn btn-primary col-lg-12" :to="{name: 'House', params: { id: item.id }}">
+                      <font-awesome-icon icon="coffee" />
+                    </router-link>
+                  </div>
+                  <div class="col-lg-4">
                     <router-link class="btn btn-primary col-lg-12" :to="{name: 'EditHouse', params: { id: item.id }}">
                       <font-awesome-icon icon="edit" />
                     </router-link>
                   </div>
-                  <div class="col-lg-6">
+                  <div class="col-lg-4">
                     <button class="btn btn-danger col-lg-12 delete-btn" v-on:click="deleteEntity(item.id)">
                       <font-awesome-icon icon="trash" />
                     </button>

@@ -19,6 +19,7 @@ import Products from '@/components/house_service/product/Products'
 import NewProduct from '@/components/house_service/product/NewProduct'
 import EditProduct from '@/components/house_service/product/EditProduct'
 import Houses from '@/components/house_service/house/Houses'
+import House from '@/components/house_service/house/House'
 import NewHouse from '@/components/house_service/house/NewHouse'
 import EditHouse from '@/components/house_service/house/EditHouse'
 import Storage from '@/components/house_service/storage/Storage'
@@ -147,6 +148,11 @@ export default new VueRouter({
         {
           path: '',
           component: Houses
+        },
+        {
+          path: ':id',
+          name: 'House',
+          component: House
         },
         {
           path: 'new',
