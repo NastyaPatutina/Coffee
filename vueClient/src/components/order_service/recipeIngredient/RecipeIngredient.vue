@@ -24,7 +24,6 @@
   import axios from 'axios'
   import RecipeIngredientInfo from '../recipeIngredient/RecipeIngredientInfo.vue'
 
-
   export default {
     name: 'recipe_ingredients',
     components: {

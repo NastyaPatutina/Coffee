@@ -4,7 +4,7 @@
     <div class="container">
       <div class="col-lg-1"></div>
       <div class="col-lg-11"  v-if="info != null">
-        <router-link :to="{name: 'NewRecipes'}" class="btn btn-primary nav-link col-lg-2">New Recipe</router-link>
+        <router-link :to="{name: 'NewRecipe'}" class="btn btn-primary nav-link col-lg-2">New Recipe</router-link>
         <br>
         <table class="table">
           <thead>

@@ -7,22 +7,22 @@
       <form id="new_recipe_form" @submit="submitForm">
         <div class="form-group">
           <div class="col-lg-6">
-            <p v-if="errors.length">
+            <div v-if="errors.length">
               <b>Пожалуйста исправьте указанные ошибки:</b>
-            <ul>
-              <li v-for="error in errors">{{ error }}</li>
-            </ul>
-            </p>
+              <ul>
+                <li v-for="error in errors">{{ error }}</li>
+              </ul>
+            </div>
+            <input v-model="name" placeholder="Recipe name" class="form-control" >
             <br>
-            <!--TODO-->
-            <p>
+            <input type="number" v-model="cost" placeholder="Recipe cost" class="form-control" min="0">
+            <br>
             <div class="container">
               <div class="row">
                 <input class="btn btn-primary" type="submit" value="Create" >
                 <router-link to="/recipes" class="btn nav-link col-lg-2">Back</router-link>
               </div>
             </div>
-            </p>
           </div>
         </div>
       </form>
@@ -42,6 +42,8 @@
     data () {
       return {
         msg: 'New Coffee Recipe',
+        cost: null,
+        name: null,
         errors: []
       }
     }, methods: {
@@ -50,6 +52,8 @@
         if (checkForm(this)){
           axios
             .post('http://localhost:5055/recipes/', {
+              cost: this.cost,
+              name: this.name
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
