@@ -95,7 +95,7 @@ public class HouseServiceImpl implements HouseService {
         for (RecipeWithIngredientsInfo recipeInfo: recipesInfo) {
             for (OnlyIngredientInfo recipeIngredientInfo: recipeInfo.getRecipeIngredients()) {
                 if (isProductInStorageList(storage, recipeIngredientInfo.getProductId())) {
-                    if (isIngredientAvailiable(storage, recipeIngredientInfo)) {
+                    if (!isIngredientAvailiable(storage, recipeIngredientInfo)) {
                         res.remove(recipeInfo);
                     }
                 } else {

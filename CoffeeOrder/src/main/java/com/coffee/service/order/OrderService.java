@@ -12,7 +12,7 @@ public interface OrderService {
     List<OrderInfo> findAllOrders();
 
     @Nonnull
-    List<OrderInfo> findOrderByUserId(@Nonnull Integer userId);
+    List<OrderInfo> findOrderByCustomerId(@Nonnull Integer userId);
 
     @Nonnull
     List<OrderInfo> findOrderByCoffeeHouseId(@Nonnull Integer coffeeHouseId);

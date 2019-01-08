@@ -32,7 +32,7 @@
                     <includeSystemScope>true</includeSystemScope>
                     <classifier>spring-boot</classifier>
                     <mainClass>
-                        com.coffee.CoffeeUserServer
+                        com.coffee.CoffeeCustomerServer
                     </mainClass>
                 </configuration>
                 <executions>

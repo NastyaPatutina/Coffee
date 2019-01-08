@@ -3,6 +3,7 @@ import com.coffee.entity.RecipeIngredient;
 import com.coffee.helpers.Builder;
 import com.coffee.model.order.recipeIngredient.*;
 import com.coffee.repository.RecipeIngredientRepository;
+import com.coffee.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,9 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
 
     @Autowired
     private RecipeIngredientRepository recipeIngredientRepository;
+
+    @Autowired
+    private RecipeRepository recipeRepository;
 
     @Nonnull
     @Override
@@ -43,6 +47,7 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
     @Override
     @Transactional
     public RecipeIngredient save(RecipeMiniIngredientInfo recipeMiniIngredientInfo) {
-        return recipeIngredientRepository.save(Builder.buildRecipeIngredientByMiniInfo(recipeMiniIngredientInfo));
+        return recipeIngredientRepository.save(Builder.buildRecipeIngredientByMiniInfo(recipeMiniIngredientInfo,
+                recipeRepository.findById(recipeMiniIngredientInfo.getRecipeId()).orElse(null)));
     }
 }

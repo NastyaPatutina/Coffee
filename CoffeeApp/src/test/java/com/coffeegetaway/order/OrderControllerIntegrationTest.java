@@ -56,19 +56,19 @@ public class OrderControllerIntegrationTest {
         OrderInfo order1 = new OrderInfo();
         order1.setRecipe(recipe1);
         order1.setCoffeeHouseId(1);
-        order1.setUserId(5);
+        order1.setCustomerId(5);
 
 
         OrderInfo order2 = new OrderInfo();
         order2.setRecipe(recipe1);
         order2.setCoffeeHouseId(1);
-        order2.setUserId(3);
+        order2.setCustomerId(3);
 
 
         OrderInfo order3 = new OrderInfo();
         order3.setRecipe(recipe1);
         order3.setCoffeeHouseId(1);
-        order3.setUserId(2);
+        order3.setCustomerId(2);
 
         List<OrderInfo> allOrders= Arrays.asList(order1, order2, order3);
 
@@ -78,10 +78,10 @@ public class OrderControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].userId", is(order1.getUserId())))
+                .andExpect(jsonPath("$[0].customerId", is(order1.getCustomerId())))
                 .andExpect(jsonPath("$[0].recipe.id", is(order1.getRecipe().getId())))
                 .andExpect(jsonPath("$[0].coffeeHouseId", is(order1.getCoffeeHouseId())))
-                .andExpect(jsonPath("$[1].userId", is(order2.getUserId())))
+                .andExpect(jsonPath("$[1].customerId", is(order2.getCustomerId())))
                 .andExpect(jsonPath("$[1].recipe.id", is(order2.getRecipe().getId())))
                 .andExpect(jsonPath("$[1].coffeeHouseId", is(order2.getCoffeeHouseId())))
                 .andExpect(jsonPath("$[2].recipe.id", is(order3.getRecipe().getId())))
@@ -89,7 +89,7 @@ public class OrderControllerIntegrationTest {
     }
 
     @Test
-    public void getOrdersByUser()
+    public void getOrdersByCustomer()
             throws Exception {
         RecipeInfo recipe1 = new RecipeInfo();
         recipe1.setName("Recipe 1");
@@ -98,32 +98,32 @@ public class OrderControllerIntegrationTest {
         OrderInfo order1 = new OrderInfo();
         order1.setRecipe(recipe1);
         order1.setCoffeeHouseId(1);
-        order1.setUserId(2);
+        order1.setCustomerId(2);
 
 
         OrderInfo order2 = new OrderInfo();
         order2.setRecipe(recipe1);
         order2.setCoffeeHouseId(1);
-        order2.setUserId(2);
+        order2.setCustomerId(2);
 
 
         OrderInfo order3 = new OrderInfo();
         order3.setRecipe(recipe1);
         order3.setCoffeeHouseId(1);
-        order3.setUserId(2);
+        order3.setCustomerId(2);
 
         List<OrderInfo> allOrders= Arrays.asList(order1, order2, order3);
 
-        given(service.allOrdersbyUser(2)).willReturn(allOrders);
+        given(service.allOrdersbyCustomer(2)).willReturn(allOrders);
 
-        mvc.perform(get("/orders?user_id=2")
+        mvc.perform(get("/orders?customer_id=2")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].userId", is(order1.getUserId())))
+                .andExpect(jsonPath("$[0].customerId", is(order1.getCustomerId())))
                 .andExpect(jsonPath("$[0].recipe.id", is(order1.getRecipe().getId())))
                 .andExpect(jsonPath("$[0].coffeeHouseId", is(order1.getCoffeeHouseId())))
-                .andExpect(jsonPath("$[1].userId", is(order2.getUserId())))
+                .andExpect(jsonPath("$[1].customerId", is(order2.getCustomerId())))
                 .andExpect(jsonPath("$[1].recipe.id", is(order2.getRecipe().getId())))
                 .andExpect(jsonPath("$[1].coffeeHouseId", is(order2.getCoffeeHouseId())))
                 .andExpect(jsonPath("$[2].recipe.id", is(order3.getRecipe().getId())))
@@ -140,19 +140,19 @@ public class OrderControllerIntegrationTest {
         OrderInfo order1 = new OrderInfo();
         order1.setRecipe(recipe1);
         order1.setCoffeeHouseId(1);
-        order1.setUserId(5);
+        order1.setCustomerId(5);
 
 
         OrderInfo order2 = new OrderInfo();
         order2.setRecipe(recipe1);
         order2.setCoffeeHouseId(1);
-        order2.setUserId(3);
+        order2.setCustomerId(3);
 
 
         OrderInfo order3 = new OrderInfo();
         order3.setRecipe(recipe1);
         order3.setCoffeeHouseId(1);
-        order3.setUserId(2);
+        order3.setCustomerId(2);
 
         List<OrderInfo> allOrders= Arrays.asList(order1, order2, order3);
 
@@ -162,10 +162,10 @@ public class OrderControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].userId", is(order1.getUserId())))
+                .andExpect(jsonPath("$[0].customerId", is(order1.getCustomerId())))
                 .andExpect(jsonPath("$[0].recipe.id", is(order1.getRecipe().getId())))
                 .andExpect(jsonPath("$[0].coffeeHouseId", is(order1.getCoffeeHouseId())))
-                .andExpect(jsonPath("$[1].userId", is(order2.getUserId())))
+                .andExpect(jsonPath("$[1].customerId", is(order2.getCustomerId())))
                 .andExpect(jsonPath("$[1].recipe.id", is(order2.getRecipe().getId())))
                 .andExpect(jsonPath("$[1].coffeeHouseId", is(order2.getCoffeeHouseId())))
                 .andExpect(jsonPath("$[2].recipe.id", is(order3.getRecipe().getId())))
@@ -181,14 +181,14 @@ public class OrderControllerIntegrationTest {
         OrderInfo order1 = new OrderInfo();
         order1.setRecipe(recipe1);
         order1.setCoffeeHouseId(1);
-        order1.setUserId(5);
+        order1.setCustomerId(5);
 
         given(service.findOrderById(20)).willReturn(order1);
 
         mvc.perform(get("/orders/20")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId", is(order1.getUserId())))
+                .andExpect(jsonPath("$.customerId", is(order1.getCustomerId())))
                 .andExpect(jsonPath("$.coffeeHouseId", is(order1.getCoffeeHouseId())));
     }
 
@@ -211,12 +211,12 @@ public class OrderControllerIntegrationTest {
         OrderInfo order1 = new OrderInfo();
         order1.setRecipe(recipe1);
         order1.setCoffeeHouseId(1);
-        order1.setUserId(5);
+        order1.setCustomerId(5);
 
         OrderMiniInfo orderMiniInfo1 = new OrderMiniInfo();
         orderMiniInfo1.setRecipeId(recipe1.getId());
         orderMiniInfo1.setCoffeeHouseId(1);
-        orderMiniInfo1.setUserId(5);
+        orderMiniInfo1.setCustomerId(5);
 
         ResponseEntity<OrderInfo> res = new ResponseEntity<OrderInfo>(order1, HttpStatus.CREATED);
 
@@ -245,12 +245,12 @@ public class OrderControllerIntegrationTest {
         OrderInfo order1 = new OrderInfo();
         order1.setRecipe(recipe1);
         order1.setCoffeeHouseId(1);
-        order1.setUserId(5);
+        order1.setCustomerId(5);
 
         OrderMiniInfo orderMiniInfo1 = new OrderMiniInfo();
         orderMiniInfo1.setRecipeId(15);
         orderMiniInfo1.setCoffeeHouseId(1);
-        orderMiniInfo1.setUserId(5);
+        orderMiniInfo1.setCustomerId(5);
 
         order1.setId(21);
 

@@ -40,11 +40,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderInfo> allOrdersbyUser(Integer userId) {
+    public List<OrderInfo> allOrdersbyCustomer(Integer customerId) {
         RestTemplate restTemplate = new RestTemplate();
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
 
-        builder.queryParam("user_id", userId);
+        builder.queryParam("customer_id", customerId);
 
         ResponseEntity<List<OrderInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
                 null,

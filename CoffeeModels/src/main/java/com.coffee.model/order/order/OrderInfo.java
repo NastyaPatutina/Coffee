@@ -4,7 +4,7 @@ import com.coffee.model.order.recipe.RecipeInfo;
 
 public class OrderInfo {
     private Integer id;
-    private Integer user_id;
+    private Integer customer_id;
     private RecipeInfo recipe;
     private Integer coffee_house_id;
 
@@ -16,12 +16,12 @@ public class OrderInfo {
         this.id = id;
     }
 
-    public Integer getUserId() {
-        return user_id;
+    public Integer getCustomerId() {
+        return customer_id;
     }
 
-    public void setUserId(Integer user_id) {
-        this.user_id = user_id;
+    public void setCustomerId(Integer user_id) {
+        this.customer_id = user_id;
     }
 
     public RecipeInfo getRecipe() {

@@ -59,10 +59,10 @@ public class OrderControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].userId", is(order1.getUserId())))
+                .andExpect(jsonPath("$[0].customerId", is(order1.getCustomerId())))
                 .andExpect(jsonPath("$[0].recipe.id", is(order1.getRecipeId())))
                 .andExpect(jsonPath("$[0].coffeeHouseId", is(order1.getCoffeeHouseId())))
-                .andExpect(jsonPath("$[1].userId", is(order2.getUserId())))
+                .andExpect(jsonPath("$[1].customerId", is(order2.getCustomerId())))
                 .andExpect(jsonPath("$[1].recipe.id", is(order2.getRecipeId())))
                 .andExpect(jsonPath("$[1].coffeeHouseId", is(order2.getCoffeeHouseId())))
                 .andExpect(jsonPath("$[2].recipe.id", is(order3.getRecipeId())))
@@ -70,7 +70,7 @@ public class OrderControllerIntegrationTest {
     }
 
     @Test
-    public void getOrdersForUser()
+    public void getOrdersForCustomer()
             throws Exception {
         Recipe recipe1 = new Recipe("Recipe 1", 50);
 
@@ -82,16 +82,16 @@ public class OrderControllerIntegrationTest {
                 Builder.buildOrderInfo(order2),
                 Builder.buildOrderInfo(order3));
 
-        given(service.findOrderByUserId(2)).willReturn(allOrders);
+        given(service.findOrderByCustomerId(2)).willReturn(allOrders);
 
-        mvc.perform(get("/orders?user_id=2")
+        mvc.perform(get("/orders?customer_id=2")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].userId", is(order1.getUserId())))
+                .andExpect(jsonPath("$[0].customerId", is(order1.getCustomerId())))
                 .andExpect(jsonPath("$[0].recipe.id", is(order1.getRecipe().getId())))
                 .andExpect(jsonPath("$[0].coffeeHouseId", is(order1.getCoffeeHouseId())))
-                .andExpect(jsonPath("$[1].userId", is(order2.getUserId())))
+                .andExpect(jsonPath("$[1].customerId", is(order2.getCustomerId())))
                 .andExpect(jsonPath("$[1].recipe.id", is(order2.getRecipe().getId())))
                 .andExpect(jsonPath("$[1].coffeeHouseId", is(order2.getCoffeeHouseId())))
                 .andExpect(jsonPath("$[2].recipe.id", is(order3.getRecipe().getId())))
@@ -117,10 +117,10 @@ public class OrderControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].userId", is(order1.getUserId())))
+                .andExpect(jsonPath("$[0].customerId", is(order1.getCustomerId())))
                 .andExpect(jsonPath("$[0].recipe.id", is(order1.getRecipeId())))
                 .andExpect(jsonPath("$[0].coffeeHouseId", is(order1.getCoffeeHouseId())))
-                .andExpect(jsonPath("$[1].userId", is(order2.getUserId())))
+                .andExpect(jsonPath("$[1].customerId", is(order2.getCustomerId())))
                 .andExpect(jsonPath("$[1].recipe.id", is(order2.getRecipeId())))
                 .andExpect(jsonPath("$[1].coffeeHouseId", is(order2.getCoffeeHouseId())))
                 .andExpect(jsonPath("$[2].recipe.id", is(order3.getRecipeId())))
@@ -140,7 +140,7 @@ public class OrderControllerIntegrationTest {
         mvc.perform(get("/orders/20")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId", is(order3.getUserId())))
+                .andExpect(jsonPath("$.customerId", is(order3.getCustomerId())))
                 .andExpect(jsonPath("$.coffeeHouseId", is(order3.getCoffeeHouseId())));
     }
 

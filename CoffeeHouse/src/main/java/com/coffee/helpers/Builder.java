@@ -13,12 +13,6 @@ import javax.annotation.Nonnull;
 
 public class Builder {
 
-    @Autowired
-    private static HouseRepository houseRepository;
-
-    @Autowired
-    private static ProductRepository productRepository;
-
     //   ******************************** Product ********************************
     @Nonnull
     public static ProductInfo buildProductInfo(Product product) {
@@ -82,12 +76,12 @@ public class Builder {
     }
 
     @Nonnull
-    public static Storage buildStorageByInfo(StorageMiniInfo storageInfo) {
+    public static Storage buildStorageByInfo(StorageMiniInfo storageInfo, House house, Product product) {
         Storage storage = new Storage();
         storage.setId(storageInfo.getId());
         storage.setCount(storageInfo.getCount());
-        storage.setHouse(houseRepository.findById(storageInfo.getHouseId()).orElse(null));
-        storage.setProduct(productRepository.findById(storageInfo.getProductId()).orElse(null));
+        storage.setHouse(house);
+        storage.setProduct(product);
         return storage;
     }
 }

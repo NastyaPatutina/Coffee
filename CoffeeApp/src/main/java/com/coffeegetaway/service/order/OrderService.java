@@ -12,7 +12,7 @@ public interface OrderService {
 
     List<OrderInfo> allOrders();
 
-    List<OrderInfo> allOrdersbyUser(Integer userId);
+    List<OrderInfo> allOrdersbyCustomer(Integer customerId);
 
     List<OrderInfo> allOrdersByCoffeeHouse(Integer coffeeHouseId);
 
