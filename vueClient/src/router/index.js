@@ -26,10 +26,10 @@ import Storage from '@/components/house_service/storage/Storage'
 import NewStorage from '@/components/house_service/storage/NewStorage'
 import EditStorage from '@/components/house_service/storage/EditStorage'
 
-import Users from '@/components/user/Users'
-import User from '@/components/user/User'
-import NewUser from '@/components/user/NewUser'
-import EditUser from '@/components/user/EditUser'
+import Customers from '@/components/customer/Customers'
+import Customer from '@/components/customer/Customer'
+import NewCustomer from '@/components/customer/NewCustomer'
+import EditCustomer from '@/components/customer/EditCustomer'
 
 Vue.use(VueRouter)
 
@@ -188,28 +188,28 @@ export default new VueRouter({
       ]
     },
     {
-      path: '/users',
-      name: 'User',
+      path: '/customers',
+      name: 'Customer',
       component: { render: h => h('router-view') },
       children: [
         {
           path: '',
-          component: Users
+          component: Customers
         },
         {
           path: 'new',
-          name: 'NewUser',
-          component: NewUser
+          name: 'NewCustomer',
+          component: NewCustomer
         },
         {
           path: ':id',
-          name: 'User',
-          component: User
+          name: 'Customer',
+          component: Customer
         },
         {
           path: ':id/edit',
-          name: 'EditUser',
-          component: EditUser
+          name: 'EditCustomer',
+          component: EditCustomer
         }
       ]
     }

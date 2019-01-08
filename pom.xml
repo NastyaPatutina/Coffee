@@ -11,10 +11,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>CoffeeUser</module>
+        <module>CoffeeModels</module>
+        <module>CoffeeCustomer</module>
         <module>CoffeeHouse</module>
         <module>CoffeeOrder</module>
         <module>CoffeeApp</module>
-        <module>CoffeeModels</module>
+        <!--<module>AuthorizationServer</module>-->
     </modules>
 </project>

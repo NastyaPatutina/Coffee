@@ -1,6 +1,6 @@
 <template>
   <div class="order">
-    <h1 v-if="info != null">{{ msg }} ({{ info.data.recipe.name }}) for {{ info.data.userId }}</h1>
+    <h1 v-if="info != null">{{ msg }} ({{ info.data.recipe.name }}) for {{ info.data.customerId }}</h1>
     <h1 v-else>{{ msg }}</h1>
     <div class="container">
       <div class="col-lg-1"></div>
@@ -20,8 +20,8 @@
           <strong>Recipe Cost: </strong>{{ info.data.recipe.cost }}
         </p>
         <p>
-          <strong>User: </strong>
-          <UserName v-bind:id="info.data.userId"/>
+          <strong>Customer: </strong>
+          <CustomerName v-bind:id="info.data.customerId"/>
         </p>
         <p>
           <strong>Coffee House: </strong>
@@ -40,13 +40,13 @@
 
 <script>
   import axios from 'axios'
-  import UserName from '../../user/UserName.vue'
+  import CustomerName from '../../customer/CustomerName.vue'
   import HouseName from '../../house_service/house/HouseName.vue'
 
   export default {
     name: 'order',
     components: {
-      UserName,
+      CustomerName,
       HouseName
     },
     data () {

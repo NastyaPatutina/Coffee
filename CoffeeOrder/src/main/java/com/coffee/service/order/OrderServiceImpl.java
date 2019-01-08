@@ -35,8 +35,8 @@ public class OrderServiceImpl implements OrderService {
     @Nonnull
     @Override
     @Transactional(readOnly = true)
-    public List<OrderInfo> findOrderByUserId(@Nonnull Integer userId) {
-        return orderRepository.findByUserId(userId)
+    public List<OrderInfo> findOrderByCustomerId(@Nonnull Integer userId) {
+        return orderRepository.findByCustomerId(userId)
                 .stream()
                 .map(Builder::buildOrderInfo)
                 .collect(Collectors.toList());

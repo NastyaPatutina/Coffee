@@ -21,7 +21,7 @@
                 <li v-for="error in errors">{{ error }}</li>
               </ul>
             </div>
-            <v-select id="userId" v-model="userId" v-if="users != null" :options="users" placeholder="Select user">
+            <v-select id="customerId" v-model="customerId" v-if="customers != null" :options="customers" placeholder="Select customer">
             </v-select>
             <br>
             <v-select id="recipeId" v-model="recipeId" v-if="recipes != null" :options="recipes" placeholder="Select recipe">
@@ -43,10 +43,10 @@
 <script>
   import axios from 'axios'
 
-  function SelectIdAndValueForUser(users) {
+  function SelectIdAndValueForCustomer(customers) {
     var res = [];
-    users.forEach(function(user) {
-      res.push({value : user.id, label: user.firstName + " " + user.lastName });
+    customers.forEach(function(customer) {
+      res.push({value : customer.id, label: customer.firstName + " " + customer.lastName });
     });
     return res;
   }
@@ -68,14 +68,14 @@
   }
 
   function checkForm (e) {
-    if (e.userId && e.recipeId && e.houseId) {
+    if (e.customerId && e.recipeId && e.houseId) {
       return true;
     }
 
     e.errors = [];
 
-    if (!e.userId) {
-      e.errors.push('Please, select user.');
+    if (!e.customerId) {
+      e.errors.push('Please, select customer.');
     }
     if (!e.recipeId) {
       e.errors.push('Please, select recipe.');
@@ -93,10 +93,10 @@
       return {
         msg: 'Edit Coffee Order',
         showDangerAlert: false,
-        userId: null,
+        customerId: null,
         recipeId: null,
         houseId: null,
-        users: null,
+        customers: null,
         recipes: null,
         houses: null,
         info: null,
@@ -108,7 +108,7 @@
         if (checkForm(this)){
           axios
             .put('http://localhost:5055/orders/' +  this.$route.params.id, {
-              userId: this.userId.value,
+              customerId: this.customerId.value,
               recipeId: this.recipeId.value,
               coffeeHouseId: this.houseId.value
             }, {
@@ -134,15 +134,15 @@
         .get('http://localhost:5055/orders/' +  this.$route.params.id )
         .then(response_f => {
           axios
-            .get('http://localhost:5055/users/')
+            .get('http://localhost:5055/customers/')
             .then(response => {
-              this.users = SelectIdAndValueForUser(response.data);
+              this.customers = SelectIdAndValueForCustomer(response.data);
               var res = {};
-              this.users.forEach(function(user) {
-                if (user.value == response_f.data.userId)
-                  res = user;
+              this.customers.forEach(function(customer) {
+                if (customer.value == response_f.data.customerId)
+                  res = customer;
               });
-              this.userId = res;
+              this.customerId = res;
             })
             .catch(error => {
               console.log(error);

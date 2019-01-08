@@ -19,7 +19,7 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Recipe name</th>
-            <th scope="col">User</th>
+            <th scope="col">Customer</th>
             <th scope="col">Coffee House</th>
             <th scope="col"></th>
           </tr>
@@ -33,7 +33,7 @@
               {{item.recipe.name}}
             </td>
             <td>
-              <UserName v-bind:id="item.userId"/>
+              <CustomerName v-bind:id="item.customerId"/>
             </td>
             <td>
               <HouseName v-bind:id="item.coffeeHouseId"/>
@@ -70,13 +70,13 @@
 
 <script>
   import axios from 'axios'
-  import UserName from '../../user/UserName.vue'
+  import CustomerName from '../../customer/CustomerName.vue'
   import HouseName from '../../house_service/house/HouseName.vue'
 
   export default {
     name: 'orders',
     components: {
-      UserName,
+      CustomerName,
       HouseName
     },
     data () {
