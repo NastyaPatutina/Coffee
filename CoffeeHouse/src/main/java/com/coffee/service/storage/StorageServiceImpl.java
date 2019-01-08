@@ -3,6 +3,8 @@ package com.coffee.service.storage;
 import com.coffee.entity.Storage;
 import com.coffee.helpers.Builder;
 import com.coffee.model.house.storage.*;
+import com.coffee.repository.HouseRepository;
+import com.coffee.repository.ProductRepository;
 import com.coffee.repository.StorageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,12 @@ import java.util.stream.Collectors;
 public class StorageServiceImpl implements StorageService{
     @Autowired
     private StorageRepository storageRepository;
+
+    @Autowired
+    private HouseRepository houseRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Nonnull
     @Override
@@ -53,6 +61,8 @@ public class StorageServiceImpl implements StorageService{
     @Override
     @Transactional
     public Storage save(StorageMiniInfo storage) {
-        return storageRepository.save(Builder.buildStorageByInfo(storage));
+        return storageRepository.save(Builder.buildStorageByInfo(storage,
+                houseRepository.findById(storage.getHouseId()).orElse(null),
+                productRepository.findById(storage.getProductId()).orElse(null)));
     }
 }

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/houses")
 public class HouseController {
@@ -35,7 +36,7 @@ public class HouseController {
         return houseService.findHouseById(id);
     }
 
-    @GetMapping("/{id}/available_recipes")
+    @GetMapping("/{id}/recipes")
     public List<RecipeWithIngredientsInfo> HouseAvailableRecipes(@PathVariable Integer id) {
         return houseService.availableRecipesById(id);
     }

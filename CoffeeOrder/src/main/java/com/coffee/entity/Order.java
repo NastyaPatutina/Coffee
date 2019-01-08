@@ -15,8 +15,8 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "customer_id")
+    private Integer customerId;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "recipe_id", nullable = false)
@@ -25,8 +25,8 @@ public class Order {
     @Column(name = "coffee_house_id")
     private Integer coffeeHouseId;
 
-    public Order(Integer userId, Recipe recipe, Integer coffeeHouseId) {
-        this.userId = userId;
+    public Order(Integer customerId, Recipe recipe, Integer coffeeHouseId) {
+        this.customerId = customerId;
         this.recipe = recipe;
         this.coffeeHouseId = coffeeHouseId;
     }
@@ -41,12 +41,12 @@ public class Order {
         this.id = id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getCustomerId() {
+        return customerId;
     }
 
-    public void setUserId(Integer user_id) {
-        this.userId = user_id;
+    public void setCustomerId(Integer customer_id) {
+        this.customerId = customer_id;
     }
 
     public Recipe getRecipe() {
@@ -80,7 +80,7 @@ public class Order {
 
         return new EqualsBuilder()
                 .append(id, order.id)
-                .append(userId, order.userId)
+                .append(customerId, order.customerId)
                 .append(recipe.getId(), order.recipe.getId())
                 .append(coffeeHouseId, order.coffeeHouseId)
                 .isEquals();
@@ -90,7 +90,7 @@ public class Order {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(userId)
+                .append(customerId)
                 .append(recipe.hashCode())
                 .append(coffeeHouseId)
                 .toHashCode();
@@ -100,7 +100,7 @@ public class Order {
     public String toString() {
         return MoreObjects
                 .toStringHelper(this)
-                .add("userId", userId)
+                .add("customerId", customerId)
                 .add("recipe", recipe.toString())
                 .add("coffeeHouseId", coffeeHouseId)
                 .toString();

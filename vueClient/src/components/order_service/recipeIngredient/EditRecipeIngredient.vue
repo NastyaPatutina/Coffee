@@ -1,0 +1,168 @@
+<template>
+  <div class="edit_recipe_ingredient">
+    <h1>{{ msg }}</h1>
+    <br>
+    <div class="container">
+      <div class="col-lg-1"></div>
+      <div>
+        <b-alert variant="danger"
+                 dismissible
+                 :show="showDangerAlert"
+                 @dismissed="showDangerAlert=false">
+          Something went wrong... Sorry, try later...
+        </b-alert>
+      </div>
+      <form id="edit_recipe_ingredient_form" @submit="submitForm">
+        <div class="form-group">
+          <div class="col-lg-6">
+            <div v-if="errors.length">
+              <b>Please, correct this this mistakes:</b>
+              <ul>
+                <li v-for="error in errors">{{ error }}</li>
+              </ul>
+            </div>
+            <v-select id="recipeId" v-model="recipeId" v-if="recipes != null" :options="recipes" placeholder="Select recipe">
+            </v-select>
+            <br>
+            <v-select id="productId" v-model="productId" v-if="products != null" :options="products" placeholder="Select product">
+            </v-select>
+            <br>
+            <input type="number" v-model="count" placeholder="Product count" class="form-control" min="0">
+            <br>
+            <p>
+              <input class="btn btn-primary" type="submit" value="Edit" >
+            </p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script>
+  import axios from 'axios'
+
+  function checkForm (e) {
+    if (e.count && e.productId && e.recipeId) {
+      return true;
+    }
+
+    e.errors = [];
+
+    if (!e.count) {
+      e.errors.push('Please, write ingredient count.');
+    }
+    if (!e.productId) {
+      e.errors.push('Please, write ingredient product.');
+    }
+    if (!e.recipeId) {
+      e.errors.push('Please, write ingredient recipe.');
+    }
+    return false;
+  }
+
+  function SelectIdAndValueForRecipe(recipes) {
+    var res = [];
+    recipes.forEach(function(recipe) {
+      res.push({value : recipe.id, label: recipe.name });
+    });
+    return res;
+  }
+  function SelectIdAndValueForProduct(recipes) {
+    var res = [];
+    recipes.forEach(function(recipe) {
+      res.push({value : recipe.id, label: recipe.name });
+    });
+    return res;
+  }
+
+  export default {
+    name: 'edit_recipe_ingredient',
+    data () {
+      return {
+        msg: 'Edit Coffee Storage',
+        count: null,
+        products: null,
+        recipes: null,
+        productId: null,
+        recipeId: null,
+        showDangerAlert: false,
+        errors: []
+      }
+    }, methods: {
+      submitForm: function (e) {
+
+        if (checkForm(this)){
+          axios
+            .put('http://localhost:5055/recipe_ingredients/' +  this.$route.params.id, {
+              count: this.count,
+              productId: this.productId.value,
+              recipeId: this.recipeId.value
+            }, {
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*"
+              }})
+            .then(function (response) {
+              console.log(response);
+              window.location = 'http://localhost:5000/recipe_ingredients/' + response.data.id;
+            })
+            .catch(error => {
+              console.log(error);
+              this.showDangerAlert = true;
+            });
+        }
+        e.preventDefault();
+
+      }
+    },
+    mounted() {
+      axios
+        .get('http://localhost:5055/recipe_ingredients/' +  this.$route.params.id )
+        .then(response_f => {
+          this.count = response_f.data.count;
+          axios
+            .get('http://localhost:5055/products/')
+            .then(response => {
+              this.products = SelectIdAndValueForProduct(response.data);
+              var res = {};
+              this.products.forEach(function(product) {
+                if (product.value == response_f.data.productId)
+                  res = product;
+              });
+              this.productId = res;
+            })
+            .catch(error => {
+              console.log(error);
+              this.showDangerAlert = true;
+            });
+          axios
+            .get('http://localhost:5055/recipes/')
+            .then(response => {
+              this.recipes = SelectIdAndValueForRecipe(response.data);
+              var res = {};
+              this.recipes.forEach(function(recipe) {
+                if (recipe.value == response_f.data.recipe.id)
+                  res = recipe;
+              });
+              this.recipeId = res;
+            })
+            .catch(error => {
+              console.log(error);
+              this.showDangerAlert = true;
+            });
+        })
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
+        });
+    }
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+  h1, h2 {
+    font-weight: normal;
+  }
+</style>

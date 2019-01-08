@@ -1,0 +1,116 @@
+<template>
+  <div class="orders">
+    <h1>{{msg}}</h1>
+    <div class="container">
+      <div class="col-lg-1"></div>
+      <div>
+        <b-alert variant="danger"
+                 dismissible
+                 :show="showDangerAlert"
+                 @dismissed="showDangerAlert=false">
+          Something went wrong... Sorry, try later...
+        </b-alert>
+      </div>
+      <div class="col-lg-11"  v-if="info != null">
+        <router-link :to="{name: 'NewOrder'}" class="btn btn-primary nav-link col-lg-2">New Order</router-link>
+        <br>
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Recipe name</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Coffee House</th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="item of info.data">
+            <th>
+              {{item.id}}
+            </th>
+            <td>
+              {{item.recipe.name}}
+            </td>
+            <td>
+              <CustomerName v-bind:id="item.customerId"/>
+            </td>
+            <td>
+              <HouseName v-bind:id="item.coffeeHouseId"/>
+            </td>
+            <td>
+              <div class="container">
+                <div class="row">
+                  <div class="col-lg-4">
+                    <router-link class="btn btn-primary col-lg-12" :to="{name: 'Order', params: { id: item.id }}">
+                      <font-awesome-icon icon="coffee" />
+                    </router-link>
+                  </div>
+                  <div class="col-lg-4">
+                    <router-link class="btn btn-primary col-lg-12" :to="{name: 'EditOrder', params: { id: item.id }}">
+                      <font-awesome-icon icon="edit" />
+                    </router-link>
+                  </div>
+                  <div class="col-lg-4">
+                    <button class="btn btn-danger col-lg-12 delete-btn" v-on:click="deleteEntity(item.id)">
+                      <font-awesome-icon icon="trash" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <h2 v-else>No orders yet...</h2>
+    </div>
+  </div>
+</template>
+
+<script>
+  import axios from 'axios'
+  import CustomerName from '../../customer/CustomerName.vue'
+  import HouseName from '../../house_service/house/HouseName.vue'
+
+  export default {
+    name: 'orders',
+    components: {
+      CustomerName,
+      HouseName
+    },
+    data () {
+      return {
+        msg: 'Coffee Orders',
+        showDangerAlert: false,
+        info: null
+      }
+    },
+    methods: {
+    deleteEntity: function (id) {
+
+        axios
+          .delete('http://localhost:5055/orders/' + id)
+          .then(function (response) {
+            console.log("Deleted!", response);
+            window.location = 'http://localhost:5000/orders/';
+          })
+          .catch(error => {
+            console.log(error);
+            this.showDangerAlert = true;
+          });
+
+    }
+  },
+    mounted() {
+      axios
+        .get('http://localhost:5055/orders')
+        .then(response => (this.info = response))
+        .catch(error => {
+          console.log(error);
+          this.showDangerAlert = true;
+        });
+    }
+  }
+</script>
+

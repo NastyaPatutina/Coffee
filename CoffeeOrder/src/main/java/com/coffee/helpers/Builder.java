@@ -16,9 +16,6 @@ import java.util.List;
 
 public class Builder {
 
-    @Autowired
-    private static RecipeRepository recipeRepository;
-
 //   ******************************** Recipe ********************************
 
     @Nonnull
@@ -67,7 +64,7 @@ public class Builder {
     public static OrderInfo buildOrderInfo(Order order) {
         OrderInfo info = new OrderInfo();
         info.setId(order.getId());
-        info.setUserId(order.getUserId());
+        info.setCustomerId(order.getCustomerId());
         info.setRecipe(buildRecipeInfo(order.getRecipe()));
         info.setCoffeeHouseId(order.getCoffeeHouseId());
         return info;
@@ -77,17 +74,18 @@ public class Builder {
     public static OrderMiniInfo buildOrderMiniInfo(Order order) {
         OrderMiniInfo info = new OrderMiniInfo();
         info.setId(order.getId());
-        info.setUserId(order.getUserId());
+        info.setCustomerId(order.getCustomerId());
         info.setRecipeId(order.getRecipe().getId());
         info.setCoffeeHouseId(order.getCoffeeHouseId());
         return info;
     }
 
+
     @Nonnull
-    public static Order buildOrderByInfo(OrderMiniInfo orderInfo) {
+    public static Order buildOrderByInfo(OrderMiniInfo orderInfo, Recipe recipe) {
         Order order = new Order();
-        order.setUserId(orderInfo.getUserId());
-        order.setRecipe(recipeRepository.findById(orderInfo.getRecipeId()).orElse(null));
+        order.setCustomerId(orderInfo.getCustomerId());
+        order.setRecipe(recipe);
         order.setCoffeeHouseId(orderInfo.getCoffeeHouseId());
         return order;
     }
@@ -135,10 +133,10 @@ public class Builder {
     }
 
     @Nonnull
-    public static RecipeIngredient buildRecipeIngredientByMiniInfo(RecipeMiniIngredientInfo recipeIngredientInfo) {
+    public static RecipeIngredient buildRecipeIngredientByMiniInfo(RecipeMiniIngredientInfo recipeIngredientInfo, Recipe recipe) {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
         recipeIngredient.setProductId(recipeIngredientInfo.getProductId());
-        recipeIngredient.setRecipe(recipeRepository.findById(recipeIngredientInfo.getRecipeId()).orElse(null));
+        recipeIngredient.setRecipe(recipe);
         recipeIngredient.setCount(recipeIngredientInfo.getCount());
         return recipeIngredient;
     }
