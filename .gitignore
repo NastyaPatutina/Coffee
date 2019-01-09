@@ -14,8 +14,8 @@ hs_err_pid*
 CoffeeHouse/\.idea/
 CoffeeHouse/target/
 
-CoffeeUser/\.idea/
-CoffeeUser/target/
+CoffeeCustomer/\.idea/
+CoffeeCustomer/target/
 
 CoffeeOrder/\.idea/
 CoffeeOrder/target/
@@ -26,6 +26,8 @@ CoffeeApp/target/
 CoffeeModels/target/
 CoffeeModels/\.idea/
 
+AuthorizationServer/target/
+AuthorizationServer/\.idea/
 
 \.idea/
 
