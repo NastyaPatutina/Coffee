@@ -13,17 +13,22 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value="/", method = RequestMethod.GET)
+    @GetMapping()
     public List<User> listUser(){
         return userService.findAll();
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @GetMapping("/{id}")
+    public User userById(@PathVariable Integer id) {
+        return userService.findUserById(id);
+    }
+
+    @PostMapping("/")
     public User create(@RequestBody User user){
         return userService.save(user);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
     public String delete(@PathVariable(value = "id") Integer id){
         userService.delete(id);
         return "success";
