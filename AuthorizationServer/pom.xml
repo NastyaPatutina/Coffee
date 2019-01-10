@@ -52,6 +52,12 @@
             <artifactId>jsr305</artifactId>
             <version>2.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.coffee.model</groupId>
+            <artifactId>CoffeeModels</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -64,6 +70,30 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <id>install-order</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <file>${project.basedir}/../CoffeeModels/target/CoffeeModels.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>com.coffee.model</groupId>
+                            <artifactId>CoffeeModels</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -1,21 +1,13 @@
-package com.coffee.auth.entity;
+package com.coffee.model.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
+public class UserInfo {
 
-@Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    @Column
     private String username;
 
-    @Column
     @JsonIgnore
     private String password;
 
@@ -42,6 +34,4 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }
-

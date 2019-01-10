@@ -1,6 +1,7 @@
 package com.coffee.auth.service;
 
 import com.coffee.auth.entity.User;
+import com.coffee.auth.helpers.Builder;
 import com.coffee.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,12 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import com.coffee.model.auth.UserInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service(value="userService")
 public class UserServiceImpl  implements UserDetailsService, UserService {
@@ -35,8 +38,10 @@ public class UserServiceImpl  implements UserDetailsService, UserService {
 
     @Nonnull
     @Override
-    public List<User> findAll() {
-        return new ArrayList<>(userRepository.findAll());
+    public List<UserInfo> findAll() {
+        return new ArrayList<>(userRepository.findAll().stream()
+                .map(Builder::buildUserInfo)
+                .collect(Collectors.toList()));
     }
 
     @Override
@@ -46,12 +51,12 @@ public class UserServiceImpl  implements UserDetailsService, UserService {
 
     @Nullable
     @Override
-    public User findUserById(Integer id) {
-        return userRepository.findById(id).orElse(null);
+    public UserInfo findUserById(Integer id) {
+        return userRepository.findById(id).map(Builder::buildUserInfo).orElse(null);
     }
 
     @Override
-    public User save(User user) {
-        return userRepository.save(user);
+    public UserInfo save(UserInfo user) {
+        return Builder.buildUserInfo(userRepository.save(Builder.buildUserByInfo(user)));
     }
 }

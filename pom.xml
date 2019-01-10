@@ -16,6 +16,6 @@
         <module>CoffeeHouse</module>
         <module>CoffeeOrder</module>
         <module>CoffeeApp</module>
-        <!--<module>AuthorizationServer</module>-->
+        <module>AuthorizationServer</module>
     </modules>
 </project>

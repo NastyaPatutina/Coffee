@@ -1,16 +1,15 @@
-package com.coffee.auth.service;
+package com.coffeegetaway.service.auth.user;
 
-import com.coffee.auth.entity.User;
+import com.coffee.model.auth.UserInfo;
+import org.springframework.http.ResponseEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.coffee.model.auth.UserInfo;
-
 import java.util.List;
 
 public interface UserService {
 
-    UserInfo save(UserInfo user);
+    ResponseEntity<UserInfo> save(UserInfo user);
 
     @Nonnull
     List<UserInfo> findAll();
