@@ -1,9 +1,11 @@
 package com.coffee.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -15,7 +17,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @EnableAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    static final String CLIEN_ID = "patutina";
+    static final String CLIENT_ID = "patutina";
     static final String CLIENT_SECRET = "patutina_secret";
     static final String GRANT_TYPE_PASSWORD = "password";
     static final String AUTHORIZATION_CODE = "authorization_code";
@@ -28,25 +30,30 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     static final int FREFRESH_TOKEN_VALIDITY_SECONDS = 6 * 60 * 60;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private TokenStore tokenStore;
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(8);
+    }
+
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
+        oauthServer.tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()")
+                .passwordEncoder(this.passwordEncoder())
+                .allowFormAuthenticationForClients().checkTokenAccess("permitAll()");
     }
     @Override
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
 
         configurer
                 .inMemory()
-                .withClient(CLIEN_ID)
-                .secret(passwordEncoder.encode(CLIENT_SECRET))
+                .withClient(CLIENT_ID)
+                .secret(passwordEncoder().encode(CLIENT_SECRET))
                 .authorizedGrantTypes(GRANT_TYPE_PASSWORD, AUTHORIZATION_CODE, REFRESH_TOKEN, IMPLICIT)
                 .scopes(SCOPE_READ, SCOPE_WRITE, TRUST)
                 .accessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_SECONDS).
@@ -58,4 +65,5 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         endpoints.tokenStore(tokenStore)
                 .authenticationManager(authenticationManager);
     }
+
 }

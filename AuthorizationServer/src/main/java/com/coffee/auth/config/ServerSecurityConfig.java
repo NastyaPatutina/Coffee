@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,6 +30,9 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource(name = "userService")
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -38,16 +42,12 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .anonymous().disable()
-                .authorizeRequests()
-                .antMatchers("/api-docs/**").permitAll();
+        http.anonymous().and().formLogin();
     }
 
     @Bean
@@ -55,21 +55,8 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
         return new InMemoryTokenStore();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(8);
-    }
-    @Bean
-    public FilterRegistrationBean corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        bean.setOrder(0);
-        return bean;
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder(8);
+//    }
 }
