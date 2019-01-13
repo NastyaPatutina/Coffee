@@ -47,32 +47,13 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.anonymous().and().formLogin();
-
         http
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .and()
-                .httpBasic();
-//                .authorizeRequests()
-//                .anyRequest()
-//                .authenticated()
+                .formLogin();
 //                .and()
-//                .formLogin()
-//                .permitAll();
-//        http
-//                .requestMatchers()
-//                .antMatchers("/login", "/oauth/authorize")
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers("/users/**").authenticated()
-//                .anyRequest()
-//                .authenticated()
-//                .and()
-//                .formLogin()
-//                .permitAll();
+//                .httpBasic();
     }
 
     @Bean
