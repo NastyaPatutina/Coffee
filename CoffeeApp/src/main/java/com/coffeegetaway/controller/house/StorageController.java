@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("/storage")
 public class StorageController {
 

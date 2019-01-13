@@ -16,6 +16,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,22 +45,24 @@ public class RecipeController {
         return recipeService.findRecipeById(id).getRecipeIngredients();
     }
 
-
     @GetMapping
     public List<RecipeWithIngredientsInfo> allRecipes() {
         return recipeService.allRecipes();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public void deleteRecipe(@PathVariable Integer id) {
         recipeService.deleteRecipe(id);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<RecipeWithProducts> createRecipe(@RequestBody RecipeWithProducts recipeInfo) {
         return recipeService.createRecipe(recipeInfo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}")
     public ResponseEntity<RecipeWithProducts> updateRecipe(@RequestBody RecipeWithProducts recipe, @PathVariable Integer id) {
         return recipeService.updateRecipe(recipe, id);

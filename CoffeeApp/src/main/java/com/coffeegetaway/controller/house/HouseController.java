@@ -13,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,22 +42,24 @@ public class HouseController {
         return houseService.availableRecipesById(id);
     }
 
-
     @GetMapping
     public List<HouseInfo> allHouses() {
         return houseService.allHouses();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public void deleteHouse(@PathVariable Integer id) {
         houseService.deleteHouse(id);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<HouseInfo> createHouse(@RequestBody HouseInfo houseInfo) {
         return houseService.createHouse(houseInfo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}")
     public ResponseEntity<HouseInfo> updateHouse(@RequestBody HouseInfo houseInfo, @PathVariable Integer id) {
         return houseService.updateHouse(houseInfo, id);
