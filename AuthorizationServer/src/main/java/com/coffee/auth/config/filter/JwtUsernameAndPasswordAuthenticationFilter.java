@@ -42,15 +42,29 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         // By default, UsernamePasswordAuthenticationFilter listens to "/login" path.
         // In our case, we use "/auth". So, we need to override the defaults.
         this.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(
-                new AntPathRequestMatcher("/login", "POST"),
-                new AntPathRequestMatcher("/oauth/token", "POST"),
-                new AntPathRequestMatcher("/oauth/authorize", "POST"),
                 new AntPathRequestMatcher(jwtConfig.getUri(), "POST")));
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
+
+        if (request.getRequestURI().equals("/login")) {
+            String username = this.obtainUsername(request);
+            String password = this.obtainPassword(request);
+            if (username == null) {
+                username = "";
+            }
+
+            if (password == null) {
+                password = "";
+            }
+
+            username = username.trim();
+            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+            this.setDetails(request, authRequest);
+            return authManager.authenticate(authRequest);
+        }
 
         try {
 
@@ -74,6 +88,10 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
+
+        if (request.getRequestURI().equals("/login")) {
+            super.successfulAuthentication(request, response, chain, auth);
+        }
 
         Long now = System.currentTimeMillis();
         String token = Jwts.builder()

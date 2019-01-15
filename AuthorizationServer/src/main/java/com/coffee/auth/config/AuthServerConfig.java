@@ -48,8 +48,6 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         return new JwtTokenStore(accessTokenConverter());
     }
 
-    @Autowired
-    private JwtConfig jwtConfig;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {

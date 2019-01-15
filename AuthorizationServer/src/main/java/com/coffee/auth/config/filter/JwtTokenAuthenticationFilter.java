@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
+public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtConfig jwtConfig;
 
@@ -33,8 +33,8 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
         String header = request.getHeader(jwtConfig.getHeader());
 
         // 2. validate the header and check the prefix
-        if(header == null || !header.startsWith(jwtConfig.getPrefix())) {
-            chain.doFilter(request, response);  		// If not valid, go to the next filter.
+        if(header == null || !header.startsWith(jwtConfig.getPrefix()) ) {
+            chain.doFilter(request, response);
             return;
         }
 
