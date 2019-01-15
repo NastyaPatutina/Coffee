@@ -35,6 +35,11 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // allow all who are accessing "auth" service
                 .antMatchers(jwtConfig.getUri()).permitAll()
+                .antMatchers("/oauth/authorize").permitAll()
+                .antMatchers("/oauth/check_token").permitAll()
+                .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/login").permitAll()
+                //public methods
                 .antMatchers(HttpMethod.GET, "/houses/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.GET, "/recipes/**").permitAll()

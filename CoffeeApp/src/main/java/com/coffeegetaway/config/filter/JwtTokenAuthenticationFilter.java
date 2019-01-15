@@ -2,6 +2,7 @@ package com.coffeegetaway.config.filter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
@@ -57,7 +58,7 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
                     .parseClaimsJws(token)
                     .getBody();
 
-            String username = claims.getSubject();
+            String username = Optional.ofNullable(claims.getSubject()).orElse(claims.get("user_name", String.class));
             if(username != null) {
                 @SuppressWarnings("unchecked")
                 List<String> authorities = (List<String>) claims.get("authorities");

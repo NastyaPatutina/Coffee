@@ -55,7 +55,7 @@ public class JwtConfig {
         this.secret = secret;
     }
 
-    @Value("${security.jwt.secret:JwtSecretKey}")
+    @Value("${security.jwt.secret:123}")
     private String secret;
 
 }
