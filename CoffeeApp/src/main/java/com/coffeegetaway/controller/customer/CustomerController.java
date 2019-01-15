@@ -15,7 +15,6 @@ import java.util.List;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
-@PreAuthorize("isAuthenticated()")
 @RequestMapping("/customers")
 public class CustomerController {
 

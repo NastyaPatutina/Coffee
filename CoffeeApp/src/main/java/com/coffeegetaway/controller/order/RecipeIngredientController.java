@@ -40,19 +40,16 @@ public class RecipeIngredientController {
         return recipeIngredientService.allRecipeIngredients();
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public void deleteRecipeIngredient(@PathVariable Integer id) {
         recipeIngredientService.deleteRecipeIngredient(id);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<RecipeIngredientInfo> createRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredientInfo) {
         return recipeIngredientService.createRecipeIngredient(recipeIngredientInfo);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}")
     public ResponseEntity<RecipeIngredientInfo> updateRecipeIngredient(@RequestBody RecipeMiniIngredientInfo recipeIngredient,
                                                                        @PathVariable Integer id) {

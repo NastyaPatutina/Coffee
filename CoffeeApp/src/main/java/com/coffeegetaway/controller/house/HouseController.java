@@ -47,19 +47,16 @@ public class HouseController {
         return houseService.allHouses();
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public void deleteHouse(@PathVariable Integer id) {
         houseService.deleteHouse(id);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<HouseInfo> createHouse(@RequestBody HouseInfo houseInfo) {
         return houseService.createHouse(houseInfo);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}")
     public ResponseEntity<HouseInfo> updateHouse(@RequestBody HouseInfo houseInfo, @PathVariable Integer id) {
         return houseService.updateHouse(houseInfo, id);

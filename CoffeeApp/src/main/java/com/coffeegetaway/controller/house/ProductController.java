@@ -20,7 +20,6 @@ import java.util.Map;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
-@PreAuthorize("isAuthenticated()")
 @RequestMapping("/products")
 public class ProductController {
 

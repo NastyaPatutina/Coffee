@@ -23,7 +23,6 @@ import java.util.Optional;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
-@PreAuthorize("isAuthenticated()")
 @RequestMapping("/storage")
 public class StorageController {
 

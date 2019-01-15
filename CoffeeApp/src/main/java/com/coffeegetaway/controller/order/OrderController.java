@@ -24,7 +24,6 @@ import java.util.Optional;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
-@PreAuthorize("isAuthenticated()")
 @RequestMapping("/orders")
 public class OrderController {
 
