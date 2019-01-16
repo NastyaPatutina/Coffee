@@ -69,7 +69,6 @@
             <artifactId>spring-security-jwt</artifactId>
             <version>1.0.0.RELEASE</version>
         </dependency>
-
     </dependencies>
 
     <properties>
