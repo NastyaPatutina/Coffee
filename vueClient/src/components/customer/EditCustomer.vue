@@ -43,6 +43,7 @@
 
 <script>
   import axios from 'axios'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   function checkForm (e) {
     if (e.first_name && e.last_name && e.gender &&
@@ -97,7 +98,8 @@
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${AUTH_TOKEN}`
               }})
             .then(function (response) {
               console.log(response);
@@ -114,7 +116,13 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/customers/' +  this.$route.params.id )
+        .get('http://localhost:5055/customers/' +  this.$route.params.id , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }})
         .then(response_f => {
           this.first_name = response_f.data.firstName;
           this.last_name = response_f.data.lastName;

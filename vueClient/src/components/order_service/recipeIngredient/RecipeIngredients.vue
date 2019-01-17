@@ -71,6 +71,8 @@
 <script>
   import axios from 'axios'
   import ProductName from '../../house_service/product/ProductName.vue'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
+
 
   export default {
     name: 'recipe_ingredients',
@@ -88,7 +90,13 @@
       deleteEntity: function (id) {
 
         axios
-          .delete('http://localhost:5055/recipe_ingredients/' + id)
+          .delete('http://localhost:5055/recipe_ingredients/' + id, {
+            headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+              "crossDomain": true,
+              "Authorization": `Bearer ${AUTH_TOKEN}`
+            }})
           .then(function (response) {
             console.log("Deleted!", response);
             window.location = 'http://localhost:5000/recipe_ingredients/';
@@ -102,7 +110,13 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/recipe_ingredients')
+        .get('http://localhost:5055/recipe_ingredients', {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          "Access-Control-Allow-Origin": "*",
+          "crossDomain": true,
+          "Authorization": `Bearer ${AUTH_TOKEN}`
+        }})
         .then(response => (this.info = response))
         .catch(error => {
           console.log(error);

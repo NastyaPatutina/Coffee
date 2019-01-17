@@ -42,6 +42,7 @@
 
 <script>
   import axios from 'axios'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   function SelectIdAndValueForCustomer(customers) {
     var res = [];
@@ -114,7 +115,8 @@
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${AUTH_TOKEN}`
               }})
             .then(function (response) {
               console.log(response);
@@ -131,10 +133,22 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/orders/' +  this.$route.params.id )
+        .get('http://localhost:5055/orders/' +  this.$route.params.id , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }})
         .then(response_f => {
           axios
-            .get('http://localhost:5055/customers/')
+            .get('http://localhost:5055/customers/', {
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+                "crossDomain": true,
+                "Authorization": `Bearer ${AUTH_TOKEN}`
+              }})
             .then(response => {
               this.customers = SelectIdAndValueForCustomer(response.data);
               var res = {};
@@ -149,7 +163,13 @@
               this.showDangerAlert = true;
             });
           axios
-            .get('http://localhost:5055/houses/')
+            .get('http://localhost:5055/houses/', {
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+                "crossDomain": true,
+                "Authorization": `Bearer ${AUTH_TOKEN}`
+              }})
             .then(response => {
               this.houses = SelectIdAndValueForCoffeeHouse(response.data);
               var res = {};
@@ -164,7 +184,13 @@
               this.showDangerAlert = true;
             });
           axios
-            .get('http://localhost:5055/recipes/')
+            .get('http://localhost:5055/recipes/', {
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+                "crossDomain": true,
+                "Authorization": `Bearer ${AUTH_TOKEN}`
+              }})
             .then(response => {
               this.recipes = SelectIdAndValueForRecipe(response.data);
               var res = {};

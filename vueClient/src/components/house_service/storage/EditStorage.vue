@@ -41,6 +41,7 @@
 
 <script>
   import axios from 'axios'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   function SelectIdAndValueForProducts(products) {
     var res = [];
@@ -103,7 +104,8 @@
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${AUTH_TOKEN}`
               }})
             .then(function (response) {
               console.log(response);
@@ -120,11 +122,23 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/storage/' +  this.$route.params.id )
+        .get('http://localhost:5055/storage/' +  this.$route.params.id , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }})
         .then(response_f => {
           this.count = response_f.data.count;
           axios
-            .get('http://localhost:5055/products/')
+            .get('http://localhost:5055/products/', {
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+                "crossDomain": true,
+                "Authorization": `Bearer ${AUTH_TOKEN}`
+              }})
             .then(response => {
               this.products = SelectIdAndValueForProducts(response.data);
               var res = {};
@@ -139,7 +153,13 @@
               this.showDangerAlert = true;
             });
           axios
-            .get('http://localhost:5055/houses/')
+            .get('http://localhost:5055/houses/', {
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+                "crossDomain": true,
+                "Authorization": `Bearer ${AUTH_TOKEN}`
+              }})
             .then(response => {
               this.houses = SelectIdAndValueForCoffeeHouse(response.data);
               var res = {};

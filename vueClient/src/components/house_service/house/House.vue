@@ -58,6 +58,7 @@
 <script>
   import axios from 'axios'
   import RecipeIngredientInfo from '../../order_service/recipeIngredient/RecipeIngredientInfo.vue'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   export default {
     name: 'house',
@@ -74,14 +75,26 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/houses/' +  this.$route.params.id )
+        .get('http://localhost:5055/houses/' +  this.$route.params.id , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }})
         .then(response => (this.info = response))
         .catch(error => {
           console.log(error);
           this.showDangerAlert = true;
         });
       axios
-        .get('http://localhost:5055/houses/' +  this.$route.params.id + '/recipes')
+        .get('http://localhost:5055/houses/' +  this.$route.params.id + '/recipes', {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }})
         .then(response => (this.recipes = response))
         .catch(error => {
           console.log(error);

@@ -43,6 +43,7 @@
 <script>
   import axios from 'axios'
   import RecipeIngredientInfo from '../recipeIngredient/RecipeIngredientInfo.vue'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   export default {
     name: 'recipe',
@@ -58,7 +59,13 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/recipes/' +  this.$route.params.id )
+        .get('http://localhost:5055/recipes/' +  this.$route.params.id, {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }} )
         .then(response => (this.info = response))
         .catch(error => {
           console.log(error);

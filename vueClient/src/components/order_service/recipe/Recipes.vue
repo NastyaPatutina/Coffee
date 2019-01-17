@@ -70,6 +70,7 @@
 
 <script>
   import axios from 'axios'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   export default {
     name: 'recipes',
@@ -84,7 +85,13 @@
       deleteEntity: function (id) {
 
         axios
-          .delete('http://localhost:5055/recipes/' + id)
+          .delete('http://localhost:5055/recipes/' + id, {
+            headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+              "crossDomain": true,
+              "Authorization": `Bearer ${AUTH_TOKEN}`
+            }})
           .then(function (response) {
             console.log("Deleted!", response);
             window.location = 'http://localhost:5000/recipes/';
@@ -98,7 +105,13 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/recipes')
+        .get('http://localhost:5055/recipes', {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }})
         .then(response => (this.info = response))
         .catch(error => {
           console.log(error);

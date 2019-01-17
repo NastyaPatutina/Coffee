@@ -72,6 +72,7 @@
   import axios from 'axios'
   import CustomerName from '../../customer/CustomerName.vue'
   import HouseName from '../../house_service/house/HouseName.vue'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   export default {
     name: 'orders',
@@ -90,7 +91,13 @@
     deleteEntity: function (id) {
 
         axios
-          .delete('http://localhost:5055/orders/' + id)
+          .delete('http://localhost:5055/orders/' + id, {
+            headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+              "crossDomain": true,
+              "Authorization": `Bearer ${AUTH_TOKEN}`
+            }})
           .then(function (response) {
             console.log("Deleted!", response);
             window.location = 'http://localhost:5000/orders/';
@@ -104,7 +111,13 @@
   },
     mounted() {
       axios
-        .get('http://localhost:5055/orders')
+        .get('http://localhost:5055/orders', {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }})
         .then(response => (this.info = response))
         .catch(error => {
           console.log(error);

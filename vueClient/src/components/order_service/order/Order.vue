@@ -42,6 +42,7 @@
   import axios from 'axios'
   import CustomerName from '../../customer/CustomerName.vue'
   import HouseName from '../../house_service/house/HouseName.vue'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   export default {
     name: 'order',
@@ -58,7 +59,13 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/orders/' +  this.$route.params.id )
+        .get('http://localhost:5055/orders/' +  this.$route.params.id , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }})
         .then(response => (this.info = response))
         .catch(error => {
           console.log(error);

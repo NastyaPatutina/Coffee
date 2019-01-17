@@ -41,6 +41,7 @@
 
 <script>
   import axios from 'axios'
+  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   function checkForm (e) {
     if (e.name) {
@@ -104,7 +105,8 @@
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${AUTH_TOKEN}`
               }})
             .then(function (response) {
               console.log(response);
@@ -121,7 +123,13 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/houses/' +  this.$route.params.id )
+        .get('http://localhost:5055/houses/' +  this.$route.params.id , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${AUTH_TOKEN}`
+          }})
         .then(response_f => {
           this.name = response_f.data.name;
           this.address = response_f.data.address;

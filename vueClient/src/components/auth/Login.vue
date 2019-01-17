@@ -27,6 +27,14 @@
 <script>
   import axios from 'axios'
 
+  export var AUTH_TOKEN = "";
+  export function logout (){
+    AUTH_TOKEN = ""
+  }
+  export function isAuth (){
+    return AUTH_TOKEN != "";
+  }
+
   function checkForm (e) {
     if (e.username && e.password) {
       return true;
@@ -67,8 +75,9 @@
                 "crossDomain": true
               }})
             .then(function (response) {
-              console.log(response);
-              window.location = 'http://localhost:5000';
+              AUTH_TOKEN = response.headers.authorization.split(" ")[1];
+              console.log(AUTH_TOKEN);
+              // window.location = 'http://localhost:5000';
             })
             .catch(error => {
               console.log(error);

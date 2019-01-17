@@ -15,13 +15,14 @@
 
 <script>
   import axios from 'axios'
+  import { logout } from "@/components/auth/Login"
 
   export default {
-    name: 'Login',
+    name: 'Logout',
     data () {
       return {
         showDangerAlert: false,
-        msg: null,
+        msg: "Hmmmm...  ",
         errors: []
       }
     },
@@ -35,13 +36,10 @@
         },
             maxRedirects: 0
         })
-        .then(function (response) {
-          this.msg = "You have been signed out";
+        .then(response => {
           console.log(response);
-
-          if (response.status == 302) {
-            console.log(response);
-          }
+          this.msg = "You have been signed out";
+          logout();
         })
         .catch(error => {
           console.log(error);
