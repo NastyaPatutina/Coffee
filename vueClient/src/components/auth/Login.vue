@@ -28,12 +28,6 @@
   import axios from 'axios'
 
   export var AUTH_TOKEN = "";
-  export function logout (){
-    AUTH_TOKEN = ""
-  }
-  export function isAuth (){
-    return AUTH_TOKEN != "";
-  }
 
   function checkForm (e) {
     if (e.username && e.password) {

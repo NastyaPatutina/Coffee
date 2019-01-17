@@ -102,6 +102,10 @@
         .then(response => (this.info = response))
         .catch(error => {
           console.log(error);
+          if (error.response.status == 401 || error.response.status == 403) {
+            this.msg = "Access denied";
+            return
+          }
           this.showDangerAlert = true;
         });
     }

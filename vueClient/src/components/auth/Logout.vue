@@ -15,7 +15,6 @@
 
 <script>
   import axios from 'axios'
-  import { logout } from "@/components/auth/Login"
 
   export default {
     name: 'Logout',
@@ -39,7 +38,6 @@
         .then(response => {
           console.log(response);
           this.msg = "You have been signed out";
-          logout();
         })
         .catch(error => {
           console.log(error);
