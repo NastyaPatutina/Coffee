@@ -86,7 +86,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<OrderInfo> createOrder(OrderMiniInfo orderInfo) {
-
         RestTemplate restTemplate = new RestTemplate();
 
         HttpEntity<OrderMiniInfo> request = new HttpEntity<>(orderInfo);

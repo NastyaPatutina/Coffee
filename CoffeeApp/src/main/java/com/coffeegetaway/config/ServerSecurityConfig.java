@@ -43,7 +43,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/oauth/authorize").permitAll()
                 .antMatchers("/oauth/check_token").permitAll()
                 .antMatchers("/oauth/token").permitAll()
-//                .antMatchers("/login").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/logout").permitAll()
                 //public methods
                 .antMatchers(HttpMethod.GET, "/houses/**").permitAll()
