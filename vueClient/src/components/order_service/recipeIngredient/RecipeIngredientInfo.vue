@@ -10,7 +10,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import ProductName from '../../house_service/product/ProductName.vue'
 
   export default {

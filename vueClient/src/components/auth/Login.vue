@@ -71,7 +71,9 @@
             .then(function (response) {
               AUTH_TOKEN = response.headers.authorization.split(" ")[1];
               console.log(AUTH_TOKEN);
-              // window.location = 'http://localhost:5000';
+
+              localStorage.setItem("auth", AUTH_TOKEN);
+              window.location = 'http://localhost:5000';
             })
             .catch(error => {
               console.log(error);

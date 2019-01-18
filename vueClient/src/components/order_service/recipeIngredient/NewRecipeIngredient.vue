@@ -44,7 +44,6 @@
 
 <script>
   import axios from 'axios'
-  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   function checkForm (e) {
     if (e.count && e.productId && e.recipeId) {
@@ -106,7 +105,7 @@
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
                 "Access-Control-Allow-Origin": "*",
-                "Authorization": `Bearer ${AUTH_TOKEN}`
+                "Authorization": `Bearer ${localStorage.getItem("auth")}`
               }})
             .then(function (response) {
               console.log(response);
@@ -127,7 +126,7 @@
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
             "crossDomain": true,
-            "Authorization": `Bearer ${AUTH_TOKEN}`
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
           }})
         .then(response => (this.products = SelectIdAndValueForProduct(response.data)))
         .catch(error => {
@@ -140,7 +139,7 @@
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
             "crossDomain": true,
-            "Authorization": `Bearer ${AUTH_TOKEN}`
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
           }})
         .then(response => (this.recipes = SelectIdAndValueForRecipe(response.data)))
         .catch(error => {

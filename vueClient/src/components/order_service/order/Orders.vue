@@ -72,7 +72,6 @@
   import axios from 'axios'
   import CustomerName from '../../customer/CustomerName.vue'
   import HouseName from '../../house_service/house/HouseName.vue'
-  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   export default {
     name: 'orders',
@@ -96,7 +95,7 @@
               'Content-Type': 'application/json;charset=UTF-8',
               "Access-Control-Allow-Origin": "*",
               "crossDomain": true,
-              "Authorization": `Bearer ${AUTH_TOKEN}`
+              "Authorization": `Bearer ${localStorage.getItem("auth")}`
             }})
           .then(function (response) {
             console.log("Deleted!", response);
@@ -120,7 +119,7 @@
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
             "crossDomain": true,
-            "Authorization": `Bearer ${AUTH_TOKEN}`
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
           }})
         .then(response => (this.info = response))
         .catch(error => {

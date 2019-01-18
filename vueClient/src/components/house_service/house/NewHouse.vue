@@ -44,7 +44,6 @@
 
 <script>
   import axios from 'axios'
-  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   function checkForm (e) {
     if (e.name && e.address &&
@@ -95,7 +94,7 @@
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
                 "Access-Control-Allow-Origin": "*",
-                "Authorization": `Bearer ${AUTH_TOKEN}`
+                "Authorization": `Bearer ${localStorage.getItem("auth")}`
               }})
             .then(function (response) {
               console.log(response);

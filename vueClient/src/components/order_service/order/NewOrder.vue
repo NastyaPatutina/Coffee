@@ -45,7 +45,6 @@
 
 <script>
   import axios from 'axios'
-  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   function SelectIdAndValueForCustomer(customers) {
     var res = [];
@@ -118,7 +117,7 @@
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
                 "Access-Control-Allow-Origin": "*",
-                "Authorization": `Bearer ${AUTH_TOKEN}`
+                "Authorization": `Bearer ${localStorage.getItem("auth")}`
               }})
             .then(function (response) {
               console.log(response);
@@ -140,7 +139,7 @@
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
             "crossDomain": true,
-            "Authorization": `Bearer ${AUTH_TOKEN}`
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
           }})
         .then(response => (this.customers = SelectIdAndValueForCustomer(response.data)))
         .catch(error => {
@@ -153,7 +152,7 @@
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
             "crossDomain": true,
-            "Authorization": `Bearer ${AUTH_TOKEN}`
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
           }})
         .then(response => (this.houses = SelectIdAndValueForCoffeeHouse(response.data)))
         .catch(error => {
@@ -166,7 +165,7 @@
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
             "crossDomain": true,
-            "Authorization": `Bearer ${AUTH_TOKEN}`
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
           }})
         .then(response => (this.recipes = SelectIdAndValueForRecipe(response.data)))
         .catch(error => {

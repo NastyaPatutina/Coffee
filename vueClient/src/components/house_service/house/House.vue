@@ -58,7 +58,6 @@
 <script>
   import axios from 'axios'
   import RecipeIngredientInfo from '../../order_service/recipeIngredient/RecipeIngredientInfo.vue'
-  import { AUTH_TOKEN } from "@/components/auth/Login"
 
   export default {
     name: 'house',
@@ -80,7 +79,7 @@
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
             "crossDomain": true,
-            "Authorization": `Bearer ${AUTH_TOKEN}`
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
           }})
         .then(response => (this.info = response))
         .catch(error => {
@@ -93,7 +92,7 @@
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
             "crossDomain": true,
-            "Authorization": `Bearer ${AUTH_TOKEN}`
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
           }})
         .then(response => (this.recipes = response))
         .catch(error => {
