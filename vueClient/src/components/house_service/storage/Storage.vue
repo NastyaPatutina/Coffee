@@ -79,13 +79,23 @@
       deleteEntity: function (id) {
 
         axios
-          .delete('http://localhost:5055/storage/' + id)
+          .delete('http://localhost:5055/storage/' + id, {
+            headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+              "crossDomain": true,
+              "Authorization": `Bearer ${localStorage.getItem("auth")}`
+            }})
           .then(function (response) {
             console.log("Deleted!", response);
             window.location = 'http://localhost:5000/storage/';
           })
           .catch(error => {
             console.log(error);
+            if (error.response.status == 401 || error.response.status == 403) {
+              this.msg = "Access denied";
+              return
+            }
             this.showDangerAlert = true;
           });
 
@@ -93,10 +103,20 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/storage')
+        .get('http://localhost:5055/storage', {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
+          }})
         .then(response => (this.info = response))
         .catch(error => {
           console.log(error);
+          if (error.response.status == 401 || error.response.status == 403) {
+            this.msg = "Access denied";
+            return
+          }
           this.showDangerAlert = true;
         });
     }

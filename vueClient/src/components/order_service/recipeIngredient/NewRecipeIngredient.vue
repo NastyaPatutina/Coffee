@@ -104,7 +104,8 @@
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${localStorage.getItem("auth")}`
               }})
             .then(function (response) {
               console.log(response);
@@ -120,14 +121,26 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/products')
+        .get('http://localhost:5055/products' , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
+          }})
         .then(response => (this.products = SelectIdAndValueForProduct(response.data)))
         .catch(error => {
           console.log(error);
           this.showDangerAlert = true;
         });
       axios
-        .get('http://localhost:5055/recipes')
+        .get('http://localhost:5055/recipes' , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
+          }})
         .then(response => (this.recipes = SelectIdAndValueForRecipe(response.data)))
         .catch(error => {
           console.log(error);

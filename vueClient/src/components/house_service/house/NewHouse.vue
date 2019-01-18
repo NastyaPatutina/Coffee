@@ -93,7 +93,8 @@
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${localStorage.getItem("auth")}`
               }})
             .then(function (response) {
               console.log(response);
@@ -101,6 +102,10 @@
             })
             .catch(error => {
               console.log(error);
+              if (error.response.status == 401 || error.response.status == 403) {
+                this.msg = "Access denied";
+                return
+              }
               this.showDangerAlert = true;
             });
         }

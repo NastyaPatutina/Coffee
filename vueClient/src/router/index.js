@@ -31,6 +31,8 @@ import Customer from '@/components/customer/Customer'
 import NewCustomer from '@/components/customer/NewCustomer'
 import EditCustomer from '@/components/customer/EditCustomer'
 
+import Login from '@/components/auth/Login'
+import Logout from '@/components/auth/Logout'
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -212,6 +214,14 @@ export default new VueRouter({
           component: EditCustomer
         }
       ]
+    }, {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    }, {
+      path: '/logout',
+      name: 'Logout',
+      component: Logout
     }
 
   ]

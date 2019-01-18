@@ -46,7 +46,13 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/recipe_ingredients/' +  this.$route.params.id )
+        .get('http://localhost:5055/recipe_ingredients/' +  this.$route.params.id , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
+          }})
         .then(response => (this.info = response))
         .catch(error => {
           console.log(error);

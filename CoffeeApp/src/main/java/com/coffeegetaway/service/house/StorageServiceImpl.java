@@ -2,86 +2,130 @@ package com.coffeegetaway.service.house;
 
 import com.coffee.model.house.storage.StorageInfo;
 import com.coffee.model.house.storage.StorageMiniInfo;
+import com.coffeegetaway.service.auth.Authorize;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class StorageServiceImpl implements StorageService {
 
     private String default_urlTarget = "http://localhost:8080/storage/";
 
+    private Authorize auth = new Authorize("http://localhost:8080/auth", "getaway", "getaway-house");
+
     @Override
     public StorageInfo findStorageById(Integer id) {
-        RestTemplate restTemplate = new RestTemplate();
+        if (!auth.isAuthorze())
+            auth.authorize();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+        HttpEntity entity = new HttpEntity(headers);
+
         String urlTarget = default_urlTarget + id.toString();
-        StorageInfo result = restTemplate.getForObject(urlTarget, StorageInfo.class);
-        return result;
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlTarget);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<StorageInfo> result = restTemplate.exchange(
+                builder.build().encode().toUri(), HttpMethod.GET, entity, StorageInfo.class);
+        return result.getBody();
     }
 
     @Override
     public List<StorageInfo> allStorage() {
-        RestTemplate restTemplate = new RestTemplate();
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
 
+        if (!auth.isAuthorze())
+            auth.authorize();
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
+        HttpEntity request = new HttpEntity(headers);
         ResponseEntity<List<StorageInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<StorageInfo>>(){});
+                    request,
+                    new ParameterizedTypeReference<List<StorageInfo>>(){});
         return result.getBody();
     }
 
 
     @Override
     public List<StorageInfo> allStorageForHouse(Integer houseId) {
+        if (!auth.isAuthorze())
+            auth.authorize();
+
         RestTemplate restTemplate = new RestTemplate();
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
         builder.queryParam("house_id", houseId);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+        HttpEntity request = new HttpEntity(headers);
+
         ResponseEntity<List<StorageInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<StorageInfo>>(){});
+                request,
+                    new ParameterizedTypeReference<List<StorageInfo>>(){});
         return result.getBody();
     }
 
     @Override
     public void deleteStorage(Integer id) {
-        String urlTarget = default_urlTarget + "{id}";
-        Map<String, String> params = new HashMap<>();
-        params.put("id", id.toString());
+        if (!auth.isAuthorze())
+            auth.authorize();
+
+        String urlTarget = default_urlTarget + id.toString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+        HttpEntity request = new HttpEntity( headers);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlTarget);
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete (urlTarget,  params );
+        restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.DELETE,
+                request,
+                String.class);
     }
 
     @Override
     public ResponseEntity<StorageInfo> updateStorage(StorageMiniInfo storageInfo, Integer id) {
-            String urlTarget = default_urlTarget + id.toString();
-            HttpEntity<StorageMiniInfo> request = new HttpEntity<>(storageInfo);
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<StorageInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, StorageInfo.class);
-            return result;
-        }
+        if (!auth.isAuthorze())
+            auth.authorize();
+
+        String urlTarget = default_urlTarget + id.toString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+        HttpEntity<StorageMiniInfo> request = new HttpEntity<>(storageInfo, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<StorageInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, StorageInfo.class);
+        return result;
+    }
 
     @Override
     public ResponseEntity<StorageInfo> createStorage(StorageMiniInfo storageInfo) {
-        RestTemplate restTemplate = new RestTemplate();
+        if (!auth.isAuthorze())
+            auth.authorize();
 
-        HttpEntity<StorageMiniInfo> request = new HttpEntity<>(storageInfo);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+        HttpEntity<StorageMiniInfo> request = new HttpEntity<>(storageInfo, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
         StorageInfo result = restTemplate.postForObject(default_urlTarget, request, StorageInfo.class);
-        if (result == null)
-            return new ResponseEntity<>((StorageInfo) null, HttpStatus.NOT_ACCEPTABLE);
+
         return new ResponseEntity<StorageInfo>(result, HttpStatus.CREATED);
     }
+
 }

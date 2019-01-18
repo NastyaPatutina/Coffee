@@ -104,7 +104,8 @@
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${localStorage.getItem("auth")}`
               }})
             .then(function (response) {
               console.log(response);
@@ -112,6 +113,10 @@
             })
             .catch(error => {
               console.log(error);
+              if (error.response.status == 401 || error.response.status == 403) {
+                this.msg = "Access denied";
+                return
+              }
               this.showDangerAlert = true;
             });
         }
@@ -121,7 +126,13 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/houses/' +  this.$route.params.id )
+        .get('http://localhost:5055/houses/' +  this.$route.params.id , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
+          }})
         .then(response_f => {
           this.name = response_f.data.name;
           this.address = response_f.data.address;

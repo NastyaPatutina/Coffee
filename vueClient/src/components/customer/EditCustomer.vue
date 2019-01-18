@@ -97,7 +97,8 @@
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${localStorage.getItem("auth")}`
               }})
             .then(function (response) {
               console.log(response);
@@ -114,7 +115,13 @@
     },
     mounted() {
       axios
-        .get('http://localhost:5055/customers/' +  this.$route.params.id )
+        .get('http://localhost:5055/customers/' +  this.$route.params.id , {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true,
+            "Authorization": `Bearer ${localStorage.getItem("auth")}`
+          }})
         .then(response_f => {
           this.first_name = response_f.data.firstName;
           this.last_name = response_f.data.lastName;

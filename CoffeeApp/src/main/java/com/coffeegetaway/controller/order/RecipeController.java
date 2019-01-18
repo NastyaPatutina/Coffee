@@ -16,6 +16,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -43,7 +44,6 @@ public class RecipeController {
     public List<OnlyIngredientInfo> recipeIngredientById(@PathVariable Integer id) {
         return recipeService.findRecipeById(id).getRecipeIngredients();
     }
-
 
     @GetMapping
     public List<RecipeWithIngredientsInfo> allRecipes() {

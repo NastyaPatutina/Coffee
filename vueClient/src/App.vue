@@ -25,15 +25,21 @@
       <li class="nav-item">
         <router-link to="/customers" class="nav-link">Customers</router-link>
       </li>
+      <li class="nav-item">
+        <router-link to="/login" class="nav-link">Login</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link to="/logout" class="nav-link">Logout</router-link>
+      </li>
     </ul>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'App'
-}
+  export default {
+    name: 'App'
+  }
 </script>
 
 <style>

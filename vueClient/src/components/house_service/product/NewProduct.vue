@@ -39,7 +39,6 @@
 <script>
   import axios from 'axios'
 
-
   function checkForm (e) {
     if (e.name) {
       return true;
@@ -73,7 +72,8 @@
             }, {
               headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                "Authorization": `Bearer ${localStorage.getItem("auth")}`
               }})
             .then(function (response) {
               console.log(response);
