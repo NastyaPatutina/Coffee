@@ -1,6 +1,7 @@
 package com.coffee.service.recipe;
 
 import com.coffee.entity.Recipe;
+import com.coffee.entity.RecipeIngredient;
 import com.coffee.helpers.Builder;
 import com.coffee.model.order.recipe.*;
 import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
@@ -42,6 +43,10 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     @Transactional
     public void deleteById(@Nonnull Integer id) {
+        Recipe ri = recipeRepository.findById(id).get();
+        for (RecipeIngredient oiInfo : ri.getRecipeIngredients()) {
+            recipeIngredientRepository.deleteById(oiInfo.getId());
+        }
         recipeRepository.deleteById(id);
     }
 

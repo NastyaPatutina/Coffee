@@ -11,4 +11,5 @@ import java.util.List;
 public interface StorageRepository
         extends JpaRepository<Storage, Integer> {
     List<Storage> findByHouse_Id(Integer id);
+    List<Storage> findByProduct_Id(Integer id);
 }

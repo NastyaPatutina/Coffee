@@ -53,6 +53,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void deleteById(@Nonnull Integer id) {
+        List<Storage> st = storageRepository.findByProduct_Id(id);
+        for (Storage sti: st) {
+            storageRepository.delete(sti);
+        }
         productRepository.deleteById(id);
     }
 

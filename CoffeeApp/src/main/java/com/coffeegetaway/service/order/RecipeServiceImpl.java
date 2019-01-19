@@ -4,6 +4,7 @@ import com.coffee.model.house.ProductInfo;
 import com.coffee.model.order.recipe.RecipeWithIngredientsInfo;
 import com.coffee.model.order.recipe.RecipeWithProducts;
 import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
+import com.coffee.model.order.recipeIngredient.RecipeIngredientInfo;
 import com.coffee.model.order.recipeIngredient.RecipeIngredientWithProductInfo;
 import com.coffeegetaway.queue.JQueue;
 import com.coffeegetaway.queue.request.Request;
@@ -110,22 +111,51 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<RecipeWithProducts> createRecipe(RecipeWithProducts recipeInfo) {
         RestTemplate restTemplate = new RestTemplate();
 
-        HttpEntity<RecipeWithIngredientsInfo> request = new HttpEntity<>(buildRecipeWithIngredientsInfo(recipeInfo));
-        RecipeWithIngredientsInfo result = restTemplate.postForObject(default_urlTarget, request, RecipeWithIngredientsInfo.class);
-        if (result == null)
-            return new ResponseEntity<>((RecipeWithProducts) null, HttpStatus.NOT_ACCEPTABLE);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+        HttpEntity entity = new HttpEntity(headers);
 
-        ResponseEntity<List<ProductInfo>> products_result = restTemplate.exchange("http://localhost:8080/products/", HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<ProductInfo>>(){});
+        ResponseEntity<List<ProductInfo>> products_result;
+        try {
+            products_result = restTemplate.exchange("http://localhost:8080/products/", HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<List<ProductInfo>>() {
+                    });
+        } catch(Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
 
         restTemplate = new RestTemplate();
         List<ProductInfo> products = products_result.getBody();
 
-        if (!createProducts(recipeInfo, products))
-            return new ResponseEntity<RecipeWithProducts>((RecipeWithProducts) null, HttpStatus.NOT_ACCEPTABLE);
+        if (!createProducts(recipeInfo, products)) {
+            return new ResponseEntity<RecipeWithProducts>(HttpStatus.NOT_ACCEPTABLE);
+        }
 
+        restTemplate = new RestTemplate();
+        HttpEntity<RecipeWithIngredientsInfo> request = new HttpEntity<>(buildRecipeWithIngredientsInfo(recipeInfo));
+        RecipeWithIngredientsInfo result;
+        try {
+            result = restTemplate.postForObject(default_urlTarget, request, RecipeWithIngredientsInfo.class);
+        } catch (Exception e) {
+            compensationForProductsCreate();
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+        ids.clear();
         return new ResponseEntity<RecipeWithProducts>(buildRecipeWithProducts(result, products), HttpStatus.CREATED);
+    }
+    private List<Integer> ids = new ArrayList<>();
+
+    private void compensationForProductsCreate() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+        HttpEntity entity = new HttpEntity(headers);
+
+        for (Integer id: ids) {
+            restTemplate.postForObject("http://localhost:8080/products/" + id.toString() + "/rollback", entity, String.class);
+        }
     }
 
     private Boolean createProducts(RecipeWithProducts recipeInfo, List<ProductInfo> products){
@@ -175,7 +205,9 @@ public class RecipeServiceImpl implements RecipeService {
         }
         return true;
     }
+
     private Boolean createProducts(RecipeIngredientWithProductInfo riInfo, List<ProductInfo> products) {
+
         for(ProductInfo pInfo: products) {
             if (pInfo.getName().replaceAll("\\s","")
                     .equals(riInfo.getProduct().getName().replaceAll("\\s",""))) {
@@ -187,26 +219,43 @@ public class RecipeServiceImpl implements RecipeService {
             ProductInfo productInfo = new ProductInfo();
             productInfo.setName(riInfo.getProduct().getName());
 
-            ProductInfo result = createProduct(productInfo);
+            ProductInfo result = null;
+            try {
+                result = createProduct(productInfo);
+            } catch (Exception e) {
+                compensationForProductsCreate();
+                return false;
+            }
             if (result == null) {
                 return false;
             }
 
             riInfo.getProduct().setId(result.getId());
+            ids.add(result.getId());
             products.add(result);
         }
         return true;
     }
 
-    private ProductInfo createProduct(ProductInfo productInfo ) {
+    private ProductInfo createProduct(ProductInfo productInfo ) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
 
-        HttpEntity<ProductInfo> request = new HttpEntity<>(productInfo);
-        ProductInfo result = restTemplate.postForObject("http://localhost:8080/products/", request, ProductInfo.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+
+        HttpEntity<ProductInfo> request = new HttpEntity<>(productInfo,headers);
+        ProductInfo result;
+        try {
+            result = restTemplate.postForObject("http://localhost:8080/products/", request, ProductInfo.class);
+        } catch(Exception e) {
+            throw new Exception(e);
+        }
+
         if (result == null)
             return null;
         return result;
     }
+
     private ProductInfo updateProduct(Integer id, ProductInfo productInfo) {
 
         HttpHeaders headers = new HttpHeaders();
