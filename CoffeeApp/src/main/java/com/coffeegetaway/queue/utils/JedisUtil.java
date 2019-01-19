@@ -24,7 +24,8 @@ public class JedisUtil {
         try {
             Gson gson = new Gson();
             jedis = jedisPool.getResource();
-            return gson.fromJson(jedis.rpop(key), Request.class);
+            Request rq = gson.fromJson(jedis.rpop(key), Request.class);
+            return rq;
         } finally {
             if (jedis != null) {
                 jedis.close();

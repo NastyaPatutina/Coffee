@@ -79,7 +79,7 @@ public class RecipeServiceImpl implements RecipeService {
                     });
 
         } catch (Exception e) {
-            Request rq = new Request("http://localhost:8080/products/", entity, HttpMethod.GET, new ParameterizedTypeReference<List<ProductInfo>>(){});
+            Request rq = new Request("http://localhost:8080/products/", HttpMethod.GET, (ProductInfo) null, headers);
             queue.push(rq);
 //            TODO
 //        } finally {
@@ -99,7 +99,7 @@ public class RecipeServiceImpl implements RecipeService {
                     RecipeWithIngredientsInfo.class);
 
         } catch (Exception e) {
-            Request rq = new Request(urlTarget, request, HttpMethod.PUT, RecipeWithIngredientsInfo.class);
+            Request rq = new Request(urlTarget,HttpMethod.PUT, buildRecipeWithIngredientsInfo(recipeInfo), null);
             queue.push(rq);
         }
 
@@ -221,7 +221,7 @@ public class RecipeServiceImpl implements RecipeService {
                     request,
                     ProductInfo.class);
         } catch (Exception e) {
-            Request rq = new Request("http://localhost:8080/products/", request, HttpMethod.PUT, ProductInfo.class);
+            Request rq = new Request("http://localhost:8080/products/", HttpMethod.PUT, productInfo, headers);
             queue.push(rq);
         }
         return result.getBody();
