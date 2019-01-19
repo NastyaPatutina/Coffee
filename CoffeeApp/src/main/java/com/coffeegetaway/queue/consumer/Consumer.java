@@ -4,6 +4,8 @@ import com.coffeegetaway.queue.request.Request;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+
 public class Consumer {
     public static boolean run(Request request) {
         RestTemplate restTemplate = new RestTemplate();
@@ -21,7 +23,13 @@ public class Consumer {
                         request.getParameterizedTypeReference());
 
             }
+            String msg = "Yeah... Success request send:" + request.getMethod().toString() + " " +
+                    request.getUrl() + " at " + LocalDateTime.now().toString();
+            System.out.println(msg);
         } catch (Exception e) {
+            String msg = "Hmmm... Error sending request:" + request.getMethod().toString() + " " +
+                    request.getUrl() + " at " + LocalDateTime.now().toString();
+            System.out.println(msg);
             return false;
         }
         return result.getStatusCode().value() < 400;
