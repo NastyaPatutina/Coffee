@@ -5,8 +5,10 @@ import com.coffee.helpers.Builder;
 import com.coffee.model.house.HouseInfo;
 import com.coffee.repository.HouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,19 +35,41 @@ public class HouseServiceImpl implements HouseService {
     @Override
     @Transactional(readOnly = true)
     public HouseInfo findHouseById(@Nonnull Integer id) {
-        return houseRepository.findById(id).map(Builder::buildHouseInfo).orElse(null);
+        House house;
+        try {
+            house = houseRepository.findById(id).get();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "House not found", ex);
+        }
+        return Builder.buildHouseInfo(house);
     }
 
     @Nullable
     @Override
     @Transactional
     public void deleteById(@Nonnull Integer id) {
-        houseRepository.deleteById(id);
+        House house;
+        try {
+            house = houseRepository.findById(id).get();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "House not found", ex);
+        }
+
+        houseRepository.delete(house);
     }
 
     @Override
     @Transactional
     public House save(HouseInfo house) {
-        return houseRepository.save(Builder.buildHouseByInfo(house));
+        House savedHouse;
+        try {
+            savedHouse = houseRepository.save(Builder.buildHouseByInfo(house));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_ACCEPTABLE, "Error save house: " + ex.getCause().getCause().getMessage(), ex);
+        }
+        return savedHouse;
     }
 }
