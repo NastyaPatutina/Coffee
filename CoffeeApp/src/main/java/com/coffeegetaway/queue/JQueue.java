@@ -9,15 +9,16 @@ import redis.clients.util.Pool;
 
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.Thread.sleep;
 
 public class JQueue {
     private JedisPool jedisPool =  new JedisPool("127.0.0.1", 6379);
     private String key = "recipes";
 
     private Integer length = 0;
-    private int delayTime = 60;
+    private int delayTime = 10;
     private TimeUnit tu = TimeUnit.SECONDS;
+    private boolean isRunning = false;
+    private Thread thread;
 
     public Pool<Jedis> getJedisPool() {
         return jedisPool;
@@ -28,17 +29,7 @@ public class JQueue {
     }
 
     Runnable task = () -> {
-        trySend();
-    };
-
-    public void push(Request request){
-        JedisUtil.lpush(jedisPool, key, request);
-        task.run();
-    }
-
-    private boolean trySend(){
-
-        Request rq = (Request) JedisUtil.rpop(jedisPool, key);
+        Request rq = JedisUtil.rpop(jedisPool, key);
         while (rq!=null) {
             if (!Consumer.run(rq)) {
                 JedisUtil.lpush(jedisPool, key, rq);
@@ -48,9 +39,18 @@ public class JQueue {
                     e.printStackTrace();
                 }
             }
-            rq = (Request) JedisUtil.rpop(jedisPool, key);
+            rq = JedisUtil.rpop(jedisPool, key);
         }
-        return true;
+        isRunning = false;
+    };
+
+    public void push(Request request){
+        JedisUtil.lpush(jedisPool, key, request);
+        if (!isRunning) {
+            isRunning = true;
+            thread = new Thread(task);
+            thread.start();
+        }
     }
 
 }

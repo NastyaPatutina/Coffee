@@ -29,7 +29,7 @@ public class Request {
         this.method = method;
     }
 
-
+//            TODO
     public ParameterizedTypeReference<?> getParameterizedTypeReference() {
         return new ParameterizedTypeReference<List<ProductInfo>>(){};
     }
@@ -58,7 +58,6 @@ public class Request {
         try {
             return Class.forName(class_name);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return Object.class;
     }

@@ -7,12 +7,11 @@ import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
 import com.coffee.model.order.recipeIngredient.RecipeIngredientWithProductInfo;
 import com.coffeegetaway.queue.JQueue;
 import com.coffeegetaway.queue.request.Request;
+import com.coffeegetaway.service.auth.Authorize;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import redis.clients.jedis.JedisPool;
@@ -26,11 +25,9 @@ import java.util.Map;
 public class RecipeServiceImpl implements RecipeService {
 
     private String default_urlTarget = "http://localhost:8081/recipes/";
+    private Authorize auth = new Authorize("http://localhost:8080/auth", "getaway", "getaway-house");
 
-    @Bean
-    private JQueue queue() {
-        return new JQueue();
-    }
+    private JQueue queue = new JQueue();
 
     @Override
     public RecipeWithIngredientsInfo findRecipeById(Integer id) {
@@ -64,43 +61,49 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<RecipeWithProducts> updateRecipe(RecipeWithProducts recipeInfo, Integer id) {
+        if (!auth.isAuthorze())
+            auth.authorize();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+        HttpEntity entity = new HttpEntity(headers);
+
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List<ProductInfo>> products_result = new ResponseEntity<>(HttpStatus.OK);
 
         try {
             products_result = restTemplate.exchange("http://localhost:8080/products/",
                     HttpMethod.GET,
-                    null,
+                    entity,
                     new ParameterizedTypeReference<List<ProductInfo>>() {
                     });
 
         } catch (Exception e) {
-            Request rq = new Request("http://localhost:8080/products/", null, HttpMethod.GET, new ParameterizedTypeReference<List<ProductInfo>>(){});
-            queue().push(rq);
+            Request rq = new Request("http://localhost:8080/products/", entity, HttpMethod.GET, new ParameterizedTypeReference<List<ProductInfo>>(){});
+            queue.push(rq);
+//            TODO
+//        } finally {
+//            List<ProductInfo> products = products_result.getBody();
+//            updateProducts(recipeInfo, products);
         }
-
-        List<ProductInfo> products = products_result.getBody();
-        if (!updateProducts(recipeInfo, products))
-            return new ResponseEntity<RecipeWithProducts>((RecipeWithProducts) null, HttpStatus.NOT_ACCEPTABLE);
 
 
         restTemplate = new RestTemplate();
-
         String urlTarget = default_urlTarget + id.toString();
         HttpEntity<RecipeWithIngredientsInfo> request = new HttpEntity<>(buildRecipeWithIngredientsInfo(recipeInfo));
         ResponseEntity<RecipeWithIngredientsInfo> result = new ResponseEntity<>(HttpStatus.OK);
         try {
             result = restTemplate.exchange(urlTarget,
-                HttpMethod.PUT,
-                request,
-                RecipeWithIngredientsInfo.class);
+                    HttpMethod.PUT,
+                    request,
+                    RecipeWithIngredientsInfo.class);
 
         } catch (Exception e) {
-            Request rq = new Request(default_urlTarget, request, HttpMethod.PUT, RecipeWithIngredientsInfo.class);
-            queue().push(rq);
+            Request rq = new Request(urlTarget, request, HttpMethod.PUT, RecipeWithIngredientsInfo.class);
+            queue.push(rq);
         }
 
-        return new ResponseEntity<RecipeWithProducts>(buildRecipeWithProducts(result.getBody(), products), HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
@@ -205,15 +208,22 @@ public class RecipeServiceImpl implements RecipeService {
         return result;
     }
     private ProductInfo updateProduct(Integer id, ProductInfo productInfo) {
-        RestTemplate restTemplate = new RestTemplate();
 
-        HttpEntity<ProductInfo> request = new HttpEntity<>(productInfo);
-        ResponseEntity<ProductInfo> result = restTemplate.exchange("http://localhost:8080/products/" + id.toString(),
-                HttpMethod.PUT,
-                request,
-                ProductInfo.class);
-        if (result.getBody() == null)
-            return null;
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", auth.getSessionId());
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<ProductInfo> result = new ResponseEntity(HttpStatus.OK);
+        HttpEntity<ProductInfo> request = new HttpEntity<>(productInfo, headers);
+        try{
+            result = restTemplate.exchange("http://localhost:8080/products/" + id.toString(),
+                    HttpMethod.PUT,
+                    request,
+                    ProductInfo.class);
+        } catch (Exception e) {
+            Request rq = new Request("http://localhost:8080/products/", request, HttpMethod.PUT, ProductInfo.class);
+            queue.push(rq);
+        }
         return result.getBody();
     }
 
