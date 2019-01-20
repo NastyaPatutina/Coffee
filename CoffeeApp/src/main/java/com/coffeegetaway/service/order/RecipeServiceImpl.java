@@ -6,15 +6,22 @@ import com.coffee.model.order.recipe.RecipeWithProducts;
 import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
 import com.coffee.model.order.recipeIngredient.RecipeIngredientInfo;
 import com.coffee.model.order.recipeIngredient.RecipeIngredientWithProductInfo;
+import com.coffeegetaway.ErrorModel;
 import com.coffeegetaway.queue.JQueue;
 import com.coffeegetaway.queue.request.Request;
 import com.coffeegetaway.service.auth.Authorize;
+import com.google.gson.Gson;
+import org.apache.http.HttpException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
@@ -35,7 +42,14 @@ public class RecipeServiceImpl implements RecipeService {
 
         RestTemplate restTemplate = new RestTemplate();
         String urlTarget = default_urlTarget + id.toString();
-        RecipeWithIngredientsInfo result = restTemplate.getForObject(urlTarget, RecipeWithIngredientsInfo.class);
+        RecipeWithIngredientsInfo result;
+        try {
+            result = restTemplate.getForObject(urlTarget, RecipeWithIngredientsInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return result;
     }
 
@@ -57,7 +71,13 @@ public class RecipeServiceImpl implements RecipeService {
         params.put("id", id.toString());
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete (urlTarget,  params );
+        try {
+            restTemplate.delete (urlTarget,  params );
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
     }
 
     @Override
@@ -79,7 +99,7 @@ public class RecipeServiceImpl implements RecipeService {
                     new ParameterizedTypeReference<List<ProductInfo>>() {
                     });
 
-        } catch (Exception e) {
+        } catch (ResourceAccessException e) {
             Request rq = new Request("http://localhost:8080/products/", HttpMethod.GET, (ProductInfo) null, headers);
             queue.push(rq);
 //            TODO
@@ -99,7 +119,7 @@ public class RecipeServiceImpl implements RecipeService {
                     request,
                     RecipeWithIngredientsInfo.class);
 
-        } catch (Exception e) {
+        } catch (ResourceAccessException e) {
             Request rq = new Request(urlTarget,HttpMethod.PUT, buildRecipeWithIngredientsInfo(recipeInfo), null);
             queue.push(rq);
         }

@@ -2,13 +2,17 @@ package com.coffeegetaway.service.house;
 
 import com.coffee.model.house.storage.StorageInfo;
 import com.coffee.model.house.storage.StorageMiniInfo;
+import com.coffeegetaway.ErrorModel;
 import com.coffeegetaway.service.auth.Authorize;
+import com.google.gson.Gson;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
@@ -35,8 +39,15 @@ public class StorageServiceImpl implements StorageService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlTarget);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<StorageInfo> result = restTemplate.exchange(
-                builder.build().encode().toUri(), HttpMethod.GET, entity, StorageInfo.class);
+        ResponseEntity<StorageInfo> result = null;
+        try {
+            result = restTemplate.exchange(
+                    builder.build().encode().toUri(), HttpMethod.GET, entity, StorageInfo.class);
+        }catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return result.getBody();
     }
 
@@ -53,8 +64,8 @@ public class StorageServiceImpl implements StorageService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
         HttpEntity request = new HttpEntity(headers);
         ResponseEntity<List<StorageInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-                    request,
-                    new ParameterizedTypeReference<List<StorageInfo>>(){});
+                request,
+                new ParameterizedTypeReference<List<StorageInfo>>(){});
         return result.getBody();
     }
 
@@ -74,7 +85,7 @@ public class StorageServiceImpl implements StorageService {
 
         ResponseEntity<List<StorageInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
                 request,
-                    new ParameterizedTypeReference<List<StorageInfo>>(){});
+                new ParameterizedTypeReference<List<StorageInfo>>(){});
         return result.getBody();
     }
 
@@ -92,9 +103,15 @@ public class StorageServiceImpl implements StorageService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlTarget);
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.DELETE,
-                request,
-                String.class);
+        try {
+            restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.DELETE,
+                    request,
+                    String.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
     }
 
     @Override
@@ -109,7 +126,14 @@ public class StorageServiceImpl implements StorageService {
         HttpEntity<StorageMiniInfo> request = new HttpEntity<>(storageInfo, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<StorageInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, StorageInfo.class);
+        ResponseEntity<StorageInfo> result;
+        try {
+            result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, StorageInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return result;
     }
 
@@ -123,8 +147,14 @@ public class StorageServiceImpl implements StorageService {
         HttpEntity<StorageMiniInfo> request = new HttpEntity<>(storageInfo, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        StorageInfo result = restTemplate.postForObject(default_urlTarget, request, StorageInfo.class);
-
+        StorageInfo result;
+        try {
+            result = restTemplate.postForObject(default_urlTarget, request, StorageInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return new ResponseEntity<StorageInfo>(result, HttpStatus.CREATED);
     }
 

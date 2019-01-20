@@ -4,11 +4,15 @@ import com.coffee.model.house.HouseInfo;
 import com.coffee.model.house.storage.StorageInfo;
 import com.coffee.model.order.recipe.RecipeWithIngredientsInfo;
 import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
+import com.coffeegetaway.ErrorModel;
 import com.coffeegetaway.service.auth.Authorize;
+import com.google.gson.Gson;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
@@ -36,8 +40,15 @@ public class HouseServiceImpl implements HouseService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlTarget);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<HouseInfo> result = restTemplate.exchange(
-                builder.build().encode().toUri(), HttpMethod.GET, request, HouseInfo.class);
+        ResponseEntity<HouseInfo> result;
+        try {
+            result = restTemplate.exchange(
+                    builder.build().encode().toUri(), HttpMethod.GET, request, HouseInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return result.getBody();
     }
 
@@ -51,9 +62,16 @@ public class HouseServiceImpl implements HouseService {
         HttpEntity request = new HttpEntity(headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<List<HouseInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<List<HouseInfo>>(){});
+        ResponseEntity<List<HouseInfo>> result;
+        try {
+            result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
+                    request,
+                    new ParameterizedTypeReference<List<HouseInfo>>(){});
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return result.getBody();
     }
 
@@ -98,9 +116,15 @@ public class HouseServiceImpl implements HouseService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlTarget);
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.DELETE,
-                request,
-                String.class);
+        try {
+            restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.DELETE,
+                    request,
+                    String.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
     }
 
     @Override
@@ -115,7 +139,14 @@ public class HouseServiceImpl implements HouseService {
         String urlTarget = default_urlTarget + id.toString();
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<HouseInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, HouseInfo.class);
+        ResponseEntity<HouseInfo> result;
+        try {
+            result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, HouseInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return result;
     }
 
@@ -129,10 +160,14 @@ public class HouseServiceImpl implements HouseService {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", auth.getSessionId());
         HttpEntity<HouseInfo> request = new HttpEntity<>(houseInfo, headers);
-
-        HouseInfo result = restTemplate.postForObject(default_urlTarget, request, HouseInfo.class);
-        if (result == null)
-            return new ResponseEntity<>((HouseInfo) null, HttpStatus.NOT_ACCEPTABLE);
+        HouseInfo result;
+        try {
+            result = restTemplate.postForObject(default_urlTarget, request, HouseInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return new ResponseEntity<HouseInfo>(result, HttpStatus.CREATED);
     }
 

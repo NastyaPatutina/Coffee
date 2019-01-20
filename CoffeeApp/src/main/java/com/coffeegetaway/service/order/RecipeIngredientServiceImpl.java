@@ -2,13 +2,17 @@ package com.coffeegetaway.service.order;
 
 import com.coffee.model.order.recipeIngredient.RecipeIngredientInfo;
 import com.coffee.model.order.recipeIngredient.RecipeMiniIngredientInfo;
+import com.coffeegetaway.ErrorModel;
+import com.google.gson.Gson;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +27,15 @@ public class RecipeIngredientServiceImpl implements  RecipeIngredientService {
     public RecipeIngredientInfo findRecipeIngredientById(Integer id) {
         RestTemplate restTemplate = new RestTemplate();
         String urlTarget = default_urlTarget + id.toString();
-        RecipeIngredientInfo result = restTemplate.getForObject(urlTarget, RecipeIngredientInfo.class);
+
+        RecipeIngredientInfo result;
+        try {
+            result = restTemplate.getForObject(urlTarget, RecipeIngredientInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return result;
     }
 
@@ -31,9 +43,16 @@ public class RecipeIngredientServiceImpl implements  RecipeIngredientService {
     public List<RecipeIngredientInfo> allRecipeIngredients() {
         RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity<List<RecipeIngredientInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<RecipeIngredientInfo>>(){});
+        ResponseEntity<List<RecipeIngredientInfo>> result;
+        try {
+            result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<RecipeIngredientInfo>>(){});
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return result.getBody();
     }
 
@@ -45,7 +64,13 @@ public class RecipeIngredientServiceImpl implements  RecipeIngredientService {
         params.put("id", id.toString());
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete (urlTarget,  params );
+        try {
+            restTemplate.delete (urlTarget,  params );
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
     }
 
     @Override
@@ -54,7 +79,14 @@ public class RecipeIngredientServiceImpl implements  RecipeIngredientService {
         String urlTarget = default_urlTarget + id.toString();
         HttpEntity<RecipeMiniIngredientInfo> request = new HttpEntity<>(recipeIngredientInfo);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<RecipeIngredientInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, RecipeIngredientInfo.class);
+        ResponseEntity<RecipeIngredientInfo> result;
+        try {
+            result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, RecipeIngredientInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return result;
     }
 
@@ -63,9 +95,14 @@ public class RecipeIngredientServiceImpl implements  RecipeIngredientService {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpEntity<RecipeMiniIngredientInfo> request = new HttpEntity<>(recipeIngredientInfo);
-        RecipeIngredientInfo result = restTemplate.postForObject(default_urlTarget, request, RecipeIngredientInfo.class);
-        if (result == null)
-            return new ResponseEntity<>((RecipeIngredientInfo) null, HttpStatus.NOT_ACCEPTABLE);
+        RecipeIngredientInfo result;
+        try {
+            result = restTemplate.postForObject(default_urlTarget, request, RecipeIngredientInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        }
         return new ResponseEntity<RecipeIngredientInfo>(result, HttpStatus.CREATED);
     }
 }
