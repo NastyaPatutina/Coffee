@@ -104,12 +104,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product save(ProductInfo product) {
-        Product savedProduct;
-        try {
-            savedProduct = productRepository.save(Builder.buildProductByInfo(product));
-        } catch (Exception ex) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE, "Error save product: " + ex.getCause().getCause().getMessage(), ex);
+        Product savedProduct = null;
+        Product productInDB = null;
+        if (product.getId() == null)
+            productInDB = productRepository.findByName(product.getName());
+
+        if (productInDB == null) {
+            try {
+                savedProduct = productRepository.save(Builder.buildProductByInfo(product));
+            } catch (Exception ex) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_ACCEPTABLE, "Error save product: " + ex.getCause().getCause().getMessage(), ex);
+            }
         }
         return savedProduct;
     }

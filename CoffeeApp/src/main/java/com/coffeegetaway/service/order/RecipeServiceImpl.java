@@ -100,22 +100,22 @@ public class RecipeServiceImpl implements RecipeService {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List<ProductInfo>> products_result = new ResponseEntity<>(HttpStatus.OK);
+        updateProducts(recipeInfo);
 
-        try {
-            products_result = restTemplate.exchange("http://localhost:8080/products/",
-                    HttpMethod.GET,
-                    entity,
-                    new ParameterizedTypeReference<List<ProductInfo>>() {
-                    });
-
-        } catch (ResourceAccessException e) {
-            Request rq = new Request("http://localhost:8080/products/", HttpMethod.GET, (ProductInfo) null, headers);
-            queue.push(rq);
-//            TODO
+//        try {
+//            products_result = restTemplate.exchange("http://localhost:8080/products/",
+//                    HttpMethod.GET,
+//                    entity,
+//                    new ParameterizedTypeReference<List<ProductInfo>>() {
+//                    });
+//
+//        } catch (ResourceAccessException e) {
+//            Request rq = new Request("http://localhost:8080/products/", HttpMethod.GET, (ProductInfo) null, headers);
+//            queue.push(rq);
 //        } finally {
 //            List<ProductInfo> products = products_result.getBody();
 //            updateProducts(recipeInfo, products);
-        }
+//        }
 
 
         restTemplate = new RestTemplate();
@@ -198,31 +198,29 @@ public class RecipeServiceImpl implements RecipeService {
         }
         return true;
     }
-    private Boolean updateProducts(RecipeWithProducts recipeInfo, List<ProductInfo> products){
+    private Boolean updateProducts(RecipeWithProducts recipeInfo){
 
         for (RecipeIngredientWithProductInfo riInfo:recipeInfo.getRecipeIngredients()){
-            if (riInfo.getProduct().getId() == null) {
-                if(!createProducts(riInfo, products)){
-                    return false;
-                }
-            } else {
-                if(!updateProducts(riInfo, products)){
-                    return false;
-                }
-            }
+//            if (riInfo.getProduct().getId() == null) {
+//                if(!createProducts(riInfo, products)){
+//                    return false;
+//                }
+//            } else {
+                updateProducts(riInfo);
+//            }
         }
         return true;
     }
 
-    private Boolean updateProducts(RecipeIngredientWithProductInfo riInfo, List<ProductInfo> products) {
-        Boolean changed = false;
-        ProductInfo product = findProductById(products, riInfo.getProduct().getId());
-        if (product != null &&
-                product.getName().replaceAll("\\s","").equals(riInfo.getProduct().getName().replaceAll("\\s",""))){
-            changed = true;
-        }
+    private Boolean updateProducts(RecipeIngredientWithProductInfo riInfo) {
+//        Boolean changed = false;
+//        ProductInfo product = findProductById(products, riInfo.getProduct().getId());
+//        if (product != null &&
+//                product.getName().replaceAll("\\s","").equals(riInfo.getProduct().getName().replaceAll("\\s",""))){
+//            changed = true;
+//        }
 
-        if (changed) {
+//        if (changed) {
             ProductInfo productInfo = new ProductInfo();
             productInfo.setName(riInfo.getProduct().getName());
 
@@ -231,7 +229,7 @@ public class RecipeServiceImpl implements RecipeService {
                 return false;
             }
 
-        }
+//        }
         return true;
     }
 
@@ -299,7 +297,7 @@ public class RecipeServiceImpl implements RecipeService {
                     request,
                     ProductInfo.class);
         } catch (Exception e) {
-            Request rq = new Request("http://localhost:8080/products/", HttpMethod.PUT, productInfo, headers);
+            Request rq = new Request("http://localhost:8080/products/" + id.toString(), HttpMethod.PUT, productInfo, headers);
             queue.push(rq);
         }
         return result.getBody();
