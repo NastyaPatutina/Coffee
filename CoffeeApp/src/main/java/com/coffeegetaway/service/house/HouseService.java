@@ -10,6 +10,7 @@ public interface HouseService {
     HouseInfo findHouseById(Integer id);
 
     List<HouseInfo> allHouses();
+    ResponseEntity<?> houseWithRecipesById(Integer id);
 
     List<RecipeWithIngredientsInfo> availableRecipesById(Integer id);
 

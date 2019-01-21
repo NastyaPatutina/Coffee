@@ -1,6 +1,7 @@
 package com.coffeegetaway.service.house;
 
 import com.coffee.model.house.HouseInfo;
+import com.coffee.model.house.HouseWithRecipesInfo;
 import com.coffee.model.house.storage.StorageInfo;
 import com.coffee.model.order.recipe.RecipeWithIngredientsInfo;
 import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
@@ -11,6 +12,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -48,6 +50,8 @@ public class HouseServiceImpl implements HouseService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result.getBody();
     }
@@ -76,6 +80,25 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
+    public ResponseEntity<?> houseWithRecipesById(Integer id) {
+        HouseInfo house = null;
+        try {
+            house = findHouseById(id);
+        }catch (Exception e) {
+            Map <String, Integer> map = new HashMap<>();
+            map.put("id", id);
+            return new ResponseEntity<>(map, HttpStatus.FAILED_DEPENDENCY);
+        }
+        List<RecipeWithIngredientsInfo> recipes;
+        try {
+            recipes = availableRecipesById(id);
+        }catch (Exception e) {
+            return new ResponseEntity<HouseInfo>(house, HttpStatus.FAILED_DEPENDENCY);
+        }
+        return new ResponseEntity<HouseWithRecipesInfo>(buildHouseWithRecipes(house, recipes),HttpStatus.OK);
+    }
+
+    @Override
     public List<RecipeWithIngredientsInfo> availableRecipesById(Integer id) {
 
         if (!auth.isAuthorze())
@@ -86,19 +109,44 @@ public class HouseServiceImpl implements HouseService {
         HttpEntity request = new HttpEntity(headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        String urlTarget = "http://localhost:8080/storage/?house_id=" + id.toString();
-        ResponseEntity<List<StorageInfo>> storage_requst = restTemplate.exchange(urlTarget, HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<List<StorageInfo>>(){});
-        List<StorageInfo> storage = storage_requst.getBody();
+        String urlTarget = "http://localhost:8080/storage?house_id=" + id.toString();
+        ResponseEntity<List<StorageInfo>> storage_requst = null;
+        try {
+            storage_requst = restTemplate.exchange(urlTarget, HttpMethod.GET,
+                    request,
+                    new ParameterizedTypeReference<List<StorageInfo>>() {
+                    });
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
+
+        List<StorageInfo> storage = new ArrayList<>();
+        if (storage_requst != null) {
+            storage = storage_requst.getBody();
+        }
 
         restTemplate = new RestTemplate();
         urlTarget = "http://localhost:8081/recipes/";
-        ResponseEntity<List<RecipeWithIngredientsInfo>> ri_requst = restTemplate.exchange(urlTarget, HttpMethod.GET,
+        ResponseEntity<List<RecipeWithIngredientsInfo>> ri_requst =  null;
+        try {
+            ri_requst = restTemplate.exchange(urlTarget, HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<RecipeWithIngredientsInfo>>(){});
-        List<RecipeWithIngredientsInfo> recipesInfo = ri_requst.getBody();
-
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
+        List<RecipeWithIngredientsInfo> recipesInfo= new ArrayList<>();
+        if (storage_requst != null) {
+            recipesInfo = ri_requst.getBody();
+        }
         return findAvailableRecipe(recipesInfo, storage);
     }
 
@@ -205,5 +253,16 @@ public class HouseServiceImpl implements HouseService {
             }
         }
         return false;
+    }
+
+    private HouseWithRecipesInfo buildHouseWithRecipes(HouseInfo houseInfo, List<RecipeWithIngredientsInfo> recipes) {
+        HouseWithRecipesInfo houseWithRecipesInfo =  new HouseWithRecipesInfo();
+        houseWithRecipesInfo.setAddress(houseInfo.getAddress());
+        houseWithRecipesInfo.setName(houseInfo.getName());
+        houseWithRecipesInfo.setLatitude(houseInfo.getLatitude());
+        houseWithRecipesInfo.setLongitude(houseInfo.getLongitude());
+        houseWithRecipesInfo.setId(houseInfo.getId());
+        houseWithRecipesInfo.setRecipes(recipes);
+        return houseWithRecipesInfo;
     }
 }
