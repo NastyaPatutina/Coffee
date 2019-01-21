@@ -49,6 +49,8 @@ public class RecipeServiceImpl implements RecipeService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result;
     }
@@ -56,11 +58,16 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeWithIngredientsInfo> allRecipes() {
         RestTemplate restTemplate = new RestTemplate();
-
-        ResponseEntity<List<RecipeWithIngredientsInfo>> result = restTemplate.exchange(default_urlTarget,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<RecipeWithIngredientsInfo>>(){});
+        ResponseEntity<List<RecipeWithIngredientsInfo>> result;
+        try {
+            result = restTemplate.exchange(default_urlTarget,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<RecipeWithIngredientsInfo>>() {
+                    });
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result.getBody();
     }
 
@@ -77,6 +84,8 @@ public class RecipeServiceImpl implements RecipeService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
     }
 
@@ -120,7 +129,7 @@ public class RecipeServiceImpl implements RecipeService {
                     RecipeWithIngredientsInfo.class);
 
         } catch (ResourceAccessException e) {
-            Request rq = new Request(urlTarget,HttpMethod.PUT, buildRecipeWithIngredientsInfo(recipeInfo), null);
+            Request rq = new Request(urlTarget, HttpMethod.PUT, buildRecipeWithIngredientsInfo(recipeInfo), null);
             queue.push(rq);
         }
 
@@ -142,14 +151,14 @@ public class RecipeServiceImpl implements RecipeService {
                     new ParameterizedTypeReference<List<ProductInfo>>() {
                     });
         } catch(Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
         }
 
         restTemplate = new RestTemplate();
         List<ProductInfo> products = products_result.getBody();
 
         if (!createProducts(recipeInfo, products)) {
-            return new ResponseEntity<RecipeWithProducts>(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<RecipeWithProducts>(HttpStatus.FAILED_DEPENDENCY);
         }
 
         restTemplate = new RestTemplate();
@@ -159,7 +168,7 @@ public class RecipeServiceImpl implements RecipeService {
             result = restTemplate.postForObject(default_urlTarget, request, RecipeWithIngredientsInfo.class);
         } catch (Exception e) {
             compensationForProductsCreate();
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
         }
         ids.clear();
         return new ResponseEntity<RecipeWithProducts>(buildRecipeWithProducts(result, products), HttpStatus.CREATED);

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,6 +36,8 @@ public class CustomerServiceImpl implements CustomerService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result;
     }
@@ -53,6 +56,8 @@ public class CustomerServiceImpl implements CustomerService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result.getBody();
     }
@@ -60,10 +65,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerInfo> allCustomers() {
         RestTemplate restTemplate = new RestTemplate();
-
-        ResponseEntity<List<CustomerInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<CustomerInfo>>(){});
+        ResponseEntity<List<CustomerInfo>> result = null;
+        try {
+            result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<CustomerInfo>>() {
+                    });
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result.getBody();
     }
 
@@ -80,6 +90,8 @@ public class CustomerServiceImpl implements CustomerService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
     }
 
@@ -95,6 +107,8 @@ public class CustomerServiceImpl implements CustomerService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result;
     }
@@ -111,6 +125,8 @@ public class CustomerServiceImpl implements CustomerService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return new ResponseEntity<CustomerInfo>(result, HttpStatus.CREATED);    }
 }

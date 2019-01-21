@@ -9,6 +9,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -45,6 +46,8 @@ public class ProductServiceImpl implements ProductService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result.getBody();
     }
@@ -59,9 +62,15 @@ public class ProductServiceImpl implements ProductService {
         HttpEntity request = new HttpEntity(headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<List<ProductInfo>> result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<List<ProductInfo>>(){});
+        ResponseEntity<List<ProductInfo>> result;
+        try {
+            result = restTemplate.exchange(default_urlTarget, HttpMethod.GET,
+                    request,
+                    new ParameterizedTypeReference<List<ProductInfo>>() {
+                    });
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result.getBody();
     }
 
@@ -87,6 +96,8 @@ public class ProductServiceImpl implements ProductService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
     }
 
@@ -109,6 +120,8 @@ public class ProductServiceImpl implements ProductService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result;
     }
@@ -130,6 +143,8 @@ public class ProductServiceImpl implements ProductService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return new ResponseEntity<ProductInfo>(result, HttpStatus.CREATED);    }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -47,6 +48,8 @@ public class StorageServiceImpl implements StorageService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result.getBody();
     }
@@ -63,9 +66,15 @@ public class StorageServiceImpl implements StorageService {
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
         HttpEntity request = new HttpEntity(headers);
-        ResponseEntity<List<StorageInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<List<StorageInfo>>(){});
+        ResponseEntity<List<StorageInfo>> result;
+        try {
+            result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
+                    request,
+                    new ParameterizedTypeReference<List<StorageInfo>>() {
+                    });
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result.getBody();
     }
 
@@ -82,10 +91,19 @@ public class StorageServiceImpl implements StorageService {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", auth.getSessionId());
         HttpEntity request = new HttpEntity(headers);
-
-        ResponseEntity<List<StorageInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<List<StorageInfo>>(){});
+        ResponseEntity<List<StorageInfo>> result;
+        try {
+            result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
+                    request,
+                    new ParameterizedTypeReference<List<StorageInfo>>() {
+                    });
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result.getBody();
     }
 
@@ -111,6 +129,8 @@ public class StorageServiceImpl implements StorageService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
     }
 
@@ -133,6 +153,8 @@ public class StorageServiceImpl implements StorageService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result;
     }
@@ -154,6 +176,8 @@ public class StorageServiceImpl implements StorageService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return new ResponseEntity<StorageInfo>(result, HttpStatus.CREATED);
     }

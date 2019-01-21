@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -36,6 +37,8 @@ public class OrderServiceImpl implements OrderService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result;
     }
@@ -44,9 +47,15 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderInfo> allOrders() {
         RestTemplate restTemplate = new RestTemplate();
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
-        ResponseEntity<List<OrderInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<OrderInfo>>(){});
+        ResponseEntity<List<OrderInfo>> result;
+        try {
+            result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<OrderInfo>>() {
+                    });
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result.getBody();
     }
 
@@ -65,6 +74,8 @@ public class OrderServiceImpl implements OrderService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result.getBody();
     }
@@ -85,6 +96,8 @@ public class OrderServiceImpl implements OrderService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result.getBody();
     }
@@ -102,6 +115,8 @@ public class OrderServiceImpl implements OrderService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
     }
 
@@ -118,6 +133,8 @@ public class OrderServiceImpl implements OrderService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result;
     }
@@ -134,6 +151,8 @@ public class OrderServiceImpl implements OrderService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return new ResponseEntity<OrderInfo>(result, HttpStatus.CREATED);
     }

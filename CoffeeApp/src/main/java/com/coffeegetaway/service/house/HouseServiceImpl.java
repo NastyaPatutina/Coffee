@@ -75,6 +75,8 @@ public class HouseServiceImpl implements HouseService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result.getBody();
     }
@@ -87,13 +89,13 @@ public class HouseServiceImpl implements HouseService {
         }catch (Exception e) {
             Map <String, Integer> map = new HashMap<>();
             map.put("id", id);
-            return new ResponseEntity<>(map, HttpStatus.FAILED_DEPENDENCY);
+            return new ResponseEntity<>(map, HttpStatus.PARTIAL_CONTENT);
         }
         List<RecipeWithIngredientsInfo> recipes;
         try {
             recipes = availableRecipesById(id);
-        }catch (Exception e) {
-            return new ResponseEntity<HouseInfo>(house, HttpStatus.FAILED_DEPENDENCY);
+        } catch (Exception e) {
+            return new ResponseEntity<HouseInfo>(house, HttpStatus.PARTIAL_CONTENT);
         }
         return new ResponseEntity<HouseWithRecipesInfo>(buildHouseWithRecipes(house, recipes),HttpStatus.OK);
     }
@@ -194,6 +196,8 @@ public class HouseServiceImpl implements HouseService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return result;
     }
@@ -215,6 +219,8 @@ public class HouseServiceImpl implements HouseService {
             Gson gs = new Gson();
             ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
             throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
         }
         return new ResponseEntity<HouseInfo>(result, HttpStatus.CREATED);
     }
