@@ -37,6 +37,7 @@
         })
         .then(response => {
           console.log(response);
+          localStorage.setItem("auth", "");
           this.msg = "You have been signed out";
         })
         .catch(error => {

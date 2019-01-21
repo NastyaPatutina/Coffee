@@ -5,6 +5,18 @@
     <div class="container">
       <div class="col-lg-1"></div>
       <div>
+        <b-alert variant="info"
+                 dismissible
+                 :show="showInfoAlert"
+                 @dismissed="showInfoAlert=false">
+          Sorry... Provided information may not be complete...
+        </b-alert>
+        <b-alert variant="warning"
+                 dismissible
+                 :show="showWarningAlert"
+                 @dismissed="showWarningAlert=false">
+          Sorry ... Access denied...
+        </b-alert>
         <b-alert variant="danger"
                  dismissible
                  :show="showDangerAlert"
@@ -13,16 +25,16 @@
         </b-alert>
       </div>
       <div class="col-lg-11" v-if="info != null">
-        <p>
+        <p v-if="info.data.name != null">
           <strong>House name: </strong>{{ info.data.name }}
         </p>
-        <p>
+        <p v-if="info.data.address != null">
           <strong>House address: </strong>{{ info.data.address }}
         </p>
-        <strong>Recipes:</strong>
+        <strong v-if="info.data.recipes != null" >Recipes:</strong>
         <div class="col-lg-1"></div>
-        <div class="col-lg-11"  v-if="recipes != null">
-          <div v-for="item of recipes.data">
+        <div class="col-lg-11"  v-if="info.data.recipes != null">
+          <div v-for="item of info.data.recipes">
           <hr>
           <hr>
           <p>
@@ -67,25 +79,13 @@
     data () {
       return {
         msg: 'Coffee House',
-        recipes: null,
         showDangerAlert: false,
+        showWarningAlert: false,
+        showInfoAlert: false,
         info: null
       }
     },
     mounted() {
-      axios
-        .get('http://localhost:5055/houses/' +  this.$route.params.id , {
-          headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            "Access-Control-Allow-Origin": "*",
-            "crossDomain": true,
-            "Authorization": `Bearer ${localStorage.getItem("auth")}`
-          }})
-        .then(response => (this.info = response))
-        .catch(error => {
-          console.log(error);
-          this.showDangerAlert = true;
-        });
       axios
         .get('http://localhost:5055/houses/' +  this.$route.params.id + '/recipes', {
           headers: {
@@ -94,9 +94,18 @@
             "crossDomain": true,
             "Authorization": `Bearer ${localStorage.getItem("auth")}`
           }})
-        .then(response => (this.recipes = response))
+        .then(response => {
+          if(response.status == 206){
+            this.showInfoAlert = true;
+          }
+          this.info = response
+        })
         .catch(error => {
           console.log(error);
+          if (error.response.status == 401 || error.response.status == 403) {
+            this.showWarningAlert = true;
+            return
+          }
           this.showDangerAlert = true;
         });
     }

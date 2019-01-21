@@ -5,6 +5,12 @@
     <div class="container">
       <div class="col-lg-1"></div>
       <div>
+        <b-alert variant="warning"
+                 dismissible
+                 :show="showWarningAlert"
+                 @dismissed="showWarningAlert=false">
+          Sorry ... Access denied...
+        </b-alert>
         <b-alert variant="danger"
                  dismissible
                  :show="showDangerAlert"
@@ -73,8 +79,9 @@
     data () {
       return {
         msg: 'New Coffee House',
-        name: null,
         showDangerAlert: false,
+        showWarningAlert: false,
+        name: null,
         address: null,
         longitude: null,
         latitude: null,
@@ -103,7 +110,7 @@
             .catch(error => {
               console.log(error);
               if (error.response.status == 401 || error.response.status == 403) {
-                this.msg = "Access denied";
+                this.showWarningAlert = true;
                 return
               }
               this.showDangerAlert = true;
