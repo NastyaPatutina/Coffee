@@ -1,26 +1,14 @@
 package com.coffeegetaway.controller.house;
 
 import com.coffee.model.house.HouseInfo;
-import com.coffee.model.house.storage.StorageInfo;
-import com.coffee.model.order.recipe.RecipeWithIngredientsInfo;
-import com.coffee.model.order.recipeIngredient.OnlyIngredientInfo;
 import com.coffeegetaway.service.house.HouseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
@@ -38,8 +26,8 @@ public class HouseController {
     }
 
     @GetMapping("/{id}/recipes")
-    public List<RecipeWithIngredientsInfo> HouseAvailableRecipes(@PathVariable Integer id) {
-        return houseService.availableRecipesById(id);
+    public ResponseEntity<?> HouseAvailableRecipes(@PathVariable Integer id) {
+        return houseService.houseWithRecipesById(id);
     }
 
     @GetMapping

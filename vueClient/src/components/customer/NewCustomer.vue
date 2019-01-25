@@ -5,6 +5,12 @@
     <div class="container">
       <div class="col-lg-1"></div>
       <div>
+        <b-alert variant="warning"
+                 dismissible
+                 :show="showWarningAlert"
+                 @dismissed="showWarningAlert=false">
+          Sorry ... Access denied...
+        </b-alert>
         <b-alert variant="danger"
                  dismissible
                  :show="showDangerAlert"
@@ -79,6 +85,7 @@
       return {
         msg: 'New Coffee Customer',
         showDangerAlert: false,
+        showWarningAlert: false,
         first_name: null,
         last_name: null,
         gender: null,
@@ -109,6 +116,10 @@
             })
             .catch(error => {
               console.log(error);
+              if (error.response.status == 401 || error.response.status == 403) {
+                this.showWarningAlert = true;
+                return
+              }
               this.showDangerAlert = true;
             });
         }

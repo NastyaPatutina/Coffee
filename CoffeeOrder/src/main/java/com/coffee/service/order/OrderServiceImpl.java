@@ -6,8 +6,10 @@ import com.coffee.model.order.order.*;
 import com.coffee.repository.OrderRepository;
 import com.coffee.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,18 +57,40 @@ public class OrderServiceImpl implements OrderService {
     @Nullable
     @Override
     public OrderInfo findOrderById(@Nonnull Integer id) {
-        return orderRepository.findById(id).map(Builder::buildOrderInfo).orElse(null);
+        Order order;
+        try {
+            order = orderRepository.findById(id).get();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Order not found", ex);
+        }
+        return Builder.buildOrderInfo(order);
     }
 
     @Override
     @Transactional
     public void deleteById(@Nonnull Integer id) {
-        orderRepository.deleteById(id);
+        Order order;
+        try {
+            order = orderRepository.findById(id).get();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Order not found", ex);
+        }
+        orderRepository.delete(order);
     }
 
     @Override
     @Transactional
     public Order save(OrderMiniInfo orderInfo) {
-        return orderRepository.save(Builder.buildOrderByInfo(orderInfo, recipeRepository.findById(orderInfo.getRecipeId()).orElse(null)));
+        Order order;
+        try {
+            order = orderRepository.save(Builder.buildOrderByInfo(orderInfo, recipeRepository.findById(orderInfo.getRecipeId()).get()));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_ACCEPTABLE,
+                    "Error save order: " + ex.getCause().getCause().getMessage(), ex);
+        }
+        return order;
     }
 }

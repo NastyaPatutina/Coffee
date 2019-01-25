@@ -2,13 +2,18 @@ package com.coffeegetaway.service.order;
 
 import com.coffee.model.order.order.OrderInfo;
 import com.coffee.model.order.order.OrderMiniInfo;
+import com.coffeegetaway.ErrorModel;
+import com.google.gson.Gson;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
@@ -25,7 +30,16 @@ public class OrderServiceImpl implements OrderService {
     public OrderInfo findOrderById(Integer id) {
         RestTemplate restTemplate = new RestTemplate();
         String urlTarget = default_urlTarget + id.toString();
-        OrderInfo result = restTemplate.getForObject(urlTarget, OrderInfo.class);
+        OrderInfo result;
+        try {
+            result = restTemplate.getForObject(urlTarget, OrderInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result;
     }
 
@@ -33,9 +47,15 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderInfo> allOrders() {
         RestTemplate restTemplate = new RestTemplate();
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
-        ResponseEntity<List<OrderInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<OrderInfo>>(){});
+        ResponseEntity<List<OrderInfo>> result;
+        try {
+            result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<OrderInfo>>() {
+                    });
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result.getBody();
     }
 
@@ -45,10 +65,18 @@ public class OrderServiceImpl implements OrderService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(default_urlTarget);
 
         builder.queryParam("customer_id", customerId);
-
-        ResponseEntity<List<OrderInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<OrderInfo>>(){});
+        ResponseEntity<List<OrderInfo>> result;
+        try {
+            result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<OrderInfo>>(){});
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result.getBody();
     }
 
@@ -59,9 +87,18 @@ public class OrderServiceImpl implements OrderService {
 
         builder.queryParam("coffee_house_id", coffeeHouseId);
 
-        ResponseEntity<List<OrderInfo>> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<OrderInfo>>(){});
+        ResponseEntity<List<OrderInfo>> result;
+        try {
+            result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<OrderInfo>>(){});
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result.getBody();
     }
 
@@ -72,7 +109,15 @@ public class OrderServiceImpl implements OrderService {
         params.put("id", id.toString());
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete (urlTarget,  params );
+        try {
+            restTemplate.delete (urlTarget,  params );
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
     }
 
     @Override
@@ -80,7 +125,17 @@ public class OrderServiceImpl implements OrderService {
         String urlTarget = default_urlTarget + id.toString();
         HttpEntity<OrderMiniInfo> request = new HttpEntity<>(orderInfo);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<OrderInfo> result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, OrderInfo.class);
+
+        ResponseEntity<OrderInfo> result;
+        try {
+            result = restTemplate.exchange(urlTarget, HttpMethod.PUT, request, OrderInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return result;
     }
 
@@ -89,9 +144,16 @@ public class OrderServiceImpl implements OrderService {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpEntity<OrderMiniInfo> request = new HttpEntity<>(orderInfo);
-        OrderInfo result = restTemplate.postForObject(default_urlTarget, request, OrderInfo.class);
-        if (result == null)
-            return new ResponseEntity<>((OrderInfo) null, HttpStatus.NOT_ACCEPTABLE);
+        OrderInfo result;
+        try {
+            result = restTemplate.postForObject(default_urlTarget, request, OrderInfo.class);
+        } catch (HttpClientErrorException ex) {
+            Gson gs = new Gson();
+            ErrorModel rr = gs.fromJson(ex.getResponseBodyAsString(), ErrorModel.class);
+            throw new ResponseStatusException(ex.getStatusCode(), rr.getMessage(), ex.getCause());
+        } catch (ResourceAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Full information temporarily unavailable", ex);
+        }
         return new ResponseEntity<OrderInfo>(result, HttpStatus.CREATED);
     }
 }

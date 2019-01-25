@@ -5,6 +5,12 @@
     <div class="container">
       <div class="col-lg-1"></div>
       <div>
+        <b-alert variant="warning"
+                 dismissible
+                 :show="showWarningAlert"
+                 @dismissed="showWarningAlert=false">
+          Sorry ... Access denied...
+        </b-alert>
         <b-alert variant="danger"
                  dismissible
                  :show="showDangerAlert"
@@ -81,12 +87,13 @@
     data () {
       return {
         msg: 'Edit Coffee Storage',
+        showDangerAlert: false,
+        showWarningAlert: false,
         count: null,
         products: null,
         recipes: null,
         productId: null,
         recipeId: null,
-        showDangerAlert: false,
         errors: []
       }
     }, methods: {
@@ -110,6 +117,10 @@
             })
             .catch(error => {
               console.log(error);
+              if (error.response.status == 401 || error.response.status == 403) {
+                this.showWarningAlert = true;
+                return
+              }
               this.showDangerAlert = true;
             });
         }
@@ -147,6 +158,10 @@
             })
             .catch(error => {
               console.log(error);
+              if (error.response.status == 401 || error.response.status == 403) {
+                this.showWarningAlert = true;
+                return
+              }
               this.showDangerAlert = true;
             });
           axios
@@ -168,6 +183,10 @@
             })
             .catch(error => {
               console.log(error);
+              if (error.response.status == 401 || error.response.status == 403) {
+                this.showWarningAlert = true;
+                return
+              }
               this.showDangerAlert = true;
             });
         })

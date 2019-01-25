@@ -1,12 +1,15 @@
 package com.coffee.service.recipeIngredient;
+import com.coffee.entity.Recipe;
 import com.coffee.entity.RecipeIngredient;
 import com.coffee.helpers.Builder;
 import com.coffee.model.order.recipeIngredient.*;
 import com.coffee.repository.RecipeIngredientRepository;
 import com.coffee.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,19 +38,43 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
     @Nullable
     @Override
     public RecipeIngredientInfo findRecipeIngredientById(@Nonnull Integer id) {
-        return recipeIngredientRepository.findById(id).map(Builder::buildRecipeIngredientInfo).orElse(null);
+        RecipeIngredient recipeIngredient;
+        try {
+            recipeIngredient = recipeIngredientRepository.findById(id).get();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Recipe ingredient not found", ex);
+        }
+        return Builder.buildRecipeIngredientInfo(recipeIngredient);
     }
 
     @Override
     @Transactional
     public void deleteById(@Nonnull Integer id) {
-        recipeIngredientRepository.deleteById(id);
+        RecipeIngredient recipeIngredient;
+        try {
+            recipeIngredient = recipeIngredientRepository.findById(id).get();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Recipe ingredient not found", ex);
+        }
+
+        recipeIngredientRepository.delete(recipeIngredient);
     }
 
     @Override
     @Transactional
     public RecipeIngredient save(RecipeMiniIngredientInfo recipeMiniIngredientInfo) {
-        return recipeIngredientRepository.save(Builder.buildRecipeIngredientByMiniInfo(recipeMiniIngredientInfo,
-                recipeRepository.findById(recipeMiniIngredientInfo.getRecipeId()).orElse(null)));
+        RecipeIngredient recipeIngredient;
+
+        try {
+            recipeIngredient = recipeIngredientRepository.save(Builder.buildRecipeIngredientByMiniInfo(recipeMiniIngredientInfo,
+                    recipeRepository.findById(recipeMiniIngredientInfo.getRecipeId()).orElse(null)));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_ACCEPTABLE,
+                    "Error save recipe ingredient: " + ex.getCause().getCause().getMessage(), ex);
+        }
+        return recipeIngredient;
     }
 }

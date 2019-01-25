@@ -10,11 +10,13 @@ import com.coffee.model.house.storage.StorageMiniInfo;
 import com.coffee.repository.HouseRepository;
 import com.coffee.repository.ProductRepository;
 import com.coffee.repository.StorageRepository;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,23 +49,38 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public ProductInfo findProductById(@Nonnull Integer id) {
-        return productRepository.findById(id).map(Builder::buildProductInfo).orElse(null);
+        Product product;
+        try {
+            product = productRepository.findById(id).get();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Product not found", ex);
+        }
+        return Builder.buildProductInfo(product);
     }
 
     @Override
     @Transactional
     public void deleteById(@Nonnull Integer id) {
+        Product product;
+        try {
+            product = productRepository.findById(id).get();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Product not found", ex);
+        }
+
+        List<Storage> st = storageRepository.findByProduct_Id(id);
+        for (Storage sti: st) {
+            storageRepository.delete(sti);
+        }
         productRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public Product saveAndAddToStorage(ProductInfo product) {
-        Product savedProduct = productRepository.save(Builder.buildProductByInfo(product));
-
-        if (savedProduct == null){
-            return null;
-        }
+        Product savedProduct = save(product);
 
         List<House> houses = houseRepository.findAll();
 
@@ -72,7 +89,13 @@ public class ProductServiceImpl implements ProductService {
             storage.setProduct(savedProduct);
             storage.setCount(0);
             storage.setHouse(house);
-            storageRepository.save(storage);
+            try {
+                storageRepository.save(storage);
+            } catch (Exception ex) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_ACCEPTABLE,
+                        "Error save storage for product " + product.getName() + ": " + ex.getCause().getCause().getMessage(), ex);
+            }
         }
         return savedProduct;
     }
@@ -81,6 +104,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product save(ProductInfo product) {
-        return productRepository.save(Builder.buildProductByInfo(product));
+        Product savedProduct = null;
+        Product productInDB = null;
+        if (product.getId() == null)
+            productInDB = productRepository.findByName(product.getName());
+
+        if (productInDB == null) {
+            try {
+                savedProduct = productRepository.save(Builder.buildProductByInfo(product));
+            } catch (Exception ex) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_ACCEPTABLE, "Error save product: " + ex.getCause().getCause().getMessage(), ex);
+            }
+        }
+        return savedProduct;
     }
 }

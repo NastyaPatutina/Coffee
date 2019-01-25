@@ -61,4 +61,9 @@ public class ProductController {
 
         return new ResponseEntity<ProductInfo>(Builder.buildProductInfo(savedProduct), HttpStatus.OK);
     }
+
+    @PostMapping("/{id}/rollback")
+    public void RollbackProductById(@PathVariable Integer id) {
+        productService.deleteById(id);
+    }
 }
