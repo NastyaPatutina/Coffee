@@ -18,7 +18,6 @@ public class JQueue {
     private int delayTime = 10;
     private TimeUnit tu = TimeUnit.SECONDS;
     private boolean isRunning = false;
-    private Thread thread;
 
     public Pool<Jedis> getJedisPool() {
         return jedisPool;
@@ -29,26 +28,34 @@ public class JQueue {
     }
 
     Runnable task = () -> {
-        Request rq = JedisUtil.rpop(jedisPool, key);
-        while (rq!=null) {
-            if (!Consumer.run(rq)) {
-                JedisUtil.lpush(jedisPool, key, rq);
-                try {
-                    tu.sleep(delayTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        try {
+            while (true) {
+                if (Thread.interrupted()) {
+                    break;
+                }
+                Request rq = JedisUtil.rpop(jedisPool, key);
+                while (rq != null) {
+                    if (!Consumer.run(rq)) {
+                        JedisUtil.lpush(jedisPool, key, rq);
+                        try {
+                            tu.sleep(delayTime);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    rq = JedisUtil.rpop(jedisPool, key);
                 }
             }
-            rq = JedisUtil.rpop(jedisPool, key);
+        } catch (Exception ex) {
+            System.out.println("Yeah");
         }
-        isRunning = false;
     };
+
+    private Thread thread = new Thread(task);
 
     public void push(Request request){
         JedisUtil.lpush(jedisPool, key, request);
-        if (!isRunning) {
-            isRunning = true;
-            thread = new Thread(task);
+        if (!thread.isInterrupted()) {
             thread.start();
         }
     }
